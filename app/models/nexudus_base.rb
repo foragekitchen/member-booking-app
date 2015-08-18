@@ -1,6 +1,6 @@
 require 'httparty'
 
-class Nexudus
+class NexudusBase
   include HTTParty
   base_uri 'spaces.nexudus.com/api'
 

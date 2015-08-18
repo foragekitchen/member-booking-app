@@ -1,4 +1,4 @@
-class Space < Nexudus
+class Space < NexudusBase
 
   def resources(id=nil)
     results = self.class.get("/spaces/resources/#{id}")
