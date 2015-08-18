@@ -16,7 +16,8 @@
 !/log/.keep
 /tmp
 
+
 # Ignore sensitive stuff
-config/secrets.yml
+.env
 
 .DS_Store
