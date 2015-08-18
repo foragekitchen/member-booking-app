@@ -1,4 +1,24 @@
-<h1>List of bookings:</h1>
+<h1>Book a table in the kitchen:</h1>
+<p>Prep tables are the basic unit of the kitchen. Everything happens around a prep table! Book however many you need for your team. Minimum 4 hours. We suggest limiting 2-3 crew members at each table.</p> 
+
+
+<div id="filters">
+  <form>
+    <label for="date">When do you want to come in?</label>
+    <select>
+      <option>Today</option>
+    </select>
+    <select>
+      <option>10:00am</option>
+    </select>
+  </form>
+</div>
+
+<div id="map-container">
+  <div id="map"><div id="overlay"></div></div>
+  <div id="cooking-blocks-42766738" class="resource"></div>
+</div>
+
 
 <ul>
 <% @resources.each do |resource| %>
