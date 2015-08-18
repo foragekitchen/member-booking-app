@@ -8,8 +8,8 @@ class Nexudus
     self.class.basic_auth Rails.application.secrets.nexudus_username, Rails.application.secrets.nexudus_password 
   end
 
-  def resources(id=nil)
-    self.class.get("/spaces/resources/#{id}")
+  def get(*args, &block)
+    self.class.get(*args, &block)
   end
 
 end
