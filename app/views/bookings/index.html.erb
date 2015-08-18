@@ -1,0 +1,7 @@
+<h1>List of bookings:</h1>
+
+<ul>
+<% @resources.each do |resource| %>
+  <li><%= resource["Name"] %></li>
+<% end %>
+</ul>
