@@ -4,16 +4,12 @@ class Nexudus
   include HTTParty
   base_uri 'spaces.nexudus.com/api'
 
-  def auth
-    {:username => ENV['NEXUDUS_USERNAME'], :password => ENV['NEXUDUS_PASSWORD']}
-  end
-
   def initialize()
-    @options = { :basic_auth => auth }
+    self.class.basic_auth Rails.application.secrets.nexudus_username, Rails.application.secrets.nexudus_password 
   end
 
   def resources(id=nil)
-    self.class.get("/spaces/resources/#{id}", @options)
+    self.class.get("/spaces/resources/#{id}")
   end
 
 end
