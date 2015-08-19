@@ -11,9 +11,14 @@ class Space < NexudusBase
   def resource_location(id)
     # We can only access the "Description", AND the "LinkedResources" data when calling a single Resource
     resource = get_resource(id)
-    linked = get_resource(resource["LinkedResources"].try("first")) || { "Description" => nil }
+    linked = resource["LinkedResources"].present? ? get_resource( resource["LinkedResources"].first ) : nil
     
-    return linked["Description"]
+    if linked.present?
+      location = linked["Description"].include?("@") ? linked["Description"].split("@").last.split(",") : nil
+      location.map!{ |ft| ResourceLocation.new.convert_from_feet_to_inches(ft) } if location.is_a?(Array)
+    else
+      return nil
+    end
   end
 
   def resources(type = "Cooking Blocks", visible = true)
