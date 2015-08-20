@@ -4,6 +4,9 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.3'
 
+# Use Rspec for testing
+gem 'rspec-rails', :group => [:development, :test]
+
 # Dotenv for storing environment variables in development
 gem 'dotenv-rails', :groups => [:development, :test]
 
