@@ -3,3 +3,29 @@
 @import "bootstrap/theme";
 
 @import "bookings";
+
+
+nav {
+  a.navbar-brand  {
+    height: auto;
+    padding: 5px 15px;
+    img {
+      height: 50px;
+    }
+  }
+  .navbar-nav li a {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  .navbar-text {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
+
+footer {
+  background-color: #eee;
+  margin-top: 50px;
+  padding-top: 20px;
+  padding-bottom: 50px;
+}

@@ -15,3 +15,10 @@
 #= require bootstrap
 #= require_tree .
 
+$(document).ready ->  
+  $('.collapse').collapse()
+  lightUpActiveNav()
+  
+lightUpActiveNav = () ->
+  current_controller = $("body").attr("id")
+  $("#nav-main .#{current_controller}-nav").addClass "active"
