@@ -27,7 +27,7 @@ class Space < NexudusBase
 
     results.each do |r|
       next unless r["ResourceTypeName"] == type
-      item = {:id => r["Id"], :name => r["Name"], :location => resource_location(r["Id"])}
+      item = {:id => r["Id"], :name => r["Name"], :type => r["ResourceTypeName"], :location => resource_location(r["Id"])}
       resources << item
     end
     

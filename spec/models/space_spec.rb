@@ -11,10 +11,12 @@ RSpec.describe Space, type: :model do
       expect( @resources.is_a?(Array) ).to eq true
     end
 
-    pending "includes only Cooking Blocks" 
+    it "includes only Cooking Blocks" do
+      expect(@resources.collect{|r| r[:type] }.uniq).to eq ["Cooking Blocks"]
+    end
 
-    it "returns id, name, and location for each resource" do
-      expect(@resources.first.keys).to match_array [:id, :name, :location]
+    it "returns id, name, type, and location for each resource" do
+      expect(@resources.first.keys).to match_array [:id, :name, :type, :location]
     end
 
   end
