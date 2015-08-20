@@ -60,6 +60,9 @@ group :development, :test do
   # Use Rspec for testing
   gem 'rspec-rails', '~> 3.0'
 
+  # Use Capybara for UI testing
+  gem 'capybara'
+
   # Use Guard for auto-running tests
   gem 'guard-rspec', require: false
 
