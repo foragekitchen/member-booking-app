@@ -60,8 +60,9 @@ group :development, :test do
   # Use Rspec for testing
   gem 'rspec-rails', '~> 3.0'
 
-  # Use Capybara for UI testing
+  # Use Capybara for UI testing, with Selenium for support when needing to run javascript
   gem 'capybara'
+  gem 'selenium-webdriver'
 
   # Use Guard for auto-running tests
   gem 'guard-rspec', require: false
