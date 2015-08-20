@@ -4,12 +4,6 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.3'
 
-# Use Rspec for testing
-gem 'rspec-rails', :group => [:development, :test]
-
-# Dotenv for storing environment variables in development
-gem 'dotenv-rails', :groups => [:development, :test]
-
 # Use Bootstrap ported to Sass for css framework
 gem 'bootstrap-sass', '~> 3.3.5'
 # Use SCSS for stylesheets
@@ -58,5 +52,13 @@ group :development, :test do
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   # gem 'spring'
+
+
+  # Use Rspec for testing
+  gem 'rspec-rails', '~> 3.0'
+
+  # Dotenv for storing environment variables in development
+  gem 'dotenv-rails'
+
 end
 

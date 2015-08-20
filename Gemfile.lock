@@ -154,7 +154,7 @@ DEPENDENCIES
   httparty (= 0.13.5)
   jquery-rails
   rails (= 4.2.3)
-  rspec-rails
+  rspec-rails (~> 3.0)
   ruby-units
   sass-rails (~> 5.0)
 
