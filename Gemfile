@@ -54,11 +54,14 @@ group :development, :test do
   # gem 'spring'
 
 
+  # Dotenv for storing environment variables in development
+  gem 'dotenv-rails'
+
   # Use Rspec for testing
   gem 'rspec-rails', '~> 3.0'
 
-  # Dotenv for storing environment variables in development
-  gem 'dotenv-rails'
+  # Use Guard for auto-running tests
+  gem 'guard-rspec', require: false
 
 end
 
