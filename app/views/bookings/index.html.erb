@@ -3,14 +3,22 @@
 
 
 <div id="filters">
-  <form>
-    <label for="date">When do you want to come in?</label>
-    <select>
-      <option>Today</option>
-    </select>
-    <select>
-      <option>10:00am</option>
-    </select>
+  <form class="form-inline">
+    <div class="form-group">
+      <label for="date">When do you want to come in?</label>
+      <select data-placeholder="Today" class="chosen-select">
+        <option>Today</option>
+        <option>Tomorrow</option>
+      </select>
+      <select data-placeholder="10:00am" class="chosen-select">
+        <% (8..12).each do |n| %>
+        <option><%= n %>:00 am</option>
+        <% end %>
+        <% (1..11).each do |n| %>
+        <option><%= n %>:00 pm</option>
+        <% end %>
+      </select>
+    </div>
   </form>
 </div>
 

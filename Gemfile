@@ -6,6 +6,9 @@ gem 'rails', '4.2.3'
 
 # Use Bootstrap ported to Sass for css framework
 gem 'bootstrap-sass', '~> 3.3.5'
+# Use Chosen for styling form elements - install compass-rails BEFORE Chosen and Sass for sprockets compatibility
+gem "compass-rails", github: "Compass/compass-rails", branch: "master"
+gem 'chosen-rails', '~>1.4.2'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 

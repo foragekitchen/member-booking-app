@@ -13,10 +13,12 @@
 #= require jquery
 #= require jquery_ujs
 #= require bootstrap
+#= require chosen-jquery
 #= require_tree .
 
 $(document).ready ->  
   $('.collapse').collapse()
+  $(".chosen-select").chosen()
   lightUpActiveNav()
   
 lightUpActiveNav = () ->
