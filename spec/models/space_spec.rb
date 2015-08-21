@@ -11,12 +11,12 @@ RSpec.describe Space, "(e.g. Kitchen Space):", type: :model do
       expect( @resources.is_a?(Array) ).to eq true
     end
 
-    it "includes only the type(s) of resources we want to be bookable, which are 'Prep Tables'" do
-      expect(@resources.collect{|r| r[:type] }.uniq).to eq ["Prep Tables"]
+    it "includes only the type(s) of resources we want to be bookable, which is 'Prep Table'" do
+      expect(@resources.collect{|r| r[:type] }.uniq).to eq ["Prep Table"]
     end
 
-    it "returns id, name, type, and location for each resource" do
-      expect(@resources.first.keys).to match_array [:id, :name, :type, :location]
+    it "returns id, name, type, description, and location for each resource" do
+      expect(@resources.first.keys).to match_array [:id, :name, :type, :description, :location]
     end
 
   end

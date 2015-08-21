@@ -14,10 +14,14 @@ createTable = (table) ->
   div = $ "<div>"
   div.addClass "resource"
   div.id = table.id
+  div.attr({
+    "data-toggle": "popover"
+    "title": "#{table.name} #{table.type}"
+    "data-content": table.description
+  })
+  div.popover({animation: false, placement: "left", html: true, trigger: "hover"})
   if $.isArray(table.location)
-    console.log table.location
     pos = getPosition(table.location)
-    console.log pos
     div.css({top: pos[0], left: pos[1] })
   $("#map-container").append div
   
