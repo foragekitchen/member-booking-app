@@ -1,17 +1,17 @@
 require 'rails_helper'
 
-RSpec.describe Space, type: :model do
+RSpec.describe Space, "(e.g. Kitchen Space):", type: :model do
   before(:all) do
     @resources = Space.new.resources
   end
 
   describe "Resources for booking" do
 
-    it "returns an array of one or more items" do
+    it "returns an array of one or more bookable resources" do
       expect( @resources.is_a?(Array) ).to eq true
     end
 
-    it "includes only Prep Tables" do
+    it "includes only the type(s) of resources we want to be bookable, which are 'Prep Tables'" do
       expect(@resources.collect{|r| r[:type] }.uniq).to eq ["Prep Tables"]
     end
 
