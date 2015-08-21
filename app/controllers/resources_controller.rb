@@ -1,4 +1,4 @@
-class BookingsController < ApplicationController
+class ResourcesController < ApplicationController
 
   def index
     @resources = Space.new.resources

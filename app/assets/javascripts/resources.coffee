@@ -2,7 +2,7 @@ $(document).ready ->
   getResources()
 
 getResources = () ->
-  $.ajax(url: "/bookings", dataType: "json").done (json) ->
+  $.ajax(url: "/resources", dataType: "json").done (json) ->
     console.log json
     positionTables(json)
 
