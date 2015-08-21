@@ -4,10 +4,6 @@ class Space < NexudusBase
     self.class.get("/spaces/resources/#{id}")
   end
 
-  def get_category(type_name = "Cooking Blocks")
-    # Get the ResourceTypeID of the kind of resource we want, so we can filter by it 
-  end
-
   def resource_location(id)
     # We can only access the "Description", AND the "LinkedResources" data when calling a single Resource
     resource = get_resource(id)
@@ -21,7 +17,7 @@ class Space < NexudusBase
     end
   end
 
-  def resources(type = "Cooking Blocks", visible = true)
+  def resources(type = "Prep Tables", visible = true)
     results = self.class.get("/spaces/resources?Resource_Visible=#{visible}")["Records"]
     resources = []
 
