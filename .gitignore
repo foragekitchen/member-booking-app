@@ -15,7 +15,7 @@
 /log/*
 !/log/.keep
 /tmp
-
+public/documentation-working.html
 
 # Ignore sensitive stuff
 .env

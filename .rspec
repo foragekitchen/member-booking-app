@@ -2,4 +2,4 @@
 --require spec_helper
 --format documentation
 --format html
---out public/documentation.html
+--out public/documentation-working.html
