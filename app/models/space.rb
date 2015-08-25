@@ -19,6 +19,21 @@ class Space < NexudusBase
     return details
   end
 
+  def resource_timeslots(resource_id)
+    results = self.class.get("/spaces/resourcetimeslots?ResourceTimeSlot_Resource=#{resource_id}")["Records"]
+    results.sort_by!{|t| t["DayOfWeek"]}
+    details = []
+    results.each do |t| 
+      details << {
+        :day_of_week => t["DayOfWeek"],
+        :from_time => t["FromTime"],
+        :to_time => t["ToTime"]
+      }
+    end
+    
+    return {:time_slots => details}
+  end
+
   def resources(type = "Prep Table", visible = true)
     results = self.class.get("/spaces/resources?Resource_Visible=#{visible}")["Records"]
     resources = []
@@ -31,6 +46,7 @@ class Space < NexudusBase
         :type => r["ResourceTypeName"]
       }
       item.merge!( resource_details(r["Id"]) )
+      item.merge!( resource_timeslots(r["Id"]) )
       resources << item
     end
     

@@ -15,8 +15,8 @@ RSpec.describe Space, "(e.g. Kitchen Space):", type: :model do
       expect(@resources.collect{|r| r[:type] }.uniq).to eq ["Prep Table"]
     end
 
-    it "returns id, name, type, description, and location for each resource" do
-      expect(@resources.first.keys).to match_array [:id, :name, :type, :description, :location]
+    it "returns id, name, type, description, timeslots, and location for each resource" do
+      expect(@resources.first.keys).to match_array [:id, :name, :type, :description, :location, :time_slots]
     end
 
   end
