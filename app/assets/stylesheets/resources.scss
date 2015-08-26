@@ -29,6 +29,11 @@ $map-width: 1276px;
     index: 100;
     width: 50px;
     position: absolute;
+
+    &.available {
+      background-color: #d6e9c6;
+      border-color: #3c763d;
+    }
   }
   
 }

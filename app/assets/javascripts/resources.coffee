@@ -3,18 +3,21 @@ $(document).ready ->
 
 getResources = () ->
   $.ajax(url: "/resources", dataType: "json").done (json) ->
-    console.log json
     positionTables(json)
 
 positionTables = (resources) ->
-  console.log "Ok got resources"
   createTable resource for resource in resources
+  markAvailable()
   
+markAvailable = () ->
+  $.ajax(url: "/resources?available=true", dataType: "json").done (json) ->
+    $("#map-container").find("##{resourceID}").addClass "available" for resourceID in json
+
 createTable = (table) ->
   div = $ "<div>"
   div.addClass "resource"
-  div.id = table.id
   div.attr({
+    "id": table.id
     "data-toggle": "popover"
     "title": "#{table.name} #{table.type}"
     "data-content": table.description

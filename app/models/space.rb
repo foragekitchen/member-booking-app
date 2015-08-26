@@ -19,21 +19,6 @@ class Space < NexudusBase
     return details
   end
 
-  def resource_timeslots(resource_id)
-    results = self.class.get("/spaces/resourcetimeslots?ResourceTimeSlot_Resource=#{resource_id}")["Records"]
-    results.sort_by!{|t| t["DayOfWeek"]}
-    details = []
-    results.each do |t| 
-      details << {
-        :day_of_week => t["DayOfWeek"],
-        :from_time => t["FromTime"],
-        :to_time => t["ToTime"]
-      }
-    end
-    
-    return {:time_slots => details}
-  end
-
   def resources(type = "Prep Table", visible = true)
     results = self.class.get("/spaces/resources?Resource_Visible=#{visible}")["Records"]
     resources = []
@@ -46,11 +31,35 @@ class Space < NexudusBase
         :type => r["ResourceTypeName"]
       }
       item.merge!( resource_details(r["Id"]) )
-      item.merge!( resource_timeslots(r["Id"]) )
       resources << item
     end
     
     return resources
+  end
+
+  def available_resources_by_day(day_of_week = Date.today.wday)
+    # We have to figure out time-availability ourselves, since the 'ResourceTimeSlot_FromTime' only returns exact matches
+    self.class.get("/spaces/resourcetimeslots?ResourceTimeSlot_DayOfWeek=#{day_of_week}")["Records"]
+  end
+
+  def available_resources_by_time(set, from_time = Time.now + 2.hours, to_time = Time.now + 6.hours)
+    #from_time = from_time.strftime("%Y-%m-%dT%H:%M:%SZ") unless from_time.is_a?(String)
+    #to_time = to_time.strftime("%Y-%m-%dT%H:%M:%SZ") unless to_time.is_a?(String)
+    from_time = Time.parse(from_time) if from_time.is_a?(String)
+    to_time = Time.parse(to_time) if to_time.is_a?(String)
+
+    available = []
+    set.each do |time_slot|
+      slot_start = Time.parse(time_slot["FromTime"].split("T").last)
+      slot_end = Time.parse(time_slot["ToTime"].split("T").last)
+      available << time_slot["ResourceId"] if from_time >= slot_start and to_time <= slot_end
+    end
+    
+  end
+
+  def available_resources_by_day_and_time(day_of_week = Date.today.wday,from_time = Time.now + 2.hours, to_time = Time.now + 6.hours)
+    results = available_resources_by_time(available_resources_by_day(day_of_week),from_time,to_time)
+    return results.collect{|t| t["ResourceId"]}
   end
 
 end
