@@ -63,6 +63,11 @@ group :development, :test do
   # Use Rspec for testing
   gem 'rspec-rails', '~> 3.0'
 
+  # Use WebMock and Sinatra for stubbing out API calls in tests
+  gem 'webmock'
+  gem 'sinatra'
+  
+
   # Use Capybara for UI testing, with Selenium for support when needing to run javascript
   gem 'capybara'
   gem 'selenium-webdriver'

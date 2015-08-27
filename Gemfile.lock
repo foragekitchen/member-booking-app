@@ -46,6 +46,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    addressable (2.3.8)
     arel (6.0.3)
     autoprefixer-rails (5.2.1.2)
       execjs
@@ -88,6 +89,8 @@ GEM
       sass (>= 3.3.0, < 3.5)
     compass-import-once (1.0.5)
       sass (>= 3.2, < 3.5)
+    crack (0.4.2)
+      safe_yaml (~> 1.0.0)
     diff-lcs (1.2.5)
     dotenv (2.0.2)
     dotenv-rails (2.0.2)
@@ -148,6 +151,8 @@ GEM
       method_source (~> 0.8.1)
       slop (~> 3.4)
     rack (1.6.4)
+    rack-protection (1.5.3)
+      rack
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.3)
@@ -201,6 +206,7 @@ GEM
     rspec-support (3.3.0)
     ruby-units (1.4.5)
     rubyzip (1.1.7)
+    safe_yaml (1.0.4)
     sass (3.4.16)
     sass-rails (5.0.3)
       railties (>= 4.0.0, < 5.0)
@@ -214,6 +220,10 @@ GEM
       rubyzip (~> 1.0)
       websocket (~> 1.0)
     shellany (0.0.1)
+    sinatra (1.4.6)
+      rack (~> 1.4)
+      rack-protection (~> 1.4)
+      tilt (>= 1.3, < 3)
     slop (3.6.0)
     sprockets (2.12.4)
       hike (~> 1.2)
@@ -229,6 +239,9 @@ GEM
     tilt (1.4.1)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    webmock (1.21.0)
+      addressable (>= 2.3.6)
+      crack (>= 0.3.2)
     websocket (1.2.2)
     xpath (2.0.0)
       nokogiri (~> 1.3)
@@ -251,6 +264,8 @@ DEPENDENCIES
   ruby-units
   sass-rails (~> 5.0)
   selenium-webdriver
+  sinatra
+  webmock
 
 BUNDLED WITH
    1.10.6
