@@ -20,8 +20,6 @@
 require 'capybara/rspec'
 require 'webmock/rspec'
 
-WebMock.allow_net_connect!
-
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
@@ -45,6 +43,16 @@ RSpec.configure do |config|
     # `true` in RSpec 4.
     mocks.verify_partial_doubles = true
   end
+
+  # WebMock configs! DO allow live API connections by default in the test suite
+  # Then re-disable on the after, so that Selenium can run and shutdown properly (by allowing localhost:true)
+  config.before(:all) do
+    WebMock.allow_net_connect!
+  end  
+  config.after(:all) do
+    WebMock.disable_net_connect!(:allow_localhost => true)
+  end
+
 
 # The settings below are suggested to provide a good initial experience
 # with RSpec, but feel free to customize to your heart's content.
