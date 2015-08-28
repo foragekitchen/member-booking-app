@@ -43,18 +43,20 @@ class Space < NexudusBase
   end
 
   def available_resources_by_time(set, from_time = Time.now + 2.hours, to_time = Time.now + 6.hours)
-    #from_time = from_time.strftime("%Y-%m-%dT%H:%M:%SZ") unless from_time.is_a?(String)
-    #to_time = to_time.strftime("%Y-%m-%dT%H:%M:%SZ") unless to_time.is_a?(String)
     from_time = Time.parse(from_time) if from_time.is_a?(String)
     to_time = Time.parse(to_time) if to_time.is_a?(String)
+    requested_date = from_time.utc.to_date
 
     available = []
     set.each do |time_slot|
-      # Get the time span, accounting for next day
-      time_diff = Time.parse(time_slot["ToTime"]) - Time.parse(time_slot["FromTime"])
-      # Now detach the time from the date -- THIS DEFAULTS TO TODAY
-      slot_start = Time.parse(time_slot["FromTime"].split("T").last)
-      slot_end = slot_start + time_diff
+      # Let's reset the weird database date (ex. "1976-01-01T00:59:00Z") to current year/month/day
+      slot_date = Date.parse(time_slot["FromTime"])
+      date_diff = requested_date - slot_date 
+      seconds_diff = date_diff * 24 * 60 * 60
+      
+      slot_start = Time.parse(time_slot["FromTime"]) + seconds_diff
+      slot_end = Time.parse(time_slot["ToTime"]) + seconds_diff
+
       available << time_slot if from_time.utc >= slot_start && to_time.utc <= slot_end
     end
     
