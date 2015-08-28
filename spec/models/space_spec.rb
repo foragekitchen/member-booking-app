@@ -19,5 +19,30 @@ RSpec.describe Space, "(e.g. Kitchen Space):", type: :model do
       expect(@resources.first.keys).to match_array [:id, :name, :type, :description, :location]
     end
 
+    describe "that are available" do
+
+      before(:each) do
+        WebMock.disable_net_connect!
+        stub_request(:get,/spaces\/resourcetimeslots/).to_return(
+          :body => File.open(File.expand_path(".") + '/spec/fixtures/resourcetimeslots.json'), 
+          :headers => { 'Content-Type' => 'application/json' }
+        )
+      end
+
+      it "only includes resources that are offered during the requested timeframe" do
+        available = Space.new.available_resources_by_day_and_time(2,"13:00:00","17:00:00")
+        expect(available).to eq [101]
+      end
+
+      it "returns empty set if nothing is offered during the requested timeframe" do
+        available = Space.new.available_resources_by_day_and_time(2,"2:00:00","4:00:00")
+        expect(available).to eq []
+      end
+
+      pending "only includes resources that are not already booked during the requested timeframe"
+      pending "returns empty set if all resources are already booked during the requested timeframe"
+
+    end
+
   end
 end

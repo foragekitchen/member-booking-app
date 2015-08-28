@@ -50,11 +50,16 @@ class Space < NexudusBase
 
     available = []
     set.each do |time_slot|
+      # Get the time span, accounting for next day
+      time_diff = Time.parse(time_slot["ToTime"]) - Time.parse(time_slot["FromTime"])
+      # Now detach the time from the date -- THIS DEFAULTS TO TODAY
       slot_start = Time.parse(time_slot["FromTime"].split("T").last)
-      slot_end = Time.parse(time_slot["ToTime"].split("T").last)
-      available << time_slot["ResourceId"] if from_time >= slot_start and to_time <= slot_end
+      slot_end = slot_start + time_diff
+      available << time_slot if from_time.utc >= slot_start && to_time.utc <= slot_end
     end
     
+    return available
+
   end
 
   def available_resources_by_day_and_time(day_of_week = Date.today.wday,from_time = Time.now + 2.hours, to_time = Time.now + 6.hours)
