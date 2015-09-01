@@ -64,7 +64,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.0'
 
   # Use WebMock and Sinatra for stubbing out API calls in tests
-  gem 'webmock'
+  gem 'webmock', require: false
   gem 'sinatra'
   
 

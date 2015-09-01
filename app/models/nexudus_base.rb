@@ -12,4 +12,12 @@ class NexudusBase
     self.class.get(*args, &block)
   end
 
+  def delete(*args, &block)
+    self.class.delete(*args, &block)
+  end
+
+  def post(*args, &block)
+    self.class.post(*args, &block)
+  end
+
 end
