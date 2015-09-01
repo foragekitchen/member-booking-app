@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Space, "(e.g. Kitchen Space):", type: :model do
-  before(:all) do
+  before(:each) do
     @resources = Space.new.resources
   end
 
@@ -20,14 +20,6 @@ RSpec.describe Space, "(e.g. Kitchen Space):", type: :model do
     end
 
     describe "that are available" do
-
-      before(:each) do
-        WebMock.disable_net_connect!
-        stub_request(:get,/spaces\/resourcetimeslots/).to_return(
-          :body => File.open(File.expand_path(".") + '/spec/fixtures/resourcetimeslots.json'), 
-          :headers => { 'Content-Type' => 'application/json' }
-        )
-      end
 
       it "only includes resources that are offered during the requested timeframe" do
         available = Space.new.available_resources_by_day_and_time(2,"13:00:00","17:00:00")

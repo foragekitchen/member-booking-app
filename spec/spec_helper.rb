@@ -44,13 +44,14 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
-  # WebMock configs! DO allow live API connections by default in the test suite
-  # Then re-disable on the after, so that Selenium can run and shutdown properly (by allowing localhost:true)
-  config.before(:all) do
+  # WebMock configs! DO allow all integration tests to hit the live API server, 
+  # but then route all other tests to our fake API app 
+  config.before(:each, type: :feature) do
     WebMock.allow_net_connect!
-  end  
-  config.after(:all) do
+  end
+  config.before(:each, type: :model) do
     WebMock.disable_net_connect!(:allow_localhost => true)
+    stub_request(:any, /spaces.nexudus.com/).to_rack(FakeNexudus)
   end
 
 
