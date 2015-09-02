@@ -3,6 +3,8 @@ class FakeNexudus
   def self.call(env)
 
     case env["PATH_INFO"]
+    when /spaces\/bookings/
+      [200, { 'Content-Type' => 'application/json' }, [File.read("spec/fixtures/bookings.json")]]
     when /spaces\/resources\/\d/
       [200, { 'Content-Type' => 'application/json' }, [File.read("spec/fixtures/resource.json")]]
     when /spaces\/resources/

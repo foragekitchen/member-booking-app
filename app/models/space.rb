@@ -69,4 +69,30 @@ class Space < NexudusBase
     return results.collect{|t| t["ResourceId"]}
   end
 
+  def bookings(resources = [])
+    result = []
+    resources.each do |id|
+      result << self.class.get("/spaces/bookings?Booking_Resource=#{id}")["Records"]
+    end
+    return result.flatten.reject &:blank?
+  end
+
+  def booked_resources_by_datetime(resources = [], from_time = Time.now + 2.hours, to_time = Time.now + 6.hours)
+    from_time = DateTime.parse(from_time).utc if from_time.is_a?(String)
+    to_time = DateTime.parse(to_time).utc if to_time.is_a?(String)
+
+    results = bookings(resources)
+    set = resources
+    
+    results.each do |booking|
+      next unless set.include? booking["ResourceId"]
+      set.delete(booking["ResourceId"]) if booking["FromTime"] >= from_time && booking["ToTime"] <= to_time # falls exactly inside the slot
+      set.delete(booking["ResourceId"]) if booking["FromTime"] >= from_time && booking["FromTime"] <= to_time # overlaps after requested start
+      set.delete(booking["ResourceId"]) if booking["FromTime"] <= from_time && booking["ToTime"] >= from_time # overlaps before requested start
+    end
+
+    return set 
+  end
+  
+
 end
