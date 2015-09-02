@@ -37,12 +37,12 @@ class Space < NexudusBase
     return resources
   end
 
-  def available_resources_by_day(day_of_week = Date.today.wday)
+  def available_resources_by_day(day_of_week)
     # We have to figure out time-availability ourselves, since the 'ResourceTimeSlot_FromTime' only returns exact matches
     self.class.get("/spaces/resourcetimeslots?ResourceTimeSlot_DayOfWeek=#{day_of_week}")["Records"]
   end
 
-  def available_resources_by_time(set, from_time = Time.now + 2.hours, to_time = Time.now + 6.hours)
+  def available_resources_by_time(set, from_time, to_time)
     from_time = Time.parse(from_time) if from_time.is_a?(String)
     to_time = Time.parse(to_time) if to_time.is_a?(String)
     requested_date = from_time.utc.to_date
