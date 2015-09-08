@@ -12,13 +12,15 @@ class ResourcesController < ApplicationController
     space = Space.new
 
     if params["bookingRequestFrom"] && params["bookingRequestTo"]
-      day = Date.parse(params["bookingRequestFrom"]).wday
-      offered_resource_ids = space.available_resources_by_day_and_time(day,params["bookingRequestFrom"],params["bookingRequestTo"])
-      @resources = space.booked_resources_by_datetime(offered_resource_ids,params["bookingRequestFrom"],params["bookingRequestTo"])
+      from = Time.strptime(params["bookingRequestFrom"],"%m/%d/%YT%l:%M %p")
+      to = Time.strptime(params["bookingRequestTo"],"%m/%d/%YT%l:%M %p")
+      day = from.wday
+      offered_resource_ids = space.available_resources_by_day_and_time(day,from,to)
+      @resources = space.booked_resources_by_datetime(offered_resource_ids,from,to)
 
-      params["bookingRequestDate"] ||= Date.parse(params["bookingRequestFrom"]).strftime("%m/%d/%Y")
-      params["bookingRequestFromTime"] ||= Time.parse(params["bookingRequestFrom"]).strftime("%l:%M %p")
-      params["bookingRequestToTime"] ||= Time.parse(params["bookingRequestTo"]).strftime("%l:%M %p")
+      params["bookingRequestDate"] ||= from.strftime("%m/%d/%Y")
+      params["bookingRequestFromTime"] ||= from.strftime("%l:%M %p")
+      params["bookingRequestToTime"] ||= to.strftime("%l:%M %p")
     else
       @resources = space.resources
 
