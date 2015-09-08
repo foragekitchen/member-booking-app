@@ -18,14 +18,14 @@ namespace :data do
           newNightSlot = {
             "ResourceId" => r[:id],
             "DayOfWeek" => d,
-            "FromTime" => DateTime.parse("1976-01-01T0:00:00PST").utc,
-            "ToTime": DateTime.parse("1976-01-01T2:00:00PST").utc
+            "FromTime" => DateTime.parse("1976-01-01T0:00:00").utc,
+            "ToTime": DateTime.parse("1976-01-01T2:00:00").utc
           }
           newDaySlot = {
             "ResourceId" => r[:id],
             "DayOfWeek" => d,
-            "FromTime" => DateTime.parse("1976-01-01T8:00:00PST").utc,
-            "ToTime": DateTime.parse("1976-01-01T23:59:59PST").utc
+            "FromTime" => DateTime.parse("1976-01-01T8:00:00").utc,
+            "ToTime": DateTime.parse("1976-01-01T23:59:59").utc
           }
           n.post("/spaces/resourcetimeslots", 
             :body => newNightSlot.to_json,
