@@ -12,6 +12,7 @@
 #
 #= require jquery
 #= require jquery_ujs
+#= require jquery-ui
 #= require bootstrap
 #= require chosen-jquery
 #= require_tree .
@@ -19,6 +20,7 @@
 $(document).ready ->  
   $('.collapse').collapse()
   $(".chosen-select").chosen()
+  $(".datepicker").datepicker()
   lightUpActiveNav()
   
 lightUpActiveNav = () ->

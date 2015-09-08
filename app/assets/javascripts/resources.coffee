@@ -1,5 +1,6 @@
 $(document).ready ->  
   getResources()
+  activateFilter()
 
 getResources = () ->
   $.ajax(url: "/resources", dataType: "json").done (json) ->
@@ -9,8 +10,16 @@ positionTables = (resources) ->
   createTable resource for resource in resources
   markAvailable()
   
+activateFilter = () ->
+  $("#bookingFilters").submit (event) ->
+    markAvailable()
+    event.preventDefault()
+
 markAvailable = () ->
-  $.ajax(url: "/resources?available=true", dataType: "json").done (json) ->
+  requestFrom = $("#bookingRequestDate").val() + "T" + $("#bookingRequestFromTime").val()
+  requestTo = $("#bookingRequestDate").val() + "T" + $("#bookingRequestToTime").val()
+  $.ajax(url: "/resources?bookingRequestFrom=#{requestFrom}&bookingRequestTo=#{requestTo}", dataType: "json").done (json) ->
+    $("#map-container .resource").removeClass "available"
     $("#map-container").find("##{resourceID}").addClass "available" for resourceID in json
 
 createTable = (table) ->

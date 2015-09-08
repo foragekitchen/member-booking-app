@@ -3,21 +3,13 @@
 
 
 <div id="filters">
-  <form class="form-inline">
+  <form id="bookingFilters" class="form-inline">
     <div class="form-group">
-      <label for="date">When do you want to come in?</label>
-      <select data-placeholder="Today" class="chosen-select">
-        <option>Today</option>
-        <option>Tomorrow</option>
-      </select>
-      <select data-placeholder="10:00am" class="chosen-select">
-        <% (8..12).each do |n| %>
-        <option><%= n %>:00 am</option>
-        <% end %>
-        <% (1..11).each do |n| %>
-        <option><%= n %>:00 pm</option>
-        <% end %>
-      </select>
+      <label for="bookingRequestDate">When do you want to come in?</label>
+      <input type="text" id="bookingRequestDate" class="form-control datepicker" value="<%= params["bookingRequestDate"] %>" />
+      <%= select_tag "bookingRequestFromTime", options_for_select(@timeslotArray, params["bookingRequestFromTime"]), {:class => "zchosen-select form-control"} %> - 
+      <%= select_tag "bookingRequestToTime", options_for_select(@timeslotArray, params["bookingRequestToTime"]), {:class => "zchosen-select form-control"} %>
+      <input type="submit" value="Refresh" class="btn btn-default" />
     </div>
   </form>
 </div>
