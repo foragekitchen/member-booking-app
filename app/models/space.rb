@@ -45,17 +45,25 @@ class Space < NexudusBase
   def available_resources_by_time(set, from_time, to_time)
     from_time = Time.parse(from_time) if from_time.is_a?(String) #just in case; this should already be in correct Time format
     to_time = Time.parse(to_time) if to_time.is_a?(String) #just in case; this should already be in correct Time format
-    requested_date = from_time.utc.to_date
+    requested_date = from_time.to_date
+
+    Rails.logger.info "\n\n\n\n"
+    Rails.logger.info "CHECKING REQUESTED DATE: #{from_time} - #{to_time}"
+    Rails.logger.info "(ON #{requested_date})"
 
     available = []
+
+    Rails.logger.info "CHECKING EACH TIMESLOT:"
     set.each do |time_slot|
       # Let's reset the weird database date (ex. "1976-01-01T00:59:00Z") to current year/month/day,
       # accounting for daylight savings time (offset of 7 vs 8 hrs, depending on time of year)
       slot_date = Date.parse(time_slot["FromTime"])
       seconds_diff = (requested_date.to_time - slot_date.to_time)
-      
+
       slot_start = Time.parse(time_slot["FromTime"]) + seconds_diff
       slot_end = Time.parse(time_slot["ToTime"]) + seconds_diff
+      
+      Rails.logger.info "- #{slot_start} - #{slot_end} -- #{from_time.utc >= slot_start} / #{to_time.utc <= slot_end}"
 
       available << time_slot if from_time.utc >= slot_start && to_time.utc <= slot_end
     end
