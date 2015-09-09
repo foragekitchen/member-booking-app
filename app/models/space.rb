@@ -43,15 +43,16 @@ class Space < NexudusBase
   end
 
   def available_resources_by_time(set, from_time, to_time)
-    from_time = Time.parse(from_time) if from_time.is_a?(String)
-    to_time = Time.parse(to_time) if to_time.is_a?(String)
-    requested_date = from_time.beginning_of_day.utc
+    from_time = Time.parse(from_time) if from_time.is_a?(String) #just in case; this should already be in correct Time format
+    to_time = Time.parse(to_time) if to_time.is_a?(String) #just in case; this should already be in correct Time format
+    requested_date = from_time.utc.to_date
 
     available = []
     set.each do |time_slot|
-      # Let's reset the weird database date (ex. "1976-01-01T00:59:00Z") to current year/month/day
-      slot_date = Time.parse(time_slot["FromTime"]).beginning_of_day
-      seconds_diff = requested_date - slot_date 
+      # Let's reset the weird database date (ex. "1976-01-01T00:59:00Z") to current year/month/day,
+      # accounting for daylight savings time (offset of 7 vs 8 hrs, depending on time of year)
+      slot_date = Date.parse(time_slot["FromTime"])
+      seconds_diff = (requested_date.to_time - slot_date.to_time)
       
       slot_start = Time.parse(time_slot["FromTime"]) + seconds_diff
       slot_end = Time.parse(time_slot["ToTime"]) + seconds_diff
@@ -77,8 +78,10 @@ class Space < NexudusBase
   end
 
   def booked_resources_by_datetime(resources = [], from_time = Time.now + 2.hours, to_time = Time.now + 6.hours)
-    from_time = DateTime.parse(from_time).utc if from_time.is_a?(String)
-    to_time = DateTime.parse(to_time).utc if to_time.is_a?(String)
+    from_time = Time.parse(from_time) if from_time.is_a?(String) #just in case; this should already be in correct Time format
+    to_time = Time.parse(to_time) if to_time.is_a?(String) #just in case; this should already be in correct Time format
+    from_time.utc
+    to_time.utc
 
     results = bookings(resources)
     set = resources

@@ -22,7 +22,7 @@ RSpec.describe Space, "(e.g. Kitchen Space):", type: :model do
     describe "that are available" do
 
       it "only includes resources that are offered during the requested timeframe" do
-        available = Space.new.available_resources_by_day_and_time(2,"13:00:00","17:00:00")
+        available = Space.new.available_resources_by_day_and_time(2,"12:00:00","16:00:00")
         expect(available).to eq [101]
       end
 
