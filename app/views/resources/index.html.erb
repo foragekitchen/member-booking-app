@@ -7,8 +7,8 @@
     <div class="form-group">
       <label for="bookingRequestDate">When do you want to come in?</label>
       <input type="text" id="bookingRequestDate" class="form-control datepicker" value="<%= params["bookingRequestDate"] %>" />
-      <%= select_tag "bookingRequestFromTime", options_for_select(@timeslotArray, params["bookingRequestFromTime"]), {:class => "zchosen-select form-control"} %> - 
-      <%= select_tag "bookingRequestToTime", options_for_select(@timeslotArray, params["bookingRequestToTime"]), {:class => "zchosen-select form-control"} %>
+      <%= select_tag "bookingRequestFromTime", options_for_select(@timeslotArray, params["bookingRequestFromTime"]), {:class => "chosen-select form-control"} %> - 
+      <%= select_tag "bookingRequestToTime", options_for_select(@timeslotArray, params["bookingRequestToTime"]), {:class => "chosen-select form-control"} %>
       <input type="submit" value="Refresh" class="btn btn-default" />
     </div>
   </form>
