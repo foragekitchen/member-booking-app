@@ -16,9 +16,10 @@ RSpec.feature "My Bookings:", type: :feature do
 
   context "when editing an existing booking" do
 
-    pending "should see a warning if editing within 15 minutes of the start-time"
+    pending "should see a warning if editing date/time within 24 hours of the original start-time"
+    pending "should see a warning if reducing hours within 24 hours of the original start-time"
     pending "should see a warning if changing the booking-time conflicts with another booking"
-    pending "should see a warning if the requested time exceeds the available hours in their plan, with option to purchase more"
+    pending "should see a warning if the requested time exceeds the available hours in their plan, with one-click option to purchase more"
 
   end
   
