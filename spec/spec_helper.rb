@@ -44,13 +44,11 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
-  # WebMock configs! DO allow all integration tests to hit the live API server, 
-  # but then route all other tests to our fake API app 
-  config.before(:each, type: :feature) do
-    WebMock.allow_net_connect!
-  end
-  config.before(:each, type: :model) do
-    WebMock.disable_net_connect!(:allow_localhost => true)
+  # WebMock configs! Route all API requests to our fake API app, 
+  # including feature integration tests, except where live connections are explicitly allowed 
+  config.before(:each) do
+    # Allow access to view /resources, for feature testing
+    WebMock.disable_net_connect!(:allow_localhost => true, :allow => /\/resources/)
     stub_request(:any, /spaces.nexudus.com/).to_rack(FakeNexudus)
   end
 
