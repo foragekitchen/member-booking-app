@@ -20,6 +20,8 @@ RSpec.feature "Booking Kitchen Time:", type: :feature do
         expect(page).to have_css("#map-container div.resource", :count => 3, :wait => 10)
       end
     
+      pending "should see filters for date and time, with 'closed' times disabled and friendly hint (ex: 'sorry! our space is closed 3am-6am for cleaning')"
+
       scenario "should be able to filter by date and time they want to come in; defaulted to today, 2 hours from now, minimum of 4 hours" do
         visit "/resources"
         expect(page).to have_field("bookingRequestDate", :with => Date.today.strftime("%m/%d/%Y"))
