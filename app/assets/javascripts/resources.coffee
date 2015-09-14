@@ -20,13 +20,13 @@ markAvailable = () ->
   requestTo = $("#bookingRequestDate").val() + "T" + $("#bookingRequestToTime").val()
   $.ajax(url: "/resources?bookingRequestFrom=#{requestFrom}&bookingRequestTo=#{requestTo}", dataType: "json").done (json) ->
     $("#map-container .resource").removeClass "available"
-    $("#map-container").find("##{resourceID}").addClass "available" for resourceID in json
+    $("#map-container").find("#resource-#{resourceID}").addClass "available" for resourceID in json
 
 createTable = (table) ->
   div = $ "<div>"
   div.addClass "resource"
   div.attr({
-    "id": table.id
+    "id": "resource-" + table.id
     "data-toggle": "popover"
     "title": "#{table.name} #{table.type}"
     "data-content": table.description
