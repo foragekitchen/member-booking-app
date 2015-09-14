@@ -71,7 +71,7 @@
             "ResourceId": 102,
             "ToStringText": "1/1/1976 8:00:00 AM",
             "ToTime": "1976-01-01T10:00:00Z",
-            "UniqueId": "ID:102 ONLY AVAILABLE 8AM-12AM ON TUESDAY, NOT AVAILABLE DURING DAY (JUST FOR TESTING PURPOSES)",
+            "UniqueId": "ID:102 ONLY AVAILABLE 12AM-2AM ON TUESDAY, NOT AVAILABLE DURING DAY (JUST FOR TESTING PURPOSES)",
             "UpdatedBy": "patti@foragesf.com",
             "UpdatedOn": "2015-09-08T16:47:17Z"
         }
