@@ -64,10 +64,11 @@ group :development, :test do
   # Use Rspec for testing
   gem 'rspec-rails', '~> 3.0'
 
-  # Use WebMock and Sinatra for stubbing out API calls in tests
+  # Use WebMock for stubbing out API calls in tests
   gem 'webmock', require: false
-  gem 'sinatra'
-  
+
+  # Use Timecop for stubbing out (freezing) dates for proper date match in tests
+  gem 'timecop'
 
   # Use Capybara for UI testing, with Selenium for support when needing to run javascript
   gem 'capybara'
