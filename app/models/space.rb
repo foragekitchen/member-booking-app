@@ -95,5 +95,9 @@ class Space < NexudusBase
     return set 
   end
   
+  def create_booking(json_hash)
+    self.class.post("/spaces/bookings", :body => json_hash, :headers => { 'Content-Type' => 'application/json' })
+  end
+
 
 end

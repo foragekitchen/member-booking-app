@@ -1,3 +1,10 @@
+<% if flash[:alert] %>
+<div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Oh no!</strong> <%= flash[:alert] %>
+</div>
+<% end %>
+
 <h1>Book a table in the kitchen:</h1>
 <p>Prep tables are the basic unit of the kitchen. Everything happens around a prep table! Book however many you need for your team. Minimum 4 hours. We suggest limiting 2-3 crew members at each table.</p> 
 
@@ -10,12 +17,12 @@
       </div>
       <div class="modal-body">
 
-        <form id="bookingForm" action="/bookings" method="post">
-          <input type="hidden" id="bookingResourceId" />
-          <input type="hidden" id="bookingDate" />
-          <input type="hidden" id="bookingFrom" />
-          <input type="hidden" id="bookingTo" />
-        </form>
+        <%= form_tag("/bookings", method: "post", id: "bookingForm") do %>
+          <%= hidden_field_tag("bookingResourceId") %>
+          <%= hidden_field_tag("bookingDate") %>
+          <%= hidden_field_tag("bookingFrom") %>
+          <%= hidden_field_tag("bookingTo") %>
+        <% end %>
 
         <h5 class="text-left"><a href="#" class="btn-change pull-right">Change</a>For: <span></span></h3> 
         
