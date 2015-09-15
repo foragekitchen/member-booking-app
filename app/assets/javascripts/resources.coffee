@@ -1,6 +1,7 @@
 $(document).ready ->  
   getResources()
   activateFilter()
+  activateBookingModal()
 
 getResources = () ->
   $.ajax(url: "/resources", dataType: "json").done (json) ->
@@ -10,6 +11,13 @@ positionTables = (resources) ->
   createTable resource for resource in resources
   markAvailable()
   
+activateBookingModal = () ->
+  $("#bookingModal a.btn-change").click (event) ->
+    $("#bookingModal").modal('hide')
+    event.preventDefault()
+  $("#bookingModal .btn-primary").first().click (event) ->
+    $("#bookingForm").submit()
+
 activateFilter = () ->
   $("#bookingFilters").submit (event) ->
     markAvailable()
@@ -23,7 +31,7 @@ markAvailable = () ->
     $("#map-container").find("#resource-#{resourceID}").addClass "available" for resourceID in json
 
 createTable = (table) ->
-  div = $ "<div>"
+  div = $ "<div>" # draw table
   div.addClass "resource"
   div.attr({
     "id": "resource-" + table.id
@@ -32,7 +40,14 @@ createTable = (table) ->
     "data-content": table.description
   })
   div.popover({animation: false, placement: "left", html: true, trigger: "hover"})
-  if $.isArray(table.location)
+  button = $ "<div>" # put button inside to open the booking modal
+  button.addClass "button"
+  button.click (event) ->
+    updateBookingForm($(this).parent())
+    $(".popover").popover('hide')
+    $('#bookingModal').modal()
+  div.append button
+  if $.isArray(table.location) # figure out the position
     pos = getPosition(table.location)
     div.css({top: pos[0], left: pos[1] })
   $("#map-container").append div
@@ -42,5 +57,22 @@ getPosition = (latlong) ->
   offsetTop = 55 #Offset for extra border on the map around the actual space
   offsetLeft = 45
   return [latlong[0]*scale+offsetTop,latlong[1]*scale+offsetLeft]
+  
+updateBookingForm = (table) ->
+  date = $("#bookingRequestDate").val()
+  fromTime = $("#bookingRequestFromTime").val()
+  toTime = $("#bookingRequestToTime").val()
+  modal = $('#bookingModal')
+  modal.find("h4 span").text( table.attr('data-original-title') )
+  html = $("#bookingRequestDate").val() + " from " + $("#bookingRequestFromTime").val() + " - " + $("#bookingRequestToTime").val()
+  modal.find(".modal-body h5 span").html(html)
+  hours = ( new Date("1970-1-1 " + toTime) - new Date("1970-1-1 " + fromTime) ) / 1000 / 60 / 60
+  modal.find(".hoursBooking").text("#{hours} hours")
+  modal.find("#bookingResourceId").val( table.attr("id").split("-")[1] )
+  modal.find("#bookingDate").val(date)
+  modal.find("#bookingFrom").val(fromTime)
+  modal.find("#bookingTo").val(toTime)
+  
+  
   
   
