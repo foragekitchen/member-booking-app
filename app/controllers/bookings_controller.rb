@@ -1,5 +1,9 @@
 class BookingsController < ApplicationController
 
+  def index 
+    @bookings = Space.new.bookings_by_user("")
+  end
+
   def create 
     newBooking = {
       "ResourceId": params["bookingResourceId"],
@@ -15,6 +19,18 @@ class BookingsController < ApplicationController
       flash[:alert] = @response["Message"] || "There was an error saving your booking. Please try again."
       redirect_to resources_path
     end
+  end
+  
+  def destroy
+    @bookings = Space.new.bookings_by_user("")
+    flash[:info] = "Ability to delete is coming soon!"
+    render :index
+  end
+
+  def edit
+    @bookings = Space.new.bookings_by_user("")
+    flash[:info] = "Ability to edit is coming soon!"
+    render :index
   end
 
 end

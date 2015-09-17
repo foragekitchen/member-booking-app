@@ -99,5 +99,8 @@ class Space < NexudusBase
     self.class.post("/spaces/bookings", :body => json_hash, :headers => { 'Content-Type' => 'application/json' })
   end
 
+  def bookings_by_user(coworker_id)
+    self.class.get("/spaces/bookings?Booking_Coworker=#{coworker_id}")["Records"]
+  end
 
 end
