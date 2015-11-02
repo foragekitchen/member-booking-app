@@ -24,11 +24,12 @@ activateFilter = () ->
     event.preventDefault()
 
 markAvailable = () ->
-  requestFrom = $("#bookingRequestDate").val() + "T" + $("#bookingRequestFromTime").val()
-  requestTo = $("#bookingRequestDate").val() + "T" + $("#bookingRequestToTime").val()
-  $.ajax(url: "/resources?bookingRequestFrom=#{requestFrom}&bookingRequestTo=#{requestTo}", dataType: "json").done (json) ->
-    $("#map-container .resource").removeClass "available"
-    $("#map-container").find("#resource-#{resourceID}").addClass "available" for resourceID in json
+  if $("#bookingRequestDate").val()
+    requestFrom = $("#bookingRequestDate").val() + "T" + $("#bookingRequestFromTime").val()
+    requestTo = $("#bookingRequestDate").val() + "T" + $("#bookingRequestToTime").val()
+    $.ajax(url: "/resources?bookingRequestFrom=#{requestFrom}&bookingRequestTo=#{requestTo}", dataType: "json").done (json) ->
+      $("#map-container .resource").removeClass "available"
+      $("#map-container").find("#resource-#{resourceID}").addClass "available" for resourceID in json
 
 createTable = (table) ->
   div = $ "<div>" # draw table
