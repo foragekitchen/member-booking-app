@@ -46,9 +46,10 @@ RSpec.configure do |config|
 
   # WebMock configs! Route all API requests to our fake API app, 
   # including feature integration tests, except where live connections are explicitly allowed 
+  # To enable a live connection, add a before(:each) in your specific feature test, 
+  # followed by a WebMock.reset! and WebMock.allow_net_connect!
   config.before(:each) do
-    # Allow access to view /resources, for feature testing
-    WebMock.disable_net_connect!(:allow_localhost => true, :allow => /\/resources/)
+    WebMock.disable_net_connect!(:allow_localhost => true)
     stub_request(:any, /spaces.nexudus.com/).to_rack(FakeNexudus)
   end
 
