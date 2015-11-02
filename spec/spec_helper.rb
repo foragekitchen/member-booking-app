@@ -104,6 +104,10 @@ RSpec.configure do |config|
 =end
 end
 
+Capybara.configure do |config|
+  config.wait_on_first_by_default = true
+end
+
 Capybara.register_driver :selenium do |app|
   Capybara::Selenium::Driver.new(app, :browser => :chrome)
 end
