@@ -68,21 +68,13 @@ class Space < NexudusBase
     return results.collect{|t| t["ResourceId"]}
   end
 
-  def bookings(resources = [])
-    result = []
-    resources.each do |id|
-      result << self.class.get("/spaces/bookings?Booking_Resource=#{id}")["Records"]
-    end
-    return result.flatten.reject &:blank?
-  end
-
   def booked_resources_by_datetime(resources = [], from_time = Time.now + 2.hours, to_time = Time.now + 6.hours)
     from_time = Time.parse(from_time) if from_time.is_a?(String) #just in case; this should already be in correct Time format
     to_time = Time.parse(to_time) if to_time.is_a?(String) #just in case; this should already be in correct Time format
     from_time.utc
     to_time.utc
 
-    results = bookings(resources)
+    results = Booking.new.all_by_resource(resources)
     set = resources
     
     results.each do |booking|
@@ -95,12 +87,4 @@ class Space < NexudusBase
     return set 
   end
   
-  def create_booking(json_hash)
-    self.class.post("/spaces/bookings", :body => json_hash, :headers => { 'Content-Type' => 'application/json' })
-  end
-
-  def bookings_by_user(coworker_id)
-    self.class.get("/spaces/bookings?Booking_Coworker=#{coworker_id}")["Records"]
-  end
-
 end

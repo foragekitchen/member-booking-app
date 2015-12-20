@@ -1,7 +1,7 @@
 class BookingsController < ApplicationController
 
   def index 
-    @bookings = Space.new.bookings_by_user("")
+    @bookings = Booking.new.all_by_coworker("")
   end
 
   def create 
@@ -11,7 +11,7 @@ class BookingsController < ApplicationController
       "ToTime" => Time.strptime("#{params['bookingDate']}T#{params['bookingTo']}","%m/%d/%YT%l:%M %p").utc,
       "Online" => true
     }
-    response = Space.new.create_booking(newBooking.to_json)
+    response = Booking.new.create(newBooking.to_json)
     if ( @response = JSON.parse(response.body) ) && @response["WasSuccessful"]
       flash[:notice] = @response["Message"] 
       redirect_to bookings_path
