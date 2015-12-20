@@ -14,7 +14,7 @@ namespace :data do
       count = 0
       resources = Space.new.resources
       resources.each do |r|
-        (1..7).each do |d|
+        (0..6).each do |d|
           newNightSlot = {
             "ResourceId" => r[:id],
             "DayOfWeek" => d,
