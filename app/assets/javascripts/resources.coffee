@@ -37,7 +37,7 @@ createTable = (table) ->
   div.attr({
     "id": "resource-" + table.id
     "data-toggle": "popover"
-    "title": "#{table.name} #{table.type}"
+    "title": "#{table.name} #{table.resource_type_name}"
     "data-content": table.description
   })
   div.popover({animation: false, placement: "left", html: true, trigger: "hover"})
