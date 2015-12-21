@@ -1,7 +1,12 @@
 class Space < NexudusBase
 
+  @@resource_uri = "/spaces/resources"
+  @@timeslots_uri = "/spaces/resourcetimeslots"
+
+  class << self
+
   def get_resource(id)
-    self.class.get("/spaces/resources/#{id}")
+    get(@@resource_uri+"/#{id}")
   end
 
   def resource_details(id)
@@ -20,7 +25,7 @@ class Space < NexudusBase
   end
 
   def resources(type = "Prep Table", visible = true)
-    results = self.class.get("/spaces/resources?Resource_Visible=#{visible}")["Records"]
+    results = get(@@resource_uri+"?Resource_Visible=#{visible}")["Records"]
     resources = []
 
     results.each do |r|
@@ -39,7 +44,7 @@ class Space < NexudusBase
 
   def available_resources_by_day(day_of_week)
     # We have to figure out time-availability ourselves, since the 'ResourceTimeSlot_FromTime' only returns exact matches
-    self.class.get("/spaces/resourcetimeslots?ResourceTimeSlot_DayOfWeek=#{day_of_week}")["Records"]
+    get(@@timeslots_uri+"?ResourceTimeSlot_DayOfWeek=#{day_of_week}")["Records"]
   end
 
   def available_resources_by_time(set, from_time, to_time)
@@ -74,7 +79,7 @@ class Space < NexudusBase
     from_time.utc
     to_time.utc
 
-    results = Booking.new.all_by_resource(resources)
+    results = Booking.all("",resources)
     set = resources
     
     results.each do |booking|
@@ -87,4 +92,6 @@ class Space < NexudusBase
     return set 
   end
   
+  end
+
 end

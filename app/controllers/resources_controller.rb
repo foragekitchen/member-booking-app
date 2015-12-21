@@ -9,7 +9,7 @@ class ResourcesController < ApplicationController
     end
 
 
-    space = Space.new
+    space = Space
 
     if params["bookingRequestFrom"] && params["bookingRequestTo"]
       from = Time.strptime(params["bookingRequestFrom"],"%m/%d/%YT%l:%M %p")
