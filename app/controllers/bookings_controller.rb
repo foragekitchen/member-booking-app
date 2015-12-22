@@ -2,8 +2,8 @@ class BookingsController < ApplicationController
 
   def index 
     @bookings = Booking.all
-    @upcoming = @bookings.reject{|b| b["FromTime"].to_time < Time.now}
-    @past = @bookings.reject{|b| b["FromTime"].to_time > Time.now}
+    @upcoming = @bookings.reject{|b| b.from_time.to_time < Time.now}
+    @past = @bookings.reject{|b| b.from_time.to_time > Time.now}
   end
 
   def create 
@@ -16,12 +16,13 @@ class BookingsController < ApplicationController
     toTime += 1.day if toTime < fromTime
 
     newBooking = {
-      "ResourceId" => params["bookingResourceId"],
-      "FromTime" => fromTime,
-      "ToTime" => toTime,
-      "Online" => true
+      "resource_id" => params["bookingResourceId"],
+      "from_time" => fromTime,
+      "to_time" => toTime,
+      "online" => true
     }
-    response = Booking.new.create(newBooking.to_json)
+    booking = Booking.new(newBooking)
+    response = booking.create
     if ( @response = JSON.parse(response.body) ) && @response["WasSuccessful"]
       flash[:notice] = @response["Message"] 
       redirect_to bookings_path

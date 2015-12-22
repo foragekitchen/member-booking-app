@@ -43,10 +43,10 @@ class Resource < NexudusBase
     set = resource_ids
     
     results.each do |booking|
-      next unless set.include? booking["ResourceId"]
-      set.delete(booking["ResourceId"]) if booking["FromTime"] >= from_time && booking["ToTime"] <= to_time # falls exactly inside the slot
-      set.delete(booking["ResourceId"]) if booking["FromTime"] >= from_time && booking["FromTime"] < to_time # overlaps after requested start
-      set.delete(booking["ResourceId"]) if booking["FromTime"] <= from_time && booking["ToTime"] > from_time # overlaps before requested start
+      next unless set.include? booking.resource_id
+      set.delete(booking.resource_id) if booking.from_time >= from_time && booking.to_time <= to_time # falls exactly inside the slot
+      set.delete(booking.resource_id) if booking.from_time >= from_time && booking.from_time < to_time # overlaps after requested start
+      set.delete(booking.resource_id) if booking.from_time <= from_time && booking.to_time > from_time # overlaps before requested start
     end
 
     return set 
