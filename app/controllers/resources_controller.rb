@@ -18,7 +18,7 @@ class ResourcesController < ApplicationController
       params["bookingRequestToTime"] ||= to.strftime("%l:%M %p")
 
       offered_resource_ids = Resource.available_ids(from,to)
-      @resources = Space.booked_resources_by_datetime(offered_resource_ids,from,to)
+      @resources = Resource.booked_ids(from,to,offered_resource_ids)
     else
       @resources = Resource.all
 
