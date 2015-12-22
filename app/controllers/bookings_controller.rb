@@ -33,15 +33,18 @@ class BookingsController < ApplicationController
   end
   
   def destroy
-    @bookings = Space.new.bookings_by_user("")
-    flash[:info] = "Ability to delete is coming soon!"
-    render :index
+    response = Booking.new("id"=>params['id']).destroy
+    if ( @response = JSON.parse(response.body) ) && @response["WasSuccessful"]
+      flash[:notice] = @response["Message"] 
+    else
+      flash[:alert] = @response["Message"] || "There was an error canceling your booking. Please contact us."
+    end
+    redirect_to bookings_path
   end
 
   def edit
-    @bookings = Space.new.bookings_by_user("")
     flash[:info] = "Ability to edit is coming soon!"
-    render :index
+    redirect_to bookings_path
   end
 
 end
