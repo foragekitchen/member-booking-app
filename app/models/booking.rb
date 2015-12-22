@@ -17,7 +17,9 @@ class Booking < NexudusBase
       else
         bookings << get(@@request_uri+request_params.join("&"))["Records"]
       end
-      return bookings.flatten.reject &:blank?
+      bookings = bookings.flatten.reject &:blank?
+      bookings = bookings.sort_by{|b| b["FromTime"]}
+      return bookings.reverse
     end
 
   end

@@ -2,6 +2,8 @@ class BookingsController < ApplicationController
 
   def index 
     @bookings = Booking.all
+    @upcoming = @bookings.reject{|b| b["FromTime"].to_time < Time.now}
+    @past = @bookings.reject{|b| b["FromTime"].to_time > Time.now}
   end
 
   def create 
