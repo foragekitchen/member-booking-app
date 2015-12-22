@@ -9,8 +9,6 @@ class ResourcesController < ApplicationController
     end
 
 
-    space = Space
-
     if params["bookingRequestFrom"] && params["bookingRequestTo"]
       from = Time.strptime(params["bookingRequestFrom"],"%m/%d/%YT%l:%M %p")
       to = Time.strptime(params["bookingRequestTo"],"%m/%d/%YT%l:%M %p")
@@ -19,10 +17,10 @@ class ResourcesController < ApplicationController
       params["bookingRequestFromTime"] ||= from.strftime("%l:%M %p")
       params["bookingRequestToTime"] ||= to.strftime("%l:%M %p")
 
-      offered_resource_ids = space.available_resources_by_day_and_time(from.wday,from,to)
-      @resources = space.booked_resources_by_datetime(offered_resource_ids,from,to)
+      offered_resource_ids = Resource.available_ids(from,to)
+      @resources = Space.booked_resources_by_datetime(offered_resource_ids,from,to)
     else
-      @resources = space.resources
+      @resources = Resource.all
 
       params["bookingRequestDate"] ||= (Date.today).strftime("%m/%d/%Y")
       params["bookingRequestFromTime"] ||= (Time.now + 2.hours).beginning_of_hour.strftime("%l:%M %p")

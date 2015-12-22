@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Space, "(e.g. Kitchen Space):", type: :model do
   before(:each) do
-    @resources = Space.resources
+    @resources = Resource.all
   end
 
   describe "Resources for booking" do
@@ -12,22 +12,22 @@ RSpec.describe Space, "(e.g. Kitchen Space):", type: :model do
     end
 
     it "includes only the type(s) of resources we want to be bookable, which is 'Prep Table'" do
-      expect(@resources.collect{|r| r[:type] }.uniq).to eq ["Prep Table"]
+      expect(@resources.collect(&:resource_type_name).uniq).to eq ["Prep Table"]
     end
 
     it "returns id, name, type, description, and location for each resource" do
-      expect(@resources.first.keys).to match_array [:id, :name, :type, :description, :location]
+      expect(@resources.first.instance_variables).to match_array [:@id, :@name, :@resource_type_name, :@description, :@location, :@visible, :@linked_resources]
     end
 
     describe "that are available" do
 
       it "only includes resources that are offered during the requested timeframe" do
-        available = Space.available_resources_by_day_and_time(2,"12:00:00","16:00:00")
+        available = Resource.available_ids("2015-09-01T12:00:00PST","2015-09-01T16:00:00PST")
         expect(available).to eq [100,101]
       end
 
       it "returns empty set if nothing is offered during the requested timeframe" do
-        available = Space.available_resources_by_day_and_time(2,"2:00:00","4:00:00")
+        available = Resource.available_ids("2015-09-01T02:00:00PST","2015-09-01T04:00:00PST")
         expect(available).to eq []
       end
 
