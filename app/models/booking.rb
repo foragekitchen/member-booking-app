@@ -37,4 +37,8 @@ class Booking < NexudusBase
     self.class.delete(@@request_uri+"/#{id}")
   end
 
+  def resource
+    Resource.find(resource_id)
+  end
+
 end

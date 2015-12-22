@@ -21,6 +21,7 @@
 <table class="table table-striped">
 <% for booking in @upcoming do %>
 <tr>
+  <td><%= booking.resource.name %></td>
   <td><%= Time.parse(booking.from_time).localtime.to_s(:long) %> - <%= Time.parse(booking.to_time).localtime.to_s(:time) %></td>
   <td><%= link_to('<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</a>'.html_safe, edit_booking_path(booking.id), :class => "btn btn-default btn-sm") %></td>
   <td><%= link_to('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Remove</a>'.html_safe, booking_path(booking.id), :method => :delete, :data => {:confirm => "Are you sure you want to cancel this booking for #{Date.parse(booking.from_time)}?"}, :class => "btn btn-default btn-sm") %></td>
@@ -30,13 +31,14 @@
 
 <h2>
   My Past Bookings 
-  <small class="glyphicon glyphicon-plus" data-toggle="collapse" data-target="#demo"></small> 
+  <small class="glyphicon glyphicon-plus" data-toggle="collapse" data-target="#past_bookings"></small> 
 </h2>
  
-<div id="demo" class="collapse in">
+<div id="past_bookings" class="collapse in">
   <table class="table table-striped">
   <% for booking in @past do %>
   <tr>
+    <td><%= booking.resource.name %></td>
     <td><%= Time.parse(booking.from_time).to_s(:long) %> - <%= Time.parse(booking.to_time).localtime.to_s(:time) %></td>
   </tr>
   <% end %>
