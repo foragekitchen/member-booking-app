@@ -5,10 +5,18 @@ class BookingsController < ApplicationController
   end
 
   def create 
+    fromTime = Time.strptime("#{params['bookingDate']}T#{params['bookingFrom']}","%m/%d/%YT%l:%M %p").utc
+    toTime = Time.strptime("#{params['bookingDate']}T#{params['bookingTo']}","%m/%d/%YT%l:%M %p").utc
+
+    # Fix for when end-time is in the AM hours of the next day
+    # TODO this scrub should really happen on the coffeescript layer before it comes in as input
+    # but temporarily fixing it here because it's just easier :P
+    toTime += 1.day if toTime < fromTime
+
     newBooking = {
       "ResourceId" => params["bookingResourceId"],
-      "FromTime" => Time.strptime("#{params['bookingDate']}T#{params['bookingFrom']}","%m/%d/%YT%l:%M %p").utc,
-      "ToTime" => Time.strptime("#{params['bookingDate']}T#{params['bookingTo']}","%m/%d/%YT%l:%M %p").utc,
+      "FromTime" => fromTime,
+      "ToTime" => toTime,
       "Online" => true
     }
     response = Booking.new.create(newBooking.to_json)
