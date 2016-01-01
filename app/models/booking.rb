@@ -25,7 +25,7 @@ class Booking < NexudusBase
     end
     bookings = bookings.flatten.reject &:blank?
     bookings = bookings.sort_by{|b| b.from_time}
-    return bookings.reverse
+    return bookings
   end
 
   def create

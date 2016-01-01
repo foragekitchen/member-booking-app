@@ -4,8 +4,23 @@ RSpec.feature "My Bookings:", type: :feature do
 
   context "when viewing existing bookings" do
 
+    before(:all) do
+      # Default present time to 9/2/2015 12:01AM (see fixtures for mock data)
+      Timecop.travel(Time.local(2015,9,2,00,01,0))
+    end
+    
+    after(:all) do
+      Timecop.return
+    end
+
     pending "should see a list of booking(s) currently in-progress, including a marker for whether they've checked in yet"
-    pending "should see a list of upcoming bookings, ordered by soonest at the top"
+
+    scenario "should see a list of upcoming bookings, ordered by soonest at the top" do
+      visit "/bookings"
+      expect(page).to have_css("table#upcoming-bookings tr", :count => 2)
+      expect(page.first("table tr td:nth-child(2)")).to have_content("September 02, 2015 09:00 - 13:00")
+    end
+
     pending "should see a link to past bookings"
     pending "should be given the option to edit a booking"
     pending "should see available remaining hours in plan"
