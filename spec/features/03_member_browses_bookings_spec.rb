@@ -8,7 +8,6 @@ RSpec.feature "My Bookings:", type: :feature do
     pending "should see a list of upcoming bookings, ordered by soonest at the top"
     pending "should see a link to past bookings"
     pending "should be given the option to edit a booking"
-    pending "should be given the option to cancel a booking"
     pending "should see available remaining hours in plan"
     pending "should see available remaining credit, if purchased extra hours"
 
@@ -23,5 +22,27 @@ RSpec.feature "My Bookings:", type: :feature do
 
   end
   
+  context "when canceling an existing booking" do
+
+    before(:each) do
+      #Let's test against the live server for this one
+      WebMock.reset!
+      WebMock.allow_net_connect!
+    end
+
+    scenario "should be able to successfully complete a cancellation", js:true do
+      #Create a real booking first
+      visit "/resources"
+      page.first("div.available div.button", :wait => 10).click
+      click_button("Save your booking")
+
+      visit "/bookings"
+      count = page.all('table tr').count
+      accept_confirm { first(:link, "Remove").click }
+      expect(page).to have_css("table tr", :count => count-1, :wait => 10)
+    end
+
+  end
+
 
 end
