@@ -48,6 +48,7 @@ RSpec.configure do |config|
   # including feature integration tests, except where live connections are explicitly allowed 
   # To enable a live connection, add a before(:each) in your specific feature test, 
   # followed by a WebMock.reset! and WebMock.allow_net_connect!
+  # Most feature scenarios will also require "js:true" to work
   config.before(:each) do
     WebMock.disable_net_connect!(:allow_localhost => true)
     stub_request(:any, /spaces.nexudus.com/).to_rack(FakeNexudus)
