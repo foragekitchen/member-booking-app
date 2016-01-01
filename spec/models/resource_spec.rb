@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe Resource, type: :model do
-  before(:each) do
-    @resources = Resource.all
-  end
-
   describe "Resources for booking" do
+
+    before(:each) do
+      @resources = Resource.all
+    end
 
     it "returns an array of one or more bookable resources" do
       expect( @resources.is_a?(Array) ).to eq true
@@ -59,4 +59,24 @@ RSpec.describe Resource, type: :model do
     end
 
   end
+
+  describe "Caching" do
+
+    it "should be turned on for fetching all Resources" do
+      rails_caching = double.as_null_object
+      allow(Rails).to receive(:cache).and_return(rails_caching)
+      expect(rails_caching).to receive(:fetch).with(["/spaces/resources",{"Resource_ResourceType_Name"=>"Prep Table", "Resource_Visible"=>true}], :expires => 12.hours)
+      Resource.all
+    end
+
+    it "should be turned on for fetching a single Resource" do
+      rails_caching = double.as_null_object
+      allow(Rails).to receive(:cache).and_return(rails_caching)
+      expect(rails_caching).to receive(:fetch).with(["/spaces/resources/23"],:expires => 12.hours)
+      Resource.find(23)
+    end
+
+  end
+
+
 end

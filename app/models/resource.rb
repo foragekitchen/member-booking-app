@@ -9,12 +9,15 @@ class Resource < NexudusBase
     end
   end
 
-  def self.all(type = "Prep Table", visible = true, location = true)
-    results = get(@@resource_uri+"?Resource_Visible=#{visible}")["Records"]
+  def self.all(location = true, query = {})
+    query_params = {"Resource_ResourceType_Name" => "Prep Table", "Resource_Visible" => true}.merge(query)
+    results = Rails.cache.fetch([@@resource_uri, query_params], :expires => 12.hours) do
+      get(@@resource_uri, :query => query_params)["Records"]
+    end
     resources = []
 
     results.each do |r|
-      next unless r["ResourceTypeName"] == type
+      next unless r["ResourceTypeName"] == query_params["Resource_ResourceType_Name"]
 
       resource_with_details = find(r["Id"])
       resource_with_details.id = r["Id"] #TODO - find better way for rspec; this is purely to help with rspec because every single-resource returns same id
@@ -53,7 +56,10 @@ class Resource < NexudusBase
   end
 
   def self.find(id)
-    result = get(@@resource_uri+"/#{id}").parsed_response
+    url = @@resource_uri+"/#{id}"
+    result = Rails.cache.fetch([url], :expires => 12.hours) do
+      get(url).parsed_response
+    end
     resource = new(result)
   end
 

@@ -2,7 +2,11 @@ class Timeslot < NexudusBase
   @@timeslots_uri = "/spaces/resourcetimeslots"  
 
   def self.all_by_day(day_of_week = Date.today.wday)
-    get(@@timeslots_uri+"?ResourceTimeSlot_DayOfWeek=#{day_of_week}")["Records"]    
+    query_params = {"ResourceTimeSlot_DayOfWeek" => day_of_week}
+    result = Rails.cache.fetch([@@timeslots_uri, query_params], :expires => 12.hours) do
+      get(@@timeslots_uri, :query => query_params)["Records"]
+    end
+    return result
   end
   
   def self.available(from_time = Time.now + 2.hours, to_time = Time.now + 6.hours)
