@@ -21,7 +21,11 @@ RSpec.feature "My Bookings:", type: :feature do
       expect(page.first("table tr td:nth-child(2)")).to have_content("September 02, 2015 09:00 - 13:00")
     end
 
-    pending "should see a link to past bookings"
+    scenario "should see a link to past bookings" do
+      visit "/bookings"
+      expect(page).to have_css("#past-bookings.collapse")
+    end
+
     pending "should be given the option to edit a booking"
     pending "should see available remaining hours in plan"
     pending "should see available remaining credit, if purchased extra hours"
