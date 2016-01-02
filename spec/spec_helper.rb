@@ -50,6 +50,7 @@ RSpec.configure do |config|
   # followed by a WebMock.reset! and WebMock.allow_net_connect!
   # Most feature scenarios will also require "js:true" to work
   config.before(:each) do
+    Rails.cache.clear
     WebMock.disable_net_connect!(:allow_localhost => true)
     stub_request(:any, /spaces.nexudus.com/).to_rack(FakeNexudus)
   end
