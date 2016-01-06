@@ -39,7 +39,7 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Account</a>
             <ul class="dropdown-menu">
               <li><a href="#">Invoices</a></li>
-              <li><a href="#">Logout</a></li>
+              <li><%= link_to "Logout", logout_path, :method => "delete" %></li>
             </ul>
           </li>
         </ul>
