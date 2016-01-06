@@ -1,0 +1,55 @@
+{"Status": 200,
+  "Value":
+  {
+      "APIAccess": true,
+      "Active": true,
+      "AddedBusinesses": null,
+      "AddedChatRooms": null,
+      "AddedUserRoles": null,
+      "Businesses": [
+          41030993
+      ],
+      "ChatRooms": [
+          41031994
+      ],
+      "CreatedOn": "2015-04-21T21:48:46Z",
+      "Devices": null,
+      "Email": "patti@foragesf.com",
+      "EnablePassportAccess": true,
+      "FullName": "Patti Chan",
+      "Id": 100,
+      "IsAdmin": true,
+      "IsNew": false,
+      "LastAccess": "2016-01-05T00:49:04Z",
+      "MustResetPassword": false,
+      "NewPassword": null,
+      "NewPasswordConfirm": null,
+      "OldPassword": null,
+      "OnBookingChange": false,
+      "OnHelpDeskMsg": false,
+      "OnNewBlogComment": false,
+      "OnNewEmail": false,
+      "OnNewEventComment": false,
+      "OnNewMember": false,
+      "OnNewWallPost": false,
+      "OnPlaformInvoices": false,
+      "OnPurchases": false,
+      "OnTariffChange": false,
+      "PassportCardNumber": null,
+      "PassportNumber": null,
+      "PreferredLanguageId": 0,
+      "ReceiveCommunityDigest": false,
+      "ReceiveEveryMessage": false,
+      "RemovedBusinesses": null,
+      "RemovedChatRooms": null,
+      "RemovedUserRoles": null,
+      "ToStringText": "Patti Chan",
+      "UniqueId": "4b355f88-bfb7-4baa-afb5-10624ae64f28",
+      "UpdatedBy": "",
+      "UpdatedOn": "2016-01-05T00:49:04Z",
+      "UserRoles": [
+          41017990
+      ],
+      "Validated": true
+  }
+}

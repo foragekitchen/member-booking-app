@@ -15,6 +15,9 @@ Rails.application.routes.draw do
   #   resources :products
   resources :resources
   resources :bookings
+  get "login" => "sessions#new"
+  post "login" => "sessions#create"
+  delete "login" => "sessions#destroy"
 
   # Example resource route with options:
   #   resources :products do
