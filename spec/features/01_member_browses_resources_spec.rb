@@ -11,6 +11,10 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
         Timecop.travel(Time.local(2015,9,1,6,18,0))
       end
       
+      before(:each) do
+        execute_valid_login
+      end
+
       after(:all) do
         Timecop.return
       end

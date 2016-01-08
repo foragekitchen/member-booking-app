@@ -8,6 +8,7 @@ RSpec.feature "Booking Kitchen Time:", type: :feature do
       #Let's test against the live server for this one
       WebMock.reset!
       WebMock.allow_net_connect!
+      execute_valid_login
     end
 
     after(:all) do
