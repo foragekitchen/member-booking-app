@@ -13,6 +13,8 @@ class FakeNexudus
       [200, { 'Content-Type' => 'application/json' }, [File.read("spec/fixtures/resourcetimeslots.json")]]
     when /sys\/users\/validate/
       [200, { 'Content-Type' => 'application/json' }, [File.read("spec/fixtures/user.json")]]
+    when /sys\/users\/\d/
+      [200, { 'Content-Type' => 'application/json' }, [File.read("spec/fixtures/user.json")]]
     else
       [404,{},[]]
     end
