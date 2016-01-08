@@ -9,6 +9,10 @@ RSpec.feature "My Bookings:", type: :feature do
       Timecop.travel(Time.local(2015,9,2,00,01,0))
     end
     
+    before(:each) do
+      execute_valid_login
+    end
+
     after(:all) do
       Timecop.return
     end
@@ -47,6 +51,7 @@ RSpec.feature "My Bookings:", type: :feature do
       #Let's test against the live server for this one
       WebMock.reset!
       WebMock.allow_net_connect!
+      execute_valid_login
     end
 
     scenario "should be able to successfully complete a cancellation", js:true do

@@ -1,0 +1,13 @@
+      <!-- secondary nav (will collapse on smaller screens) -->
+      <div class="collapse navbar-collapse navbar-right" id="subnav-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><p class="navbar-text">Welcome back, <%= @coworker.salutation || "you" %></p></li>
+          <li class="accounts-nav dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Account</a>
+            <ul class="dropdown-menu">
+              <li><a href="#">Invoices</a></li>
+              <li><%= link_to "Logout", logout_path, :method => "delete" %></li>
+            </ul>
+          </li>
+        </ul>
+      </div>

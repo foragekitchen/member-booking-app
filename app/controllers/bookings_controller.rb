@@ -1,7 +1,7 @@
 class BookingsController < ApplicationController
 
   def index 
-    @bookings = Booking.all
+    @bookings = Booking.all(@coworker.id,[],true)
     @upcoming = @bookings.reject{|b| b.from_time.to_time < Time.now}
     @past = @bookings.reject{|b| b.from_time.to_time > Time.now}
   end
@@ -16,6 +16,7 @@ class BookingsController < ApplicationController
     toTime += 1.day if toTime < fromTime
 
     newBooking = {
+      "coworker_id" => @coworker.id,
       "resource_id" => params["bookingResourceId"],
       "from_time" => fromTime,
       "to_time" => toTime,

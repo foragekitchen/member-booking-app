@@ -1,28 +1,20 @@
 == README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+* Ruby version: 2.2.2
 
-Things you may want to cover:
+* System dependencies: see GemFile
 
-* Ruby version
+* Configuration: 
+-- In order to make API calls to the live Nexudus server from your local development environment, you will need to set two environment variables: NEXUDUS_USERNAME and NEXUDUS_PASSWORD. This login/user should have API access.
+-- In order to successfully run feature/integration tests, you will need to set two environment variables: NEXUDUS_COWORKER_TEST_USERNAME and NEXUDUS_COWORKER_TEST_PASSWORD. This login should be a regular Coworker with active membership.
+-- See secrets.yml for more details. 
 
-* System dependencies
+* Database: this application currently does not rely on any persistent database. A very few variables are stored in session, like the user ID. Data is obtained from the live Nexudus API server, though [some] requests are cached to improve performance. 
 
-* Configuration
+* How to run the test suite: 
+-- bundle exec guard
+-- edit files to see guard auto-run relevant tests, or hit 'enter' to run entire test suite
 
-* Database creation
+* Services (job queues, cache servers, search engines, etc.): none at the moment.
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+* Deployment instructions: this application is deployed on Heroku
