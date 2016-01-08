@@ -1,5 +1,5 @@
 class User < NexudusBase
-  attr_accessor :id, :email, :password, :active
+  attr_accessor :id, :email, :password, :full_name, :active
   @@request_uri = "/sys/users"
 
   def initialize(params)
@@ -10,7 +10,10 @@ class User < NexudusBase
   end
 
   def self.find(id)
-    result = get(@@resource_uri+"/#{id}").parsed_response
+    url = @@request_uri+"/#{id}"
+    result = Rails.cache.fetch([url], :expires => 12.hours) do
+      get(url).parsed_response
+    end
     user = new(result)
   end
 
