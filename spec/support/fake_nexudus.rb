@@ -11,6 +11,8 @@ class FakeNexudus
       [200, { 'Content-Type' => 'application/json' }, [File.read("spec/fixtures/resources.json")]]
     when /spaces\/resourcetimeslots/
       [200, { 'Content-Type' => 'application/json' }, [File.read("spec/fixtures/resourcetimeslots.json")]]
+    when /spaces\/coworkers/
+      [200, { 'Content-Type' => 'application/json' }, [File.read("spec/fixtures/coworkers.json")]]
     when /sys\/users\/validate/
       [200, { 'Content-Type' => 'application/json' }, [File.read("spec/fixtures/user.json")]]
     when /sys\/users\/\d/

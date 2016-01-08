@@ -9,14 +9,6 @@ class User < NexudusBase
     end
   end
 
-  def self.find(id)
-    url = @@request_uri+"/#{id}"
-    result = Rails.cache.fetch([url], :expires => 12.hours) do
-      get(url).parsed_response
-    end
-    user = new(result)
-  end
-
   def self.authenticate(email,password)
     result = post(@@request_uri+"/validate", :body => {:email => email, :password => password}.to_json, :headers => { 'Content-Type' => 'application/json' }).parsed_response
     if result["Status"] == 200

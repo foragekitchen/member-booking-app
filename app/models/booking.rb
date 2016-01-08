@@ -1,5 +1,5 @@
 class Booking < NexudusBase
-  attr_accessor :id, :resource_id, :from_time, :to_time, :online
+  attr_accessor :id, :resource_id, :coworker_id, :from_time, :to_time, :online
   @@request_uri = "/spaces/bookings"
 
   def initialize(params)
@@ -9,9 +9,9 @@ class Booking < NexudusBase
     end
   end
 
-  def self.all(coworkerID="", resource_ids=[], include_passed=false)
+  def self.all(coworker_id="", resource_ids=[], include_passed=false)
     request_params = []
-    request_params += ["Booking_Coworker=#{coworker_id}"] if coworkerID.present?
+    request_params += ["Booking_Coworker=#{coworker_id}"] if coworker_id.present?
     request_params += ["Booking_Invoiced=false"] unless include_passed # Relies on 'Booking_Invoiced' to guess at whether it's passed or future; maybe there is/will be a better way from Nexudus API
 
     bookings = []
