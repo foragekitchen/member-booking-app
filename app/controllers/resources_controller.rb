@@ -1,14 +1,6 @@
 class ResourcesController < ApplicationController
 
   def index
-    @timeslotArray = []
-    t = dayStarts = Time.parse("08:00")
-    while t <= (dayStarts + 18.hours) do
-      @timeslotArray << t.strftime("%l:%M %p")
-      t += 30.minutes
-    end
-
-
     if params["bookingRequestFrom"] && params["bookingRequestTo"]
       from = Time.strptime(params["bookingRequestFrom"],"%m/%d/%YT%l:%M %p")
       to = Time.strptime(params["bookingRequestTo"],"%m/%d/%YT%l:%M %p")
