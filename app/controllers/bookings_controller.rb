@@ -18,8 +18,8 @@ class BookingsController < ApplicationController
     newBooking = {
       "coworker_id" => @coworker.id,
       "resource_id" => params["bookingResourceId"],
-      "from_time" => fromTime,
-      "to_time" => toTime,
+      "from_time" => fromTime.to_s(:nexudus),
+      "to_time" => toTime.to_s(:nexudus),
       "online" => true
     }
     booking = Booking.new(newBooking)
