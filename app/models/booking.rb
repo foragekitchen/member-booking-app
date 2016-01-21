@@ -12,8 +12,10 @@ class Booking < NexudusBase
       attribute_name = k.underscore
       public_send("#{attribute_name}=", v) if respond_to?(attribute_name)
     end
-    public_send("friendly_dates=", friendly_dates)
-    public_send("friendly_times=", friendly_times)
+    if self.from_time.present? # protect against the times we're just quick-instantiating for a destroy
+      public_send("friendly_dates=", friendly_dates) 
+      public_send("friendly_times=", friendly_times) 
+    end
   end
 
   def self.find(id)

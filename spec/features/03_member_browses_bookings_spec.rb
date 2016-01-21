@@ -21,8 +21,9 @@ RSpec.feature "My Bookings:", type: :feature do
 
     scenario "should see a list of upcoming bookings, ordered by soonest at the top" do
       visit "/bookings"
-      expect(page).to have_css("table#upcoming-bookings tr", :count => 2)
-      expect(page.first("table tr td:nth-child(2)")).to have_content("September 02, 2015 09:00 - 13:00")
+      expect(page).to have_css("table#upcoming-bookings tbody tr", :count => 2+1) # account for the hidden EditForm row
+      expect(page.first("table tr td:nth-child(2)")).to have_content("In about 9 hours (Sep 2)")
+      expect(page.first("table tr td:nth-child(3)")).to have_content("9:00 AM - 1:00 PM")
     end
 
     scenario "should see a link to past bookings" do
@@ -61,9 +62,9 @@ RSpec.feature "My Bookings:", type: :feature do
       click_button("Save your booking")
 
       visit "/bookings"
-      count = page.all('table tr').count
+      count = page.all('tbody tr').count
       accept_confirm { first(:link, "Remove").click }
-      expect(page).to have_css("table tr", :count => count-1, :wait => 10)
+      expect(page).to have_css("tbody tr", :count => count-1, :wait => 10)
     end
 
   end
