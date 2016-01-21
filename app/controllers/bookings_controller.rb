@@ -44,8 +44,11 @@ class BookingsController < ApplicationController
   end
 
   def edit
-    flash[:info] = "Ability to edit is coming soon!"
-    redirect_to bookings_path
+    @booking = Booking.find(params[:id])
+    respond_to do |format|
+      format.js { render :json => @booking }
+      format.html { render :index }
+    end
   end
 
 end
