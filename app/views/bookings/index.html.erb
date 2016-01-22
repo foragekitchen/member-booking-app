@@ -39,10 +39,11 @@
   <td><%= link_to('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Remove'.html_safe, booking_path(booking.id), :method => :delete, :data => {:confirm => "Are you sure you want to cancel this booking for #{Date.parse(booking.from_time)}?"}, :class => "btn btn-default btn-sm") %></td>
 </tr>
 <% if booking == @upcoming.first %>
-<tr id="editForm">
+<tr id="editFormContainer">
   <td colspan="5" class="row">
-    <form id="edit-booking-form">
-      <input id="booking_id" value="" type="hidden" />
+    <%= form_tag("/bookings", method: "put", id: "editBookingForm") do %>
+      <%= hidden_field_tag("bookingId") %>
+      <%= hidden_field_tag("bookingDate") %>
       <div class="col-md-3">
         <h5 class="text-uppercase">Quick Edit</h5>
         <label>In Date:</label> <span id="inDate"></span><br />
@@ -53,17 +54,17 @@
         <h5>Time of day: <small>extend your hours</small></h5>
         <div class="form-group form-inline">
           <label class="col-sm-4">In at:</label> 
-          <%= select_tag "fromTime", options_for_select(Booking::TIMESLOTS), {:class => "chosen-select form-control col-sm-5"} %>
+          <%= select_tag "bookingFrom", options_for_select(Booking::TIMESLOTS), {:class => "chosen-select form-control col-sm-5"} %>
         </div>
         <div class="form-group form-inline">
           <label class="col-sm-4">Out by:</label> 
-          <%= select_tag "toTime", options_for_select(Booking::TIMESLOTS), {:class => "chosen-select form-control col-sm-5"} %>
+          <%= select_tag "bookingTo", options_for_select(Booking::TIMESLOTS), {:class => "chosen-select form-control col-sm-5"} %>
         </div>
       </div>
       <div class="col-md-3 row">
         <h5>Resource(s): <small>change your spot</small></h5>
         <div class="form-group form-inline">
-          <%= select_tag "resource", options_for_select(["A. Hedgehog","B. Chanterelle", "C. Porcini"]), {:class => "chosen-select form-control col-sm-10"} %>
+          <%= select_tag "bookingResource", options_for_select([["A. Hedgehog",42766734],["B. Chanterelle",42766735], ["C. Porcini",42766736]]), {:class => "chosen-select form-control col-sm-10"} %>
           <a href=""><span class="glyphicon glyphicon-remove" aria-hidden="true"></span><span class="sr-only">remove</span></a><br />
         </div>
       </div>
@@ -71,7 +72,7 @@
         <button type="button" class="btn btn-primary">Update</button><br />
         <a id="btn-cancel" href="">Cancel changes</a>
       </div>
-    </form>
+    <% end %>
   </td>
 </tr>
 <% end %>
