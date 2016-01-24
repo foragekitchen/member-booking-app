@@ -42,4 +42,14 @@ namespace :data do
       
     end
   end
+  namespace :bookings do
+    desc "Delete all upcoming bookings - USE WITH CAUTION AND ONLY WHEN TESTING"
+    task :deleteUpcoming => :environment do 
+      bookings = Booking.all
+      upcoming = bookings.reject{|b| b.from_time.to_time < Time.now}
+      for booking in upcoming do
+        booking.destroy
+      end
+    end
+  end
 end
