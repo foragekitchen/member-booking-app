@@ -1,6 +1,24 @@
 require 'rails_helper'
+require 'rake'
 
 RSpec.feature "My Bookings:", type: :feature do
+
+  def createBooking(day = nil, startTime = nil)
+    # Create a real booking - useful for doing before testing anything else
+    visit "/resources"
+    page.first("div.available div.button", :wait => 10).click
+    # Remember some stuff so we can find this booking later
+    booking = {
+      :resource_name => page.find(".modal-title span").text,
+      :end_time => page.find(".modal-body h5 span").text.split("-").last
+    }
+    click_button("Save your booking")
+    return booking
+  end
+
+  def findBookingOnPage(resource_name)
+    return page.first("td", :text => resource_name)
+  end
 
   context "when viewing existing bookings" do
 
@@ -42,44 +60,6 @@ RSpec.feature "My Bookings:", type: :feature do
 
   end
 
-  context "when editing an existing booking" do
-
-    before(:each) do
-      #Let's test against the live server for this one
-      WebMock.reset!
-      WebMock.allow_net_connect!
-      execute_valid_login
-    end
-
-    pending "should see a warning if editing date/time within 24 hours of the original start-time"
-    pending "should see a warning if reducing hours within 24 hours of the original start-time"
-    pending "should see a warning if changing the booking-time conflicts with another booking"
-    pending "should see a warning if the requested time exceeds the available hours in their plan, with one-click option to purchase more"
-
-    scenario "should be able to successfully complete an update", js:true do
-      #Create a real booking first
-      visit "/resources"
-      page.first("div.available div.button", :wait => 10).click
-      # Remember some stuff so we can find this booking later
-      resource_name = page.find(".modal-title span").text
-      end_time = page.find(".modal-body h5 span").text.split("-").last
-      click_button("Save your booking")
-
-      visit "/bookings"
-      # Find the right booking
-      thisBooking = page.find("td", :text => resource_name)
-      # Expand the edit form
-      thisBooking.find(:xpath,'../..').first('.btn-edit').click 
-      page.find("#bookingTo_chosen span", visible: false, :text => end_time.strip, :wait => 10) # wait till the form's properly loaded/updated
-      # Update some values
-      select_from_chosen(" 6:00 PM", :from => "bookingFrom", :wait => 10)
-      select_from_chosen("11:30 PM", :from => "bookingTo", :wait => 10)
-      click_button("Update")
-      expect(page).to have_text("6:00 PM - 11:30 PM")
-    end
-
-  end
-  
   context "when canceling an existing booking" do
 
     before(:each) do
@@ -90,10 +70,7 @@ RSpec.feature "My Bookings:", type: :feature do
     end
 
     scenario "should be able to successfully complete a cancellation", js:true do
-      #Create a real booking first
-      visit "/resources"
-      page.first("div.available div.button", :wait => 10).click
-      click_button("Save your booking")
+      booking = createBooking()
 
       visit "/bookings"
       count = page.all('tbody tr').count
@@ -102,6 +79,40 @@ RSpec.feature "My Bookings:", type: :feature do
     end
 
   end
+  
+  context "when editing an existing booking" do
 
+    before(:each) do
+      #Let's test against the live server for this one
+      WebMock.reset!
+      WebMock.allow_net_connect!
+      execute_valid_login
+    end
+
+    after(:all) do
+      Rake::Task['data:bookings:deleteUpcoming'].invoke
+    end
+
+    pending "should see a warning if editing date/time within 24 hours of the original start-time"
+    pending "should see a warning if reducing hours within 24 hours of the original start-time"
+    pending "should see a warning if changing the booking-time conflicts with another booking" 
+    pending "should see a warning if the requested time exceeds the available hours in their plan, with one-click option to purchase more"
+
+    scenario "should be able to successfully complete an update", js:true do
+      booking = createBooking()
+
+      visit "/bookings"
+      thisBooking = findBookingOnPage(booking[:resource_name])
+      # Expand the edit form
+      thisBooking.find(:xpath,'../..').first('.btn-edit').click 
+      page.find("#bookingTo_chosen span", visible: false, :text => booking[:end_time].strip, :wait => 10) # wait till the form's properly loaded/updated
+      # Update some values
+      select_from_chosen(" 6:00 PM", :from => "bookingFrom", :wait => 10)
+      select_from_chosen("11:30 PM", :from => "bookingTo", :wait => 10)
+      click_button("Update")
+      expect(page).to have_text("6:00 PM - 11:30 PM")
+    end
+
+  end
 
 end
