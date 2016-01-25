@@ -1,11 +1,21 @@
 require 'rails_helper'
 require 'rake'
+NexudusApp::Application.load_tasks
+include ActionView::Helpers::DateHelper
 
 RSpec.feature "My Bookings:", type: :feature do
 
-  def createBooking(day = nil, startTime = nil)
+  def createBooking(startTime = nil)
     # Create a real booking - useful for doing before testing anything else
     visit "/resources"
+    if startTime.present? && startTime.is_a?(Time)
+      from = startTime.beginning_of_hour
+      to = (from + 4.hours).to_s(:booking_time).strip
+      from = from.to_s(:booking_time).strip
+      select_from_chosen(from, from: "bookingRequestFromTime")
+      select_from_chosen(to, from: "bookingRequestToTime")
+      click_button("Refresh")
+    end
     page.first("div.available div.button", :wait => 10).click
     # Remember some stuff so we can find this booking later
     booking = {
@@ -18,6 +28,11 @@ RSpec.feature "My Bookings:", type: :feature do
 
   def findBookingOnPage(resource_name)
     return page.first("td", :text => resource_name)
+  end
+
+  def expandEditFormForBooking(booking_element, end_time_for_validation)
+    booking_element.find(:xpath,'../..').first('.btn-edit').click 
+    page.find("#bookingTo_chosen span", visible: false, :text => end_time_for_validation.strip, :wait => 10) # wait till the form's properly loaded/updated before doing anything else, by checking for its availability
   end
 
   context "when viewing existing bookings" do
@@ -89,13 +104,27 @@ RSpec.feature "My Bookings:", type: :feature do
       execute_valid_login
     end
 
-    after(:all) do
+    after(:each) do
       Rake::Task['data:bookings:deleteUpcoming'].invoke
     end
 
     pending "should see a warning if editing date/time within 24 hours of the original start-time"
     pending "should see a warning if reducing hours within 24 hours of the original start-time"
-    pending "should see a warning if changing the booking-time conflicts with another booking" 
+
+    scenario "should see a warning if changing the booking-time conflicts with another booking", js:true do
+      laterBooking = createBooking(Time.now + 6.hours)
+      soonerBooking = createBooking()
+
+      visit "/bookings"
+      thisBooking = findBookingOnPage(soonerBooking[:resource_name])
+      expandEditFormForBooking(thisBooking,soonerBooking[:end_time])
+      extendedToTime = (Time.now + 7.hours).beginning_of_hour.to_s(:booking_time)
+      select_from_chosen(extendedToTime, :from => "bookingTo", :wait => 10)
+      click_button("Update")
+      expect(page).to have_text("Oh no!")
+      expect(page).to have_text("already booked")
+    end
+
     pending "should see a warning if the requested time exceeds the available hours in their plan, with one-click option to purchase more"
 
     scenario "should be able to successfully complete an update", js:true do
@@ -103,9 +132,7 @@ RSpec.feature "My Bookings:", type: :feature do
 
       visit "/bookings"
       thisBooking = findBookingOnPage(booking[:resource_name])
-      # Expand the edit form
-      thisBooking.find(:xpath,'../..').first('.btn-edit').click 
-      page.find("#bookingTo_chosen span", visible: false, :text => booking[:end_time].strip, :wait => 10) # wait till the form's properly loaded/updated
+      expandEditFormForBooking(thisBooking,booking[:end_time])
       # Update some values
       select_from_chosen(" 6:00 PM", :from => "bookingFrom", :wait => 10)
       select_from_chosen("11:30 PM", :from => "bookingTo", :wait => 10)
