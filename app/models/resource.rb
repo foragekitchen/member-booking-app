@@ -1,11 +1,11 @@
 class Resource < NexudusBase
-  attr_accessor :id, :description, :linked_resources, :location, :name, :resource_type_name, :timeslots, :visible
+  attr_accessor :id, :description, :linked_resources, :location, :name, :resource_type_name, :timeslots, :visible, :late_cancellation_limit
   @@resource_uri = "/spaces/resources"
 
   def initialize(params)
     params.map do |k,v|
       attribute_name = k.underscore
-      public_send("#{k.underscore}=", v) if respond_to?(attribute_name)
+      public_send("#{attribute_name}=", v) if respond_to?(attribute_name)
     end
   end
 

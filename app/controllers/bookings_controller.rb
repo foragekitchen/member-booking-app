@@ -58,8 +58,8 @@ class BookingsController < ApplicationController
     redirect_to bookings_path
   end
 
-  def edit
-    @booking = Booking.find(params[:id])
+  def edit 
+    @booking = Booking.find(params[:id], :include => "resource")
     respond_to do |format|
       format.js { render :json => @booking }
       format.html { render :index }

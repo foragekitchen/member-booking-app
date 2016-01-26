@@ -40,6 +40,8 @@ generateEditForm = (booking,btn) ->
   $('#bookingResource').val(booking.resource_id)
   $('#editBookingForm select').trigger("chosen:updated");  
   
+  disableTimeIfImminent(booking)
+
   $("#editBookingForm .btn-primary").first().click (event) ->
     $("#editBookingForm").attr({"action":"/bookings/" + booking.id})
     $("#editBookingForm").submit()
@@ -47,4 +49,21 @@ generateEditForm = (booking,btn) ->
   $('editBookingForm #btn-cancel').click (event) ->
     $("#editFormContainer").addClass("hidden")
     event.preventDefault()
+    
+disableTimeIfImminent = (booking) ->
+  minutes_until_start = Math.abs( convertToUtc(booking.from_time) - convertToUtc(new Date()) ) / 1000 / 60
+  if minutes_until_start <= booking.resource.late_cancellation_limit
+    $('#bookingFrom').prop('disabled', true).trigger("chosen:updated")
+    $('#bookingFrom_chosen').attr({
+      "data-toggle": "tooltip",
+      "data-placement": "right", 
+      "title": "Locked. This booking starts in less than 24 hours."
+    })
+    $('#bookingFrom_chosen').tooltip({trigger:'click'})
+    $('#bookingFrom_chosen').mouseleave -> 
+      $(this).tooltip("hide")
+    
+convertToUtc = (datetime) ->
+  utc = (new Date(datetime)).toISOString()
+  return new Date(utc)
   
