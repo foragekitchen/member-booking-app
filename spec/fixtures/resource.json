@@ -20,12 +20,12 @@
     "IsNew": false,
     "LargeDisplay": false,
     "LateBookingLimit": null,
-    "LateCancellationLimit": null,
+    "LateCancellationLimit": 1440,
     "LinkedResources": [
         63804741
     ],
-    "MaxBookingLength": null,
-    "MinBookingLength": null,
+    "MaxBookingLength": 720,
+    "MinBookingLength": 239,
     "Name": "A. Hedgehog",
     "NaturalLight": false,
     "Projector": false,
