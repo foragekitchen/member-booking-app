@@ -63,6 +63,7 @@ disableTimeIfImminent = (booking) ->
     $('#bookingFrom_chosen').tooltip({trigger:'click'})
     $('#bookingFrom_chosen').mouseleave -> 
       $(this).tooltip("hide")
+  else $('#bookingFrom').prop('disabled', false).trigger("chosen:updated")
     
 convertToUtc = (datetime) ->
   utc = (new Date(datetime)).toISOString()
