@@ -68,7 +68,9 @@ group :development, :test do
   gem 'webmock', require: false
 
   # Use Timecop for stubbing out (freezing) dates for proper date match in tests
+  # Use Sinon for doing the same in Javascript
   gem 'timecop'
+  gem 'sinon-rails'
 
   # Use Capybara for UI testing, with Selenium for support when needing to run javascript
   gem 'capybara'

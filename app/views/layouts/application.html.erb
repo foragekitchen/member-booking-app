@@ -4,6 +4,15 @@
   <title>NexudusApp</title>
   <%= stylesheet_link_tag    'application', media: 'all' %>
   <%= javascript_include_tag 'application' %>
+
+  <% if defined?(Timecop) && Timecop.top_stack_item %>
+  <% unix_millis = (Time.now.to_f * 1000.0).to_i %>
+  <%= javascript_include_tag "/assets/sinon.js" %>
+  <script>
+    sinon.useFakeTimers(<%= unix_millis %>);
+  </script>
+  <% end %>
+
   <%= csrf_meta_tags %>
 </head>
 <body id="<%= controller_name %>">
