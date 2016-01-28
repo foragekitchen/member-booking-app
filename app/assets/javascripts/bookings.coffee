@@ -44,6 +44,7 @@ generateEditForm = (booking,btn) ->
 
   $("#editBookingForm .btn-primary").first().click (event) ->
     $("#editBookingForm").attr({"action":"/bookings/" + booking.id})
+    $('#bookingFrom').prop('disabled', false).trigger("chosen:updated")
     $("#editBookingForm").submit()
 
   $('editBookingForm #btn-cancel').click (event) ->
