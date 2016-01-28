@@ -18,7 +18,7 @@ RSpec.feature "Booking Kitchen Time:", type: :feature do
     scenario "should be able to save a valid booking and see it appear on My Reservations", js:true do
       visit "/bookings"
       bookings = Array.new
-      bookings = page.find('table').all('td:first-child')
+      bookings = page.find('table#upcoming-bookings tbody').all('tr')
       count = bookings.size
 
       visit "/resources"
@@ -26,7 +26,7 @@ RSpec.feature "Booking Kitchen Time:", type: :feature do
       expect(page).to have_selector("button", :text => "Save your booking")
       click_button("Save your booking")
       
-      expect(page).to have_css("table tr", :count => count+1, :wait => 10)
+      expect(page).to have_css("tbody tr", :count => count+1, :wait => 10)
     end
 
   end

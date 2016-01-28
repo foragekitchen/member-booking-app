@@ -1,0 +1,5 @@
+Time::DATE_FORMATS[:booking] = "%a, %b %-d"
+Time::DATE_FORMATS[:booking_short] = "%b %-d"
+Time::DATE_FORMATS[:booking_day] = "%m/%d/%Y"
+Time::DATE_FORMATS[:booking_time] = "%l:%M %p"
+Time::DATE_FORMATS[:nexudus] = "%Y-%m-%dT%H:%M:00Z"
