@@ -55,3 +55,31 @@
 <div id="map-container">
   <div id="map"><div id="overlay"></div></div>
 </div>
+
+<div id="recurring-container">
+  <h2>Make it recurring?</h2>
+  <p>Got your favorite table? Put a hold on it now by telling us when you plan to come in regularly! Note that you can only book 3 weeks in advance. Make a mistake? You may cancel up to 2 days a month, with at least 24 hours notice.</p>
+
+  <%= form_tag("/bookings/#{flash[:booking_id]}", method: "put", id: "bookingRecurringForm", class: "form-horizontal") do %>
+    <div class="form-group">
+      <label for="booking_resources" class="col-sm-2 control-label">Your table(s)</label>
+      <div class="col-sm-3">
+        <%= text_field_tag("booking_resources", "", class: "form-control") %>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="booking_repeats" class="col-sm-2 control-label">This booking should repeat:</label>
+      <div class="col-sm-3">
+        <%= select_tag("booking_repeats", options_for_select([["Daily, for consecutive days",1]])) %>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="booking_numdays" class="col-sm-2 control-label">How many days?</label>
+      <div class="col-sm-3">
+        <%= text_field_tag("booking_numdays", "", class: "form-control") %>
+      </div>
+    </div>
+    <input type="submit" />
+  <% end %>
+
+</div>
