@@ -1,6 +1,7 @@
 $(document).ready ->  
   hideEditForm()
   activateEdit()
+  activateTooltipsForDisabledCancelButtons()
 
 hideEditForm = () ->
   # can't hide this form on pageload, since Chosen doesn't configure widths correctly unless elements are visible at start
@@ -65,6 +66,9 @@ disableTimeIfImminent = (booking) ->
       $(this).tooltip("hide")
   else $('#bookingFrom').prop('disabled', false).trigger("chosen:updated")
     
+activateTooltipsForDisabledCancelButtons = () ->
+  $(".disabled-cancel").tooltip()
+
 convertToUtc = (datetime) ->
   utc = (new Date(datetime)).toISOString()
   return new Date(utc)

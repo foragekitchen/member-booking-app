@@ -20,7 +20,8 @@ class BookingsController < ApplicationController
     response = booking.create
     if ( @response = JSON.parse(response.body) ) && @response["WasSuccessful"]
       flash[:notice] = @response["Message"] 
-      redirect_to bookings_path
+      flash[:booking_id] = @response["Value"]["Id"]
+      redirect_to resources_path(:anchor => "recurring-container")
     else
       flash[:alert] = @response["Message"] || "There was an error saving your booking. Please try again."
       redirect_to resources_path
@@ -28,18 +29,23 @@ class BookingsController < ApplicationController
   end
   
   def update 
-    dateTimes = processDateTimes(params['bookingDate'],params['bookingFrom'],params['bookingTo'])
+    if params[:booking_repeats].present?
+      booking = updateRecurring
+      response = booking.create
+    else
+      dateTimes = processDateTimes(params['bookingDate'],params['bookingFrom'],params['bookingTo'])
+      bookingUpdate = {
+        "id" => params["bookingId"],
+        "coworker_id" => @coworker.id,
+        "resource_id" => params["bookingResource"],
+        "from_time" => dateTimes["fromTime"],
+        "to_time" => dateTimes["toTime"],
+        "online" => true
+      }
+      booking = Booking.new(bookingUpdate)
+      response = booking.update
+    end
 
-    bookingUpdate = {
-      "id" => params["bookingId"],
-      "coworker_id" => @coworker.id,
-      "resource_id" => params["bookingResource"],
-      "from_time" => dateTimes["fromTime"],
-      "to_time" => dateTimes["toTime"],
-      "online" => true
-    }
-    booking = Booking.new(bookingUpdate)
-    response = booking.update
     if ( @response = JSON.parse(response.body) ) && @response["WasSuccessful"]
       flash[:notice] = @response["Message"] 
     else
@@ -68,6 +74,25 @@ class BookingsController < ApplicationController
 
   private
   
+  def updateRecurring
+    oldbooking = Booking.find(params[:id])
+    booking = oldbooking
+    oldbooking.destroy # Apparently this doesn't work by doing just a plain update, so we have to destroy the old one first 
+    booking.id = nil  #...and create a brand new one with the same settings but with recurring added
+    booking.repeat_booking = true
+    booking.repeats = params[:booking_repeats]
+    booking.repeat_every = 1
+    booking.repeat_until = (Time.parse(booking.from_time) + (params[:booking_numdays].to_i).days).to_s(:nexudus)
+    booking.repeat_on_mondays = params[:booking_repeat_on_mondays] || true
+    booking.repeat_on_tuesdays = params[:booking_repeat_on_tuesdays] || true
+    booking.repeat_on_wednesdays = params[:booking_repeat_on_wednesdays] || true
+    booking.repeat_on_thursdays = params[:booking_repeat_on_thursdays] || true
+    booking.repeat_on_fridays = params[:booking_repeat_on_fridays] || true
+    booking.repeat_on_saturdays = params[:booking_repeat_on_saturdays] || true
+    booking.repeat_on_sundays = params[:booking_repeat_on_sundays] || true
+    return booking
+  end
+
   def processDateTimes(day,from,to)
     fromTime = convertToUniversalTime(day,from)
     toTime = convertToUniversalTime(day,to)
