@@ -2,6 +2,7 @@ $(document).ready ->
   getResources()
   activateFilter()
   activateBookingModal()
+  toggleRecurringBookingForm()
 
 getResources = () ->
   $.ajax(url: "/resources", dataType: "json").done (json) ->
@@ -74,6 +75,15 @@ updateBookingForm = (table) ->
   modal.find("#bookingFrom").val(fromTime)
   modal.find("#bookingTo").val(toTime)
   
+toggleRecurringBookingForm = () ->
+  if $("#recur-booking").text().trim() == "" 
+    $("#recurring-container").css({ opacity: 0.5 })
+    $("#recurring-container form input").prop('disabled', true)
+  else
+    $("#recurring-container").css({ opacity: 0.5 })
+    $("#recurring-container").fadeTo("slow",1.0)
+    $("#recurring-container form input").prop('disabled', false)
+    
   
   
   
