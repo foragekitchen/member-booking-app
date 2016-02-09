@@ -22,13 +22,21 @@ activateBookingModal = () ->
 activateFilter = () ->
   $("#bookingFilters select").change (event) ->
     hoursArr = calculateHours()
-    #TODO - query for the booking minimum time, instead of hardcoding 4 hours here
+    #TODO - query for the booking minimum/maximum time, instead of hardcoding 4/12 hours here
     if hoursArr[3] < 4
       $("#bookingFilters .btn-default").prop('disabled', true)
       $('#bookingFilters .btn-default').attr({
         "data-toggle": "tooltip",
         "data-placement": "right", 
         "title": "Booking must be at least 4 hours."
+      })
+      $('#bookingFilters .btn-default').tooltip('show')
+    else if hoursArr[3] > 12
+      $("#bookingFilters .btn-default").prop('disabled', true)
+      $('#bookingFilters .btn-default').attr({
+        "data-toggle": "tooltip",
+        "data-placement": "right", 
+        "title": "Booking cannot be more than 12 hours."
       })
       $('#bookingFilters .btn-default').tooltip('show')
     else
@@ -100,7 +108,10 @@ calculateHours = () ->
   date = $("#bookingRequestDate").val()
   fromTime = $("#bookingRequestFromTime").val()
   toTime = $("#bookingRequestToTime").val()
-  hours = ( new Date("1970-1-1 " + toTime) - new Date("1970-1-1 " + fromTime) ) / 1000 / 60 / 60
+  fromDateTime = new Date("1970-1-1 " + fromTime)
+  toDateTime = new Date("1970-1-1 " + toTime)
+  toDateTime = new Date("1970-1-2 " + toTime) if toDateTime <= fromDateTime
+  hours = ( toDateTime - fromDateTime ) / 1000 / 60 / 60
   return [date,fromTime,toTime,hours]
   
   
