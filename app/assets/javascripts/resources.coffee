@@ -20,6 +20,20 @@ activateBookingModal = () ->
     $("#bookingForm").submit()
 
 activateFilter = () ->
+  $("#bookingFilters select").change (event) ->
+    hoursArr = calculateHours()
+    #TODO - query for the booking minimum time, instead of hardcoding 4 hours here
+    if hoursArr[3] < 4
+      $("#bookingFilters .btn-default").prop('disabled', true)
+      $('#bookingFilters .btn-default').attr({
+        "data-toggle": "tooltip",
+        "data-placement": "right", 
+        "title": "Booking must be at least 4 hours."
+      })
+      $('#bookingFilters .btn-default').tooltip('show')
+    else
+      $("#bookingFilters .btn-default").prop('disabled', false)
+      $('#bookingFilters .btn-default').tooltip('destroy')
   $("#bookingFilters").submit (event) ->
     markAvailable()
     event.preventDefault()
@@ -62,19 +76,16 @@ getPosition = (latlong) ->
   return [latlong[0]*scale+offsetTop,latlong[1]*scale+offsetLeft]
   
 updateBookingForm = (table) ->
-  date = $("#bookingRequestDate").val()
-  fromTime = $("#bookingRequestFromTime").val()
-  toTime = $("#bookingRequestToTime").val()
   modal = $('#bookingModal')
   modal.find("h4 span").text( table.attr('data-original-title') )
   html = $("#bookingRequestDate").val() + " from " + $("#bookingRequestFromTime").val() + " - " + $("#bookingRequestToTime").val()
   modal.find(".modal-body h5 span").html(html)
-  hours = ( new Date("1970-1-1 " + toTime) - new Date("1970-1-1 " + fromTime) ) / 1000 / 60 / 60
-  modal.find(".hoursBooking").text("#{hours} hours")
+  hoursArr = calculateHours()
+  modal.find(".hoursBooking").text("#{hoursArr[3]} hours")
   modal.find("#bookingResourceId").val( table.attr("id").split("-")[1] )
-  modal.find("#bookingDate").val(date)
-  modal.find("#bookingFrom").val(fromTime)
-  modal.find("#bookingTo").val(toTime)
+  modal.find("#bookingDate").val(hoursArr[0])
+  modal.find("#bookingFrom").val(hoursArr[1])
+  modal.find("#bookingTo").val(hoursArr[2])
   
 toggleRecurringBookingForm = () ->
   if $("#recur-booking").text().trim() == "" 
@@ -85,6 +96,12 @@ toggleRecurringBookingForm = () ->
     $("#recurring-container").fadeTo("slow",1.0)
     $("#recurring-container form input").prop('disabled', false)
     
+calculateHours = () ->  
+  date = $("#bookingRequestDate").val()
+  fromTime = $("#bookingRequestFromTime").val()
+  toTime = $("#bookingRequestToTime").val()
+  hours = ( new Date("1970-1-1 " + toTime) - new Date("1970-1-1 " + fromTime) ) / 1000 / 60 / 60
+  return [date,fromTime,toTime,hours]
   
   
   
