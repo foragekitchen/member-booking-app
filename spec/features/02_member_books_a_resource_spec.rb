@@ -26,7 +26,8 @@ RSpec.feature "Booking Kitchen Time:", type: :feature do
       expect(page).to have_selector("button", :text => "Save your booking")
       click_button("Save your booking")
       
-      expect(page).to have_css("tbody tr", :count => count+1, :wait => 10)
+      visit "/bookings"
+      expect(page).to have_css("table#upcoming-bookings tbody tr", :count => count+1, :wait => 10)
     end
 
   end
