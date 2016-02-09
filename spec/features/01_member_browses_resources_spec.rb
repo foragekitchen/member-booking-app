@@ -43,16 +43,16 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
 
         scenario "should see the resources' availability accurately update upon changing the requested date/times and clicking 'refresh'", js: true do
           visit "/resources"
-          # Defaults to 8 AM, 2 out of 3 offered
+          # Defaults to 8AM - 12PM, 2 out of 3 offered (100,101)
           expect(page).to have_css("#map-container div.resource.available", :count => 2, :wait => 10)
-          # Change to 2 PM, conflicts with booking
+          # Change to 2 PM, conflicts with 1-7pm booking for ID:100
           select_from_chosen("2:00 PM", from: "bookingRequestFromTime")
           select_from_chosen("7:00 PM", from: "bookingRequestToTime")
           click_button("Refresh")
           expect(page).to have_css("#map-container div.resource.available", :count => 1, :wait => 10)
-          # Change to 8 PM, should be free again
-          select_from_chosen("8:00 PM", from: "bookingRequestFromTime")
-          select_from_chosen("11:00 PM", from: "bookingRequestToTime")
+          # Change to 7:30 PM, should be free again
+          select_from_chosen("7:30 PM", from: "bookingRequestFromTime")
+          select_from_chosen("11:30 PM", from: "bookingRequestToTime")
           click_button("Refresh")
           expect(page).to have_css("#map-container div.resource.available", :count => 2, :wait => 10)
         end
@@ -85,7 +85,16 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
         expect(page).to have_selector("input[type=submit][value='Refresh']:disabled")
       end
 
-      pending "should be able to extend the booking time up to 12 hours"
+      scenario "should be able to extend the booking time up to 12 hours, but no more than 12 hours", js:true do
+        visit "/resources"
+        select_from_chosen("8:00 AM", from: "bookingRequestFromTime")
+        select_from_chosen("8:00 PM", from: "bookingRequestToTime")
+        expect(page).to have_no_content("Booking cannot be more than 12 hours.")
+        select_from_chosen("8:30 PM", from: "bookingRequestToTime")
+        expect(page).to have_content("Booking cannot be more than 12 hours.")
+        expect(page).to have_selector("input[type=submit][value='Refresh']:disabled")
+      end
+
       pending "should be able to change date, and/or start and end time(s), and see if it's still available"
       pending "should see a warning if the requested booking time conflicts with someone else"
       pending "should see a warning if booking more than a month in advance"
