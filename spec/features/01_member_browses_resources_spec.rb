@@ -73,7 +73,18 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
     
     context "when selecting a resource, date, and times for booking" do
       
-      pending "should be required to book a minimum of 4 hours"
+      before(:each) do
+        execute_valid_login
+      end
+
+      scenario "should be required to book a minimum of 4 hours", js:true do
+        visit "/resources"
+        select_from_chosen("3:00 PM", from: "bookingRequestFromTime")
+        select_from_chosen("5:00 PM", from: "bookingRequestToTime")
+        expect(page).to have_content("Booking must be at least 4 hours.")
+        expect(page).to have_selector("input[type=submit][value='Refresh']:disabled")
+      end
+
       pending "should be able to extend the booking time up to 12 hours"
       pending "should be able to change date, and/or start and end time(s), and see if it's still available"
       pending "should see a warning if the requested booking time conflicts with someone else"

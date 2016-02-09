@@ -5,6 +5,7 @@ module ChosenSelect
     page.execute_script("value = ['#{option_value}']\; if ($('##{field[:id]}').val()) {$.merge(value, $('##{field[:id]}').val())}")
     option_value = page.evaluate_script("value")
     page.execute_script("$('##{field[:id]}').val(#{option_value})")
+    page.execute_script("$('##{field[:id]}').trigger('change')")
     page.execute_script("$('##{field[:id]}').trigger('chosen:updated')")
   end  
 end
