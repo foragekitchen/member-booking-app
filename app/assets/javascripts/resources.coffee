@@ -30,7 +30,12 @@ markAvailable = () ->
     requestTo = $("#bookingRequestDate").val() + "T" + $("#bookingRequestToTime").val()
     $.ajax(url: "/resources?bookingRequestFrom=#{requestFrom}&bookingRequestTo=#{requestTo}", dataType: "json").done (json) ->
       $("#map-container .resource").removeClass "available"
-      $("#map-container").find("#resource-#{resourceID}").addClass "available" for resourceID in json
+      for resourceID in json
+        $("#map-container").find("#resource-#{resourceID}").addClass "available" 
+        $("#map-container").find("#resource-#{resourceID} div.button").click (event) -> 
+          updateBookingForm($(this).parent())
+          $(".popover").popover('hide')
+          $('#bookingModal').modal()
 
 createTable = (table) ->
   div = $ "<div>" # draw table
@@ -44,10 +49,6 @@ createTable = (table) ->
   div.popover({animation: false, placement: "left", html: true, trigger: "hover"})
   button = $ "<div>" # put button inside to open the booking modal
   button.addClass "button"
-  button.click (event) ->
-    updateBookingForm($(this).parent())
-    $(".popover").popover('hide')
-    $('#bookingModal').modal()
   div.append button
   if $.isArray(table.location) # figure out the position
     pos = getPosition(table.location)
