@@ -24,7 +24,13 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
         expect(page).to have_css("#map-container div.resource", :count => 3, :wait => 10)
       end
     
-      pending "should see filters for date and time, with 'closed' times disabled and friendly hint (ex: 'sorry! our space is closed 3am-6am for cleaning')"
+      scenario "should see filters for date and time, with 'closed' times omitted and friendly hint (ex: 'sorry! our space is closed 3am-6am for cleaning')", js: true do
+        visit "/resources"
+        expect(page).to have_content("When do you want to come in?")
+        expect(page).to have_content("closed 2AM-8AM")
+        page.find("#bookingRequestToTime_chosen").click
+        expect(page.find("#filters", :visible => false)).to have_no_content(" 3:00 AM")
+      end
 
       scenario "should be able to filter by date and time they want to come in; defaulted to today, 2 hours from now, minimum of 4 hours" do
         visit "/resources"
