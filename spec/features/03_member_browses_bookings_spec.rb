@@ -140,13 +140,13 @@ RSpec.feature "My Bookings:", type: :feature do
     end
 
     scenario "should see a warning if changing the booking-time conflicts with another booking", js:true do
-      laterBooking = createBooking(Time.now + 2.days + 6.hours)
-      soonerBooking = createBooking(Time.now + 2.days)
+      laterBooking = createBooking(Date.today + 2.days + 14.hours)
+      soonerBooking = createBooking(Date.today + 2.days + 8.hours)
 
       visit "/bookings"
       thisBooking = findBookingOnPage(soonerBooking[:resource_name])
       expandEditFormForBooking(thisBooking,soonerBooking[:end_time])
-      extendedToTime = (Time.now + 2.days + 7.hours).beginning_of_hour.to_s(:booking_time)
+      extendedToTime = (Date.today + 2.days + 15.hours).beginning_of_hour.to_s(:booking_time)
       select_from_chosen(extendedToTime, :from => "bookingTo", :wait => 10)
       click_button("Update")
       expect(page).to have_text("Oh no!")
@@ -154,7 +154,7 @@ RSpec.feature "My Bookings:", type: :feature do
     end
 
     scenario "should be able to successfully complete an update", js:true do
-      booking = createBooking(Time.now + 2.days)
+      booking = createBooking(Date.today + 2.days + 8.hours)
 
       visit "/bookings"
       thisBooking = findBookingOnPage(booking[:resource_name])

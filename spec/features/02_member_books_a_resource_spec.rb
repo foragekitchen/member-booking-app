@@ -1,4 +1,6 @@
 require 'rails_helper'
+require 'rake'
+NexudusApp::Application.load_tasks
 
 RSpec.feature "Booking Kitchen Time:", type: :feature do
 
@@ -12,7 +14,7 @@ RSpec.feature "Booking Kitchen Time:", type: :feature do
     end
 
     after(:all) do
-      # TODO - Remove all test data from this user
+      Rake::Task['data:bookings:deleteUpcoming'].invoke
     end
 
     scenario "should be able to save a valid booking and see it appear on My Reservations", js:true do
