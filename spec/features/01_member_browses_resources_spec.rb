@@ -85,7 +85,7 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
         expect(page).to have_selector("input[type=submit][value='Refresh']:disabled")
       end
 
-      scenario "should be able to extend the booking time up to 12 hours, but no more than 12 hours", js:true do
+      scenario "should be able to book up to 12 hours, but no more than 12 hours", js:true do
         visit "/resources"
         select_from_chosen("8:00 AM", from: "bookingRequestFromTime")
         select_from_chosen("8:00 PM", from: "bookingRequestToTime")
@@ -95,8 +95,6 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
         expect(page).to have_selector("input[type=submit][value='Refresh']:disabled")
       end
 
-      pending "should be able to change date, and/or start and end time(s), and see if it's still available"
-      pending "should see a warning if the requested booking time conflicts with someone else"
       pending "should see a warning if booking more than a month in advance"
       pending "should see when it is next available if it is not currently available"
       pending "should see who booked it if it is currently unavailable"
