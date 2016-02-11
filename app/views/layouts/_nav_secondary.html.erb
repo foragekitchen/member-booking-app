@@ -5,7 +5,9 @@
           <li class="accounts-nav dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Account</a>
             <ul class="dropdown-menu">
-              <li><a href="#">Invoices</a></li>
+              <li class="text-info">Remaining hours: <%= @coworker.remaining_hours_in_plan.to_i %></li>
+              <li class="text-info">Total hours in plan: <%= @coworker.total_hours_in_plan.to_i %></li>
+              <li role="separator" class="divider"></li>
               <li><%= link_to "Logout", logout_path, :method => "delete" %></li>
             </ul>
           </li>
