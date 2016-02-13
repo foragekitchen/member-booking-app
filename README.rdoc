@@ -2,7 +2,7 @@
 
 This Member Booking App allows members to book resources like "prep tables" in a shared space. It requires:
 
-- A working and configured <b>Nexudus Spaces</b> Admin Account (learn more about Nexudus here: http://coworking.nexudus.com/en) 
+- A working and configured <b>Nexudus Spaces</b> Admin Account (learn more about Nexudus here: http://coworking.nexudus.com/en). Or log into your Admin area here: https://spaces.nexudus.com. 
 - Working *Coworker* (i.e. Member) logins. These are members of the space with a coworker_id. Pure Admin accounts, i.e. staff members who have role = Admin but not actual membership/price plan configured, will NOT be able to log into this interface because they are technically not a coworker.
 
 == Configuring the Nexudus Admin:
