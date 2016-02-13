@@ -87,5 +87,8 @@ class Booking < NexudusBase
     return Time.parse(from_time).localtime.to_s(:booking_time) + " - " + Time.parse(to_time).localtime.to_s(:booking_time)
   end
 
+  def duration_in_minutes
+    (Time.parse(to_time) - Time.parse(from_time)) / 60
+  end
 
 end

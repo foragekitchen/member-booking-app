@@ -29,9 +29,20 @@ nav {
   }
 }
 
+.accounts-nav .dropdown-menu li {
+  text-align: center;
+}
+
 footer {
   background-color: #eee;
   margin-top: 50px;
   padding-top: 20px;
   padding-bottom: 50px;
+}
+
+.popover {
+  max-width: 100%;
+}
+.popover-content {
+  width: 400px;
 }

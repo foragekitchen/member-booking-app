@@ -1,20 +1,50 @@
 == README
 
-* Ruby version: 2.2.2
+This Member Booking App allows members to book resources like "prep tables" in a shared space. It provides a friendlier interface, more tailored to the kitchen environment, than default out-of-box Nexudus. The App requires:
 
-* System dependencies: see GemFile
+- A working and configured <b>Nexudus Spaces</b> Admin Account (learn more about Nexudus here: http://coworking.nexudus.com/en). Or log into your Admin area here: https://spaces.nexudus.com. 
+- Working *Coworker* (i.e. Member) logins. These are members of the space with a coworker_id. Pure Admin accounts, i.e. staff members who have role = Admin but not actual membership/price plan configured, will NOT be able to log into this interface because they are technically not a coworker.
 
-* Configuration: 
-  * In order to make API calls to the live Nexudus server from your local development environment, you will need to set two environment variables: NEXUDUS_USERNAME and NEXUDUS_PASSWORD. This login/user should have API access.
-  * In order to successfully run feature/integration tests, you will need to set two environment variables: NEXUDUS_COWORKER_TEST_USERNAME and NEXUDUS_COWORKER_TEST_PASSWORD. This login should be a regular Coworker with active membership.
-  * See secrets.yml for more details. 
+== Configuring the Nexudus Admin:
+There is very good documentation on what Nexudus offers and how to use it / configure it. You can find it here!: http://help.spaces.nexudus.com/en/managers. Out of the many features, we use these to power the core of our Member Booking App:
 
-* Database: this application currently does not rely on any persistent database. A very few variables are stored in session, like the user ID. Data is obtained from the live Nexudus API server, though [some] requests are cached to improve performance. 
+- Space / *Resources* and <b>Resource Types:</b> these are how things like prep tables are represented in the system. Each individual prep table is a Resource. 
+  * *Note:* unique to this app is a Resource Type called "Resource Location." Resources created with this Type are used to store the "location" that the resource should appear on the Map of the space. The input uses real-world measurements, i.e. 5', 50' from the top-left corner of the space. Follow the syntax "@5',50'" and enter it into the *Description* field of the Resource. Then, _link_ this Resource to the main entry for the Resource. For example, if you create a Resource entry for your "Prep Table A," (Type = Prep Table) then you must also create a separate _linked_ Resource entry containing the coordinates with Type = Resource Location.
+- Space / *Bookings:* calendar of all bookings made by coworkers for resources
+- Space / *Members:* coworkers who are allowed to book resources (Note these are a slightly different concept than *Users* in Nexudus; all Coworkers are Users, but not all Users are Coworkers. Careful to use the correct ID depending on what you're trying to query.)
+- Billing / <b>Price Plans:</b> configure various price plans, especially the <b>Resource Credits</b> for how many minutes of resources are included in the plan.
 
-* How to run the test suite: 
-  * bundle exec guard
-  * edit files to see guard auto-run relevant tests, or hit 'enter' to run entire test suite
+See more about all of these features here: http://help.spaces.nexudus.com/en/managers/
 
-* Services (job queues, cache servers, search engines, etc.): none at the moment.
+See how we interact with each of these features, programmatically via the API, here: http://help.spaces.nexudus.com/en/api/
 
-* Deployment instructions: this application is deployed on Heroku
+== Tech:
+- Rails version: 4.2.3
+
+- Ruby version: 2.2.2
+
+- System dependencies: see GemFile
+
+- Configuration: 
+  - In order to make API calls to the live Nexudus server from your local development environment, you will need to set two environment variables: NEXUDUS_USERNAME and NEXUDUS_PASSWORD. This login/user should have API access.
+  - In order to successfully run feature/integration tests, you will need to set two environment variables: NEXUDUS_COWORKER_TEST_USERNAME and NEXUDUS_COWORKER_TEST_PASSWORD. This login should be a regular Coworker with active membership. Do NOT use the same login as the previous setting, and do NOT use a login belonging to a non-Coworker Admin!
+  - See secrets.yml for more details. 
+
+- Database: this application currently does not rely on any persistent database. A very few variables are stored in session, like the user ID. Data is obtained from the live Nexudus API server, though [some] requests are cached to improve performance. 
+
+- Services (job queues, cache servers, search engines, etc.): none at the moment.
+
+- Deployment instructions: this application is deployed on Heroku
+
+
+== Tests:
+Because this App primarily is an API wrapper around Nexudus and makes a lot of calls to Nexudus's API, the test suite focuses mainly on <b>feature/integration tests</b> that fire up the Selenium browser (via Capybara - remember "js:true"!) and tests end-to-end interactions. The tests switch between using fake data and stubbing live data calls, vs making _actual live changes_ to the Nexudus database. This means you should be very very careful running the test suite on a live production environment; ideally there is always a <b>clone of the production environment that is used for testing</b> instead (a clone where no actual users have access).
+
+- Is it live??
+  - By default, each test uses stubbed data methods and does NOT make live requests to Nexudus, in order to cut down a little bit on the time it takes to run the tests. Within each context, the test may allow a live connection. Look for this line of code: "WebMock.allow_net_connect!"
+
+- How to run the test suite: 
+  - 'bundle exec guard'
+  - edit files to see guard auto-run relevant tests, or hit 'enter' to run entire test suite
+  - exit and use 'rspec <path to file>' if you want to run just one specific test file
+
