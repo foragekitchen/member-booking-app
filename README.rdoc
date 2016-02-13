@@ -1,6 +1,6 @@
 == README
 
-This Member Booking App allows members to book resources like "prep tables" in a shared space. It requires:
+This Member Booking App allows members to book resources like "prep tables" in a shared space. It provides a friendlier interface, more tailored to the kitchen environment, than default out-of-box Nexudus. The App requires:
 
 - A working and configured <b>Nexudus Spaces</b> Admin Account (learn more about Nexudus here: http://coworking.nexudus.com/en). Or log into your Admin area here: https://spaces.nexudus.com. 
 - Working *Coworker* (i.e. Member) logins. These are members of the space with a coworker_id. Pure Admin accounts, i.e. staff members who have role = Admin but not actual membership/price plan configured, will NOT be able to log into this interface because they are technically not a coworker.
@@ -19,6 +19,8 @@ See more about all of these features here: http://help.spaces.nexudus.com/en/man
 See how we interact with each of these features, programmatically via the API, here: http://help.spaces.nexudus.com/en/api/
 
 == Tech:
+- Rails version: 4.2.3
+
 - Ruby version: 2.2.2
 
 - System dependencies: see GemFile
