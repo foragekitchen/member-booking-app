@@ -2,17 +2,17 @@
 
 This Member Booking App allows members to book resources like "prep tables" in a shared space. It requires:
 
-* A working and configured *Nexudus Spaces* Admin Account (learn more about Nexudus here: http://coworking.nexudus.com/en) 
-* Working *Coworker* (i.e. Member) logins. These are members of the space with a coworker_id. Pure Admin accounts, i.e. staff members who have role = Admin but not actual membership/price plan configured, will NOT be able to log into this interface because they are technically not a coworker.
+- A working and configured <b>Nexudus Spaces</b> Admin Account (learn more about Nexudus here: http://coworking.nexudus.com/en) 
+- Working *Coworker* (i.e. Member) logins. These are members of the space with a coworker_id. Pure Admin accounts, i.e. staff members who have role = Admin but not actual membership/price plan configured, will NOT be able to log into this interface because they are technically not a coworker.
 
 == Configuring the Nexudus Admin:
 There is very good documentation on what Nexudus offers and how to use it / configure it. You can find it here!: http://help.spaces.nexudus.com/en/managers. Out of the many features, we use these to power the core of our Member Booking App:
 
-- Space / *Resources* and *Resource Types:* these are how things like prep tables are represented in the system. Each individual prep table is a Resource. 
+- Space / *Resources* and <b>Resource Types:</b> these are how things like prep tables are represented in the system. Each individual prep table is a Resource. 
   * *Note:* unique to this app is a Resource Type called "Resource Location." Resources created with this Type are used to store the "location" that the resource should appear on the Map of the space. The input uses real-world measurements, i.e. 5', 50' from the top-left corner of the space. Follow the syntax "@5',50'" and enter it into the *Description* field of the Resource. Then, _link_ this Resource to the main entry for the Resource. For example, if you create a Resource entry for your "Prep Table A," (Type = Prep Table) then you must also create a separate _linked_ Resource entry containing the coordinates with Type = Resource Location.
 - Space / *Bookings:* calendar of all bookings made by coworkers for resources
 - Space / *Members:* coworkers who are allowed to book resources (Note these are a slightly different concept than *Users* in Nexudus; all Coworkers are Users, but not all Users are Coworkers. Careful to use the correct ID depending on what you're trying to query.)
-- Billing / *Price Plans:* configure various price plans, especially the *Resource Credits* for how many minutes of resources are included in the plan.
+- Billing / <b>Price Plans:</b> configure various price plans, especially the <b>Resource Credits</b> for how many minutes of resources are included in the plan.
 
 See more about all of these features here: http://help.spaces.nexudus.com/en/managers/
 
@@ -36,7 +36,7 @@ See how we interact with each of these features, programmatically via the API, h
 
 
 == Tests:
-Because this App primarily is an API wrapper around Nexudus and makes a lot of calls to Nexudus's API, the test suite focuses mainly on *feature/integration tests* that fire up the Selenium browser (via Capybara - remember "js:true"!) and tests end-to-end interactions. The tests switch between using fake data and stubbing live data calls, vs making _actual live changes_ to the Nexudus database. This means you should be very very careful running the test suite on a live production environment; ideally there is always a *clone of the production environment that is used for testing* instead (a clone where no actual users have access).
+Because this App primarily is an API wrapper around Nexudus and makes a lot of calls to Nexudus's API, the test suite focuses mainly on <b>feature/integration tests</b> that fire up the Selenium browser (via Capybara - remember "js:true"!) and tests end-to-end interactions. The tests switch between using fake data and stubbing live data calls, vs making _actual live changes_ to the Nexudus database. This means you should be very very careful running the test suite on a live production environment; ideally there is always a <b>clone of the production environment that is used for testing</b> instead (a clone where no actual users have access).
 
 - Is it live??
   - By default, each test uses stubbed data methods and does NOT make live requests to Nexudus, in order to cut down a little bit on the time it takes to run the tests. Within each context, the test may allow a live connection. Look for this line of code: "WebMock.allow_net_connect!"
