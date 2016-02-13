@@ -2,14 +2,27 @@
       <div class="collapse navbar-collapse navbar-right" id="subnav-collapse-1">
         <ul class="nav navbar-nav">
           <li><p class="navbar-text">Welcome back, <%= @coworker.salutation || "you" %></p></li>
-          <li class="accounts-nav dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Account</a>
-            <ul class="dropdown-menu">
-              <li class="text-info">Remaining hours: <%= @coworker.remaining_hours_in_plan.to_i %></li>
-              <li class="text-info">Total hours in plan: <%= @coworker.total_hours_in_plan.to_i %></li>
-              <li role="separator" class="divider"></li>
-              <li><%= link_to "Logout", logout_path, :method => "delete" %></li>
-            </ul>
+          <li class="accounts-nav">
+            <a title="My Account" data-toggle="popover" data-trigger="focus" role="button" tabindex="0">My Account</a>
           </li>
         </ul>
+      </div>
+      
+      
+      <div id="my_account_popover" class="hidden">
+        <div class="col-md-12">
+          <div class="col-md-6">
+            <small>You have <br /></small>
+            <%= pluralize(@coworker.remaining_hours_in_plan.to_i, "hour") %> <br />
+            <small>remaining this month</small>
+          </div>
+          <div>
+            <small>Your Plan: <br /></small>
+            <%= @coworker.billing_plan %> <br />
+            <small>(<%= @coworker.total_hours_in_plan.to_i %> hrs, <%= number_to_currency(@coworker.extra_service_cost_per_hour) %>/hr add'l)</small>
+          </div>
+          <hr />
+          <%= link_to "Logout", logout_path, :class => "btn btn-default", :method => "delete" %>
+          <br /><br />
+        </div>
       </div>
