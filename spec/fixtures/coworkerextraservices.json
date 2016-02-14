@@ -1,0 +1,30 @@
+{
+  "Records": [
+    {
+      "CoworkerId": 42728089,
+      "BusinessId": 41030993,
+      "ExtraServiceId": 42734703,
+      "ExtraServiceName": "Prep Table",
+      "Description": null,
+      "Notes": null,
+      "RemainingUses": 1380,
+      "TotalUses": 2400,
+      "Free": true,
+      "Price": 1400.0,
+      "ExpireDate": "2016-03-08T08:00:00Z",
+      "DueDate": null,
+      "PurchaseOrder": null,
+      "ChargePeriod": 1,
+      "Invoiced": true,
+      "InvoiceDate": null,
+      "IsFromTariff": true,
+      "Id": 132106113,
+      "UpdatedOn": "2016-02-13T13:30:54Z",
+      "CreatedOn": "2016-02-08T08:06:46Z",
+      "UniqueId": "77e9cf29-10f3-472e-a969-cd5aeed55a79",
+      "UpdatedBy": "[System]",
+      "IsNew": false,
+      "ToStringText": "#132106113"
+    }
+  ]
+}

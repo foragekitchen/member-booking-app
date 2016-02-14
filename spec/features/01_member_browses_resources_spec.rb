@@ -52,19 +52,31 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
           # Defaults to 8AM - 12PM, 2 out of 3 offered (100,101)
           expect(page).to have_css("#map-container div.resource.available", :count => 2, :wait => 10)
           # Change to 2 PM, conflicts with 1-7pm booking for ID:100
-          select_from_chosen("2:00 PM", from: "bookingRequestFromTime")
-          select_from_chosen("7:00 PM", from: "bookingRequestToTime")
+          select_from_chosen(" 2:00 PM", from: "bookingRequestFromTime")
+          select_from_chosen(" 7:00 PM", from: "bookingRequestToTime")
           click_button("Refresh")
           expect(page).to have_css("#map-container div.resource.available", :count => 1, :wait => 10)
           # Change to 7:30 PM, should be free again
-          select_from_chosen("7:30 PM", from: "bookingRequestFromTime")
+          select_from_chosen(" 7:30 PM", from: "bookingRequestFromTime")
           select_from_chosen("11:30 PM", from: "bookingRequestToTime")
           click_button("Refresh")
           expect(page).to have_css("#map-container div.resource.available", :count => 2, :wait => 10)
         end
     
-        pending "should see a warning if selecting a timespan of less than 4 hours"
-        pending "should see a warning if selecting a timespan of more than 12 hours"
+        scenario "should see a warning if selecting a timespan of less than 4 hours", js:true do
+          visit "/resources"
+          # Defaults to 8AM - 12PM
+          select_from_chosen("11:00 AM", from: "bookingRequestToTime")
+          expect(page).to have_text("Booking must be at least 4 hours.")
+        end
+
+        scenario "should see a warning if selecting a timespan of more than 12 hours", js:true do
+          visit "/resources"
+          # Defaults to 8AM - 12PM
+          select_from_chosen(" 9:00 PM", from: "bookingRequestToTime")
+          expect(page).to have_text("Booking cannot be more than 12 hours.")
+        end
+
         pending "should see a warning if selecting a date/time that is already passed"
 
       end
@@ -85,18 +97,18 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
 
       scenario "should be required to book a minimum of 4 hours", js:true do
         visit "/resources"
-        select_from_chosen("3:00 PM", from: "bookingRequestFromTime")
-        select_from_chosen("5:00 PM", from: "bookingRequestToTime")
+        select_from_chosen(" 3:00 PM", from: "bookingRequestFromTime")
+        select_from_chosen(" 5:00 PM", from: "bookingRequestToTime")
         expect(page).to have_content("Booking must be at least 4 hours.")
         expect(page).to have_selector("input[type=submit][value='Refresh']:disabled")
       end
 
       scenario "should be able to book up to 12 hours, but no more than 12 hours", js:true do
         visit "/resources"
-        select_from_chosen("8:00 AM", from: "bookingRequestFromTime")
-        select_from_chosen("8:00 PM", from: "bookingRequestToTime")
+        select_from_chosen(" 8:00 AM", from: "bookingRequestFromTime")
+        select_from_chosen(" 8:00 PM", from: "bookingRequestToTime")
         expect(page).to have_no_content("Booking cannot be more than 12 hours.")
-        select_from_chosen("8:30 PM", from: "bookingRequestToTime")
+        select_from_chosen(" 8:30 PM", from: "bookingRequestToTime")
         expect(page).to have_content("Booking cannot be more than 12 hours.")
         expect(page).to have_selector("input[type=submit][value='Refresh']:disabled")
       end

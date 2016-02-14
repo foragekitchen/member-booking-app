@@ -26,6 +26,15 @@ $map-width: 1276px;
     }
   }
 
+  #disable-map {
+    background-color: #000;
+    height: $map-height;
+    opacity: 0.3;
+    position: absolute;
+    width: $map-width;
+    z-index: 100;
+  }
+
   div.resource {
     background-color: #eee;
     border: 2px solid #444;
