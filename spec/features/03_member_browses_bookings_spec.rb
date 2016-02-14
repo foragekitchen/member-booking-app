@@ -74,9 +74,6 @@ RSpec.feature "My Bookings:", type: :feature do
       expect(page).to have_css("#editBookingForm")
     end
 
-    pending "should see available remaining hours in plan"
-    pending "should see available remaining credit, if purchased extra hours"
-
   end
 
   context "when attempting to edit an existing booking" do

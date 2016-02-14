@@ -87,10 +87,19 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
 
       end
 
-
       context "with relation to their membership plan" do
-        pending "should see available remaining hours"
-        pending "should see a warning if the requested time exceeds the available hours, with one-click option to purchase more"
+        scenario "should see available remaining hours", js:true do
+          visit "/resources"
+          page.find(:css, "li.accounts-nav a").click
+          expect(page).to have_text("5 hours remaining this month")
+        end
+
+        scenario "should see a warning if the requested time exceeds the available hours, with notice about extra billing", js:true do 
+          visit "/resources"
+          select_from_chosen(" 2:00 PM", from: "bookingRequestToTime")
+          page.execute_script("$('div.available div.button').first().trigger('click')") # Since we're using "fake" stubbed resources, they're all going to be displayed on top of one another. Trigger the click directly to avoid click conflicts.
+          expect(page).to have_text("5 hours (you will be invoiced any extras)")
+        end
       end
 
     end
