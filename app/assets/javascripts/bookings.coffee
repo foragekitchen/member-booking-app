@@ -42,6 +42,7 @@ generateEditForm = (booking,btn) ->
   $('#editBookingForm select').trigger("chosen:updated");  
   
   disableTimeIfImminent(booking)
+  disableReductionIfImminent(booking)
 
   $("#editBookingForm .btn-primary").first().click (event) ->
     $("#editBookingForm").attr({"action":"/bookings/" + booking.id})
@@ -65,6 +66,14 @@ disableTimeIfImminent = (booking) ->
     $('#bookingFrom_chosen').mouseleave -> 
       $(this).tooltip("hide")
   else $('#bookingFrom').prop('disabled', false).trigger("chosen:updated")
+    
+disableReductionIfImminent = (booking) ->
+  minutes_until_start = Math.abs( convertToUtc(booking.from_time) - convertToUtc(new Date()) ) / 1000 / 60
+  if minutes_until_start <= booking.resource.late_cancellation_limit
+    selectedTime = $("#bookingTo").val()
+    $("#bookingTo option[value='" + selectedTime + "']").prevAll().prop('disabled', true)
+    $("#bookingTo").trigger("chosen:updated")
+  else $('#bookingTo option').prop('disabled', false).trigger("chosen:updated")
     
 activateTooltipsForDisabledCancelButtons = () ->
   $(".disabled-cancel").tooltip()
