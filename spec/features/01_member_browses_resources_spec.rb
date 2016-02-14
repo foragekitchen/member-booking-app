@@ -1,4 +1,5 @@
 require 'rails_helper'
+include ActionView::Helpers::DateHelper
 
 RSpec.feature "Browsing Available Resources:", type: :feature do
 
@@ -77,7 +78,12 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
           expect(page).to have_text("Booking cannot be more than 12 hours.")
         end
 
-        pending "should see a warning if selecting a date/time that is already passed"
+        scenario "should see a warning if selecting a date/time that is already passed", js:true do
+          visit "/resources"
+          fill_in('When do you want to come in?', :with => (Time.now - 1.day).to_s(:booking_day))
+          page.execute_script("$('#bookingRequestDate').trigger('change');") 
+          expect(page).to have_text("Booking cannot be in the past.")
+        end
 
       end
 

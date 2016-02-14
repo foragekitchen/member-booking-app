@@ -21,7 +21,7 @@ activateBookingModal = () ->
 
 activateFilter = () ->
   $("#disable-map").hide()
-  $("#bookingFilters select").change (event) ->
+  $("#bookingFilters select, #bookingFilters input").change (event) ->
     hoursArr = calculateHours()
     #TODO - query for the booking minimum/maximum time, instead of hardcoding 4/12 hours here
     if hoursArr[3] < 4
@@ -40,6 +40,15 @@ activateFilter = () ->
         "data-toggle": "tooltip",
         "data-placement": "right", 
         "title": "Booking cannot be more than 12 hours."
+      })
+      $('#bookingFilters .btn-default').tooltip('show')
+    else if new Date($('#bookingRequestDate').val() ) < (new Date()).setHours(0,0,0,0)
+      $("#disable-map").show()
+      $("#bookingFilters .btn-default").prop('disabled', true)
+      $('#bookingFilters .btn-default').attr({
+        "data-toggle": "tooltip",
+        "data-placement": "right", 
+        "title": "Booking cannot be in the past."
       })
       $('#bookingFilters .btn-default').tooltip('show')
     else
