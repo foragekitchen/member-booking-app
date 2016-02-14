@@ -12,8 +12,8 @@ RSpec.feature "My Bookings:", type: :feature do
       # derive different date parts from the startTime
       day = startTime.to_s(:booking_day)
       from = startTime.beginning_of_hour
-      to = (from + 4.hours).to_s(:booking_time).strip
-      from = from.to_s(:booking_time).strip
+      to = (from + 4.hours).to_s(:booking_time)
+      from = from.to_s(:booking_time)
       # update the filters form
       fill_in('When do you want to come in?', :with => day)
       select_from_chosen(from, from: "bookingRequestFromTime")
