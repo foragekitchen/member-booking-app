@@ -63,8 +63,20 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
           expect(page).to have_css("#map-container div.resource.available", :count => 2, :wait => 10)
         end
     
-        pending "should see a warning if selecting a timespan of less than 4 hours"
-        pending "should see a warning if selecting a timespan of more than 12 hours"
+        scenario "should see a warning if selecting a timespan of less than 4 hours", js:true do
+          visit "/resources"
+          # Defaults to 8AM - 12PM
+          select_from_chosen("11:00 AM", from: "bookingRequestToTime")
+          expect(page).to have_text("Booking must be at least 4 hours.")
+        end
+
+        scenario "should see a warning if selecting a timespan of more than 12 hours", js:true do
+          visit "/resources"
+          # Defaults to 8AM - 12PM
+          select_from_chosen(" 9:00 PM", from: "bookingRequestToTime")
+          expect(page).to have_text("Booking cannot be more than 12 hours.")
+        end
+
         pending "should see a warning if selecting a date/time that is already passed"
 
       end
