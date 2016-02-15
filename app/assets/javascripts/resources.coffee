@@ -21,7 +21,7 @@ activateBookingModal = () ->
 
 activateFilter = () ->
   $("#disable-map").hide()
-  $("#bookingFilters select").change (event) ->
+  $("#bookingFilters select, #bookingFilters input").change (event) ->
     hoursArr = calculateHours()
     #TODO - query for the booking minimum/maximum time, instead of hardcoding 4/12 hours here
     if hoursArr[3] < 4
@@ -40,6 +40,15 @@ activateFilter = () ->
         "data-toggle": "tooltip",
         "data-placement": "right", 
         "title": "Booking cannot be more than 12 hours."
+      })
+      $('#bookingFilters .btn-default').tooltip('show')
+    else if new Date($('#bookingRequestDate').val() ) < (new Date()).setHours(0,0,0,0)
+      $("#disable-map").show()
+      $("#bookingFilters .btn-default").prop('disabled', true)
+      $('#bookingFilters .btn-default').attr({
+        "data-toggle": "tooltip",
+        "data-placement": "right", 
+        "title": "Booking cannot be in the past."
       })
       $('#bookingFilters .btn-default').tooltip('show')
     else
@@ -98,6 +107,7 @@ updateBookingForm = (table) ->
   modal.find("#bookingDate").val(hoursArr[0])
   modal.find("#bookingFrom").val(hoursArr[1])
   modal.find("#bookingTo").val(hoursArr[2])
+  isEnoughHoursRemaining(hoursArr[3])
   
 toggleRecurringBookingForm = () ->
   if $("#recur-booking").text().trim() == "" 
@@ -117,6 +127,14 @@ calculateHours = () ->
   toDateTime = new Date("1970-1-2 " + toTime) if toDateTime <= fromDateTime
   hours = ( toDateTime - fromDateTime ) / 1000 / 60 / 60
   return [date,fromTime,toTime,hours]
-  
-  
+
+isEnoughHoursRemaining = (hrs_in_booking) ->
+  $("#bookingModal .my-plan span.text-warning").hide()
+  $("#bookingModal .my-plan span.glyphicon-ok").hide()
+  hrs_remaining = $("#hours-remaining").text()
+  if hrs_in_booking < hrs_remaining.split(" ")[0] 
+    $("#bookingModal .my-plan span.glyphicon-ok").show()
+  else
+    $("#bookingModal .my-plan span.text-warning").show()
+    
   

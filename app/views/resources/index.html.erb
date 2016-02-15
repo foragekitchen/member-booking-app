@@ -28,7 +28,9 @@
         
         <p class="my-plan">
           Hours requested in this booking: <strong><span class="hoursBooking"></span></strong><br />
-          Hours remaining in your plan: <strong><span class="hoursPlan"></span></strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+          Hours remaining in your plan: <strong><span id="hours-remaining"><%= pluralize(@coworker.remaining_hours_in_plan.to_i, "hour") %></span></strong> 
+          <span class="text-warning">(you will be invoiced any extras)</span>
+          <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
         </p>
 
       </div>
