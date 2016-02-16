@@ -49,7 +49,7 @@ Because this App primarily is an API wrapper around Nexudus and makes a lot of c
   - exit and use 'rspec <path to file>' if you want to run just one specific test file
   
 - Troubleshooting / gotchas:
-  - Tests failing? Sometimes this can be due to the time of day you're running the tests, since the Kitchen's *timeslots are set to close from 2AM-8AM* (yes, this means they are a little bit brittle and can be refactored, but on the flipside should mirror real life conditions). Though the _stubbed_ tests (ones that don't make a live connection to the Nexudus server) also stub out the current date/time, the *_live_ tests rely on the actual current time.*
+  - Tests failing? Sometimes this can be due to the time of day you're running the tests, since the Kitchen's <b>timeslots are set to close from 2AM-8AM</b> (yes, this means they are a little bit brittle and can be refactored, but on the flipside should mirror real life conditions). Though the _stubbed_ tests (ones that don't make a live connection to the Nexudus server) also stub out the current date/time, the <b>_live_ tests rely on the actual current time.</b>
   - You may also want to use some rake task convenient methods to delete all upcoming bookings, recreate timeslots, etc. See folder /lib/tasks for all available rake methods.
   
 - Documentation: 
