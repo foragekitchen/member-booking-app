@@ -23,8 +23,8 @@ RSpec.feature "My Bookings:", type: :feature do
     page.first("div.available div.button", :wait => 10).click
     # Remember some stuff so we can find this booking later
     booking = {
-      :resource_name => page.find(".modal-title span").text,
-      :end_time => page.find(".modal-body h5 span").text.split("-").last
+      :resource_name => page.find(".modal-title span", :wait => 10).text,
+      :end_time => page.find(".modal-body h5 span", :wait => 10).text.split("-").last
     }
     click_button("Save your booking")
     return booking
@@ -98,8 +98,19 @@ RSpec.feature "My Bookings:", type: :feature do
       expect(page).to have_css("div", :text => "Locked. This booking starts in less than 24 hours.", :visible => true, :wait => 10)
     end
 
-    pending "should see a warning if reducing hours within 24 hours of the original start-time"
-    pending "should see a warning if the requested time exceeds the available hours in their plan, with one-click option to purchase more"
+    scenario "should not be able to reduce hours within 24 hours of the original start-time", js:true do
+      visit "/bookings"      
+      expandEditFormForBooking(findBookingOnPage("A. Hedgehog Prep Table"), " 1:00 PM")
+      expect(page).to have_css("#bookingTo option[disabled]", :text => "12:00 PM", :visible => false, :wait => 10)
+    end
+
+    scenario "should see a warning if the requested time exceeds the available hours in their plan", js:true do 
+      visit "/bookings"      
+      expandEditFormForBooking(findBookingOnPage("A. Hedgehog Prep Table"), " 1:00 PM")
+      select_from_chosen(" 7:00 PM", :from => "bookingTo")
+      expect(page).to have_text("exceeds the hours remaining in your plan")
+      expect(page).to have_text("you will be invoiced")
+    end
 
   end
 

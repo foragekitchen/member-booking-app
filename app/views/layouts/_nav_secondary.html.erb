@@ -13,7 +13,7 @@
         <div class="col-md-12">
           <div class="col-md-6">
             <small>You have <br /></small>
-            <%= pluralize(@coworker.remaining_hours_in_plan.to_i, "hour") %> <br />
+            <span id="my-account-remaining-hours"><%= pluralize(@coworker.remaining_hours_in_plan.to_i, "hour") %></span> <br />
             <small>remaining this month</small>
           </div>
           <div>

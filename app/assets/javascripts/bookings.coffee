@@ -43,6 +43,7 @@ generateEditForm = (booking,btn) ->
   
   disableTimeIfImminent(booking)
   disableReductionIfImminent(booking)
+  enableCheckRemainingHours(booking)
 
   $("#editBookingForm .btn-primary").first().click (event) ->
     $("#editBookingForm").attr({"action":"/bookings/" + booking.id})
@@ -75,10 +76,34 @@ disableReductionIfImminent = (booking) ->
     $("#bookingTo").trigger("chosen:updated")
   else $('#bookingTo option').prop('disabled', false).trigger("chosen:updated")
     
+enableCheckRemainingHours = (booking) ->
+  $('#editBookingForm select').change (event) ->
+    hoursBooking = calculateHours() #TODO - DRY this up with the same fx in resources.coffee
+    hoursRemaining = $("#my-account-remaining-hours").text().split(" ")[0] 
+    hoursChange = hoursBooking - (booking.duration_in_minutes / 60)
+    if hoursChange > hoursRemaining
+      $('#bookingTo_chosen').attr({
+        "data-toggle": "tooltip",
+        "data-placement": "right", 
+        "title": "This exceeds the hours remaining in your plan, you will be invoiced any extras."
+      })
+      $('#bookingTo_chosen').tooltip('show')
+    else
+      $('#bookingTo_chosen').tooltip('destroy')
+
 activateTooltipsForDisabledCancelButtons = () ->
   $(".disabled-cancel").tooltip()
 
 convertToUtc = (datetime) ->
   utc = (new Date(datetime)).toISOString()
   return new Date(utc)
+
+calculateHours = () ->  
+  fromTime = $("#bookingFrom").val()
+  toTime = $("#bookingTo").val()
+  fromDateTime = new Date("1970-1-1 " + fromTime)
+  toDateTime = new Date("1970-1-1 " + toTime)
+  toDateTime = new Date("1970-1-2 " + toTime) if toDateTime <= fromDateTime
+  hours = ( toDateTime - fromDateTime ) / 1000 / 60 / 60
+  return hours
   
