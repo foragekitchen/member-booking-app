@@ -23,8 +23,8 @@ RSpec.feature "My Bookings:", type: :feature do
     page.first("div.available div.button", :wait => 10).click
     # Remember some stuff so we can find this booking later
     booking = {
-      :resource_name => page.find(".modal-title span").text,
-      :end_time => page.find(".modal-body h5 span").text.split("-").last
+      :resource_name => page.find(".modal-title span", :wait => 10).text,
+      :end_time => page.find(".modal-body h5 span", :wait => 10).text.split("-").last
     }
     click_button("Save your booking")
     return booking
