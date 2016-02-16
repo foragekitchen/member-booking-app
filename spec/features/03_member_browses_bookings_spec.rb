@@ -98,7 +98,12 @@ RSpec.feature "My Bookings:", type: :feature do
       expect(page).to have_css("div", :text => "Locked. This booking starts in less than 24 hours.", :visible => true, :wait => 10)
     end
 
-    pending "should see a warning if reducing hours within 24 hours of the original start-time"
+    scenario "should not be able to reduce hours within 24 hours of the original start-time", js:true do
+      visit "/bookings"      
+      expandEditFormForBooking(findBookingOnPage("A. Hedgehog Prep Table"), " 1:00 PM")
+      expect(page).to have_css("#bookingTo option[disabled]", :text => "12:00 PM", :visible => false, :wait => 10)
+    end
+
     pending "should see a warning if the requested time exceeds the available hours in their plan, with one-click option to purchase more"
 
   end
