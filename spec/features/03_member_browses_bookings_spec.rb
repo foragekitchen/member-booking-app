@@ -104,7 +104,13 @@ RSpec.feature "My Bookings:", type: :feature do
       expect(page).to have_css("#bookingTo option[disabled]", :text => "12:00 PM", :visible => false, :wait => 10)
     end
 
-    pending "should see a warning if the requested time exceeds the available hours in their plan, with one-click option to purchase more"
+    scenario "should see a warning if the requested time exceeds the available hours in their plan", js:true do 
+      visit "/bookings"      
+      expandEditFormForBooking(findBookingOnPage("A. Hedgehog Prep Table"), " 1:00 PM")
+      select_from_chosen(" 7:00 PM", :from => "bookingTo")
+      expect(page).to have_text("exceeds the hours remaining in your plan")
+      expect(page).to have_text("you will be invoiced")
+    end
 
   end
 
