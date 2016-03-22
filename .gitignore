@@ -21,3 +21,10 @@ public/documentation-working.html
 .env
 
 .DS_Store
+
+# Ignore RubyMine files
+/.idea
+
+# Ignore rvm config files
+.ruby-gemset
+.ruby-version
