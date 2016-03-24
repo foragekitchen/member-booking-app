@@ -1,4 +1,4 @@
-$(document).ready ->  
+$(document).ready ->
   getResources()
   activateFilter()
   activateBookingModal()
@@ -11,12 +11,9 @@ getResources = () ->
 positionTables = (resources) ->
   createTable resource for resource in resources
   markAvailable()
-  
+
 activateBookingModal = () ->
-  $("#bookingModal a.btn-change").click (event) ->
-    $("#bookingModal").modal('hide')
-    event.preventDefault()
-  $("#bookingModal .btn-primary").first().click (event) ->
+  $("#bookingModal button:submit").click (event) ->
     $("#bookingForm").submit()
 
 activateFilter = () ->
@@ -29,7 +26,7 @@ activateFilter = () ->
       $("#bookingFilters .btn-default").prop('disabled', true)
       $('#bookingFilters .btn-default').attr({
         "data-toggle": "tooltip",
-        "data-placement": "right", 
+        "data-placement": "right",
         "title": "Booking must be at least 4 hours."
       })
       $('#bookingFilters .btn-default').tooltip('show')
@@ -38,7 +35,7 @@ activateFilter = () ->
       $("#bookingFilters .btn-default").prop('disabled', true)
       $('#bookingFilters .btn-default').attr({
         "data-toggle": "tooltip",
-        "data-placement": "right", 
+        "data-placement": "right",
         "title": "Booking cannot be more than 12 hours."
       })
       $('#bookingFilters .btn-default').tooltip('show')
@@ -47,7 +44,7 @@ activateFilter = () ->
       $("#bookingFilters .btn-default").prop('disabled', true)
       $('#bookingFilters .btn-default').attr({
         "data-toggle": "tooltip",
-        "data-placement": "right", 
+        "data-placement": "right",
         "title": "Booking cannot be in the past."
       })
       $('#bookingFilters .btn-default').tooltip('show')
@@ -66,8 +63,8 @@ markAvailable = () ->
     $.ajax(url: "/resources?bookingRequestFrom=#{requestFrom}&bookingRequestTo=#{requestTo}", dataType: "json").done (json) ->
       $("#map-container .resource").removeClass "available"
       for resourceID in json
-        $("#map-container").find("#resource-#{resourceID}").addClass "available" 
-        $("#map-container").find("#resource-#{resourceID} div.button").click (event) -> 
+        $("#map-container").find("#resource-#{resourceID}").addClass "available"
+        $("#map-container").find("#resource-#{resourceID} div.button").click (event) ->
           updateBookingForm($(this).parent())
           $(".popover").popover('hide')
           $('#bookingModal').modal()
@@ -89,13 +86,13 @@ createTable = (table) ->
     pos = getPosition(table.location)
     div.css({top: pos[0], left: pos[1] })
   $("#map-container").append div
-  
-getPosition = (latlong) ->  
+
+getPosition = (latlong) ->
   scale = .76 #Used for converting from inches (distance away from top left corner of space) to pixels (representing on the image)
   offsetTop = 55 #Offset for extra border on the map around the actual space
   offsetLeft = 45
   return [latlong[0]*scale+offsetTop,latlong[1]*scale+offsetLeft]
-  
+
 updateBookingForm = (table) ->
   modal = $('#bookingModal')
   modal.find("h4 span").text( table.attr('data-original-title') )
@@ -108,17 +105,17 @@ updateBookingForm = (table) ->
   modal.find("#bookingFrom").val(hoursArr[1])
   modal.find("#bookingTo").val(hoursArr[2])
   isEnoughHoursRemaining(hoursArr[3])
-  
+
 toggleRecurringBookingForm = () ->
-  if $("#recur-booking").text().trim() == "" 
+  if $("#recur-booking").text().trim() == ""
     $("#recurring-container").css({ opacity: 0.5 })
     $("#recurring-container form input").prop('disabled', true)
   else
     $("#recurring-container").css({ opacity: 0.5 })
     $("#recurring-container").fadeTo("slow",1.0)
     $("#recurring-container form input").prop('disabled', false)
-    
-calculateHours = () ->  
+
+calculateHours = () ->
   date = $("#bookingRequestDate").val()
   fromTime = $("#bookingRequestFromTime").val()
   toTime = $("#bookingRequestToTime").val()
@@ -132,9 +129,7 @@ isEnoughHoursRemaining = (hrs_in_booking) ->
   $("#bookingModal .my-plan span.text-warning").hide()
   $("#bookingModal .my-plan span.glyphicon-ok").hide()
   hrs_remaining = $("#hours-remaining").text()
-  if hrs_in_booking < hrs_remaining.split(" ")[0] 
+  if hrs_in_booking < hrs_remaining.split(" ")[0]
     $("#bookingModal .my-plan span.glyphicon-ok").show()
   else
     $("#bookingModal .my-plan span.text-warning").show()
-    
-  

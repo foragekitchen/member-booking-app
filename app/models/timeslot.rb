@@ -1,14 +1,14 @@
 class Timeslot < NexudusBase
-  @@timeslots_uri = "/spaces/resourcetimeslots"  
+  REQUEST_URI = "/spaces/resourcetimeslots"
 
   def self.all_by_day(day_of_week = Date.today.wday)
     query_params = {"ResourceTimeSlot_DayOfWeek" => day_of_week}
-    result = Rails.cache.fetch([@@timeslots_uri, query_params], :expires => 12.hours) do
-      get(@@timeslots_uri, :query => query_params)["Records"]
+    result = Rails.cache.fetch([REQUEST_URI, query_params], :expires => 12.hours) do
+      get(REQUEST_URI, :query => query_params)["Records"]
     end
-    return result
+    result
   end
-  
+
   def self.available(from_time = Time.now + 2.hours, to_time = Time.now + 6.hours)
     from_time = Time.parse(from_time) if from_time.is_a?(String) #just in case; this should already be in correct Time format
     to_time = Time.parse(to_time) if to_time.is_a?(String) #just in case; this should already be in correct Time format
@@ -29,8 +29,7 @@ class Timeslot < NexudusBase
 
       available << time_slot if from_time.utc >= slot_start && to_time.utc <= slot_end
     end
-
-    return available
+    available
   end
 
 end
