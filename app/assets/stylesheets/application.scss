@@ -46,3 +46,7 @@ footer {
 .popover-content {
   width: 400px;
 }
+#ui-datepicker-div {
+  // workaround. #disable-map should not be above of datepicker.
+  z-index: 100 !important;
+}

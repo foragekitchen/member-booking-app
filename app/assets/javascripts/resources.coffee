@@ -21,37 +21,14 @@ activateFilter = () ->
   $("#bookingFilters select, #bookingFilters input").change (event) ->
     hoursArr = calculateHours()
     #TODO - query for the booking minimum/maximum time, instead of hardcoding 4/12 hours here
-    if hoursArr[3] < 4
-      $("#disable-map").show()
-      $("#bookingFilters .btn-default").prop('disabled', true)
-      $('#bookingFilters .btn-default').attr({
-        "data-toggle": "tooltip",
-        "data-placement": "right",
-        "title": "Booking must be at least 4 hours."
-      })
-      $('#bookingFilters .btn-default').tooltip('show')
+    if new Date($('#bookingRequestDate').val() ) < (new Date()).setHours(0,0,0,0)
+      changeMapState(false, 'Booking cannot be in the past.')
+    else if hoursArr[3] < 4
+      changeMapState(false, 'Booking must be at least 4 hours.')
     else if hoursArr[3] > 12
-      $("#disable-map").show()
-      $("#bookingFilters .btn-default").prop('disabled', true)
-      $('#bookingFilters .btn-default').attr({
-        "data-toggle": "tooltip",
-        "data-placement": "right",
-        "title": "Booking cannot be more than 12 hours."
-      })
-      $('#bookingFilters .btn-default').tooltip('show')
-    else if new Date($('#bookingRequestDate').val() ) < (new Date()).setHours(0,0,0,0)
-      $("#disable-map").show()
-      $("#bookingFilters .btn-default").prop('disabled', true)
-      $('#bookingFilters .btn-default').attr({
-        "data-toggle": "tooltip",
-        "data-placement": "right",
-        "title": "Booking cannot be in the past."
-      })
-      $('#bookingFilters .btn-default').tooltip('show')
+      changeMapState(false, 'Booking cannot be more than 12 hours.')
     else
-      $("#disable-map").hide()
-      $("#bookingFilters .btn-default").prop('disabled', false)
-      $('#bookingFilters .btn-default').tooltip('destroy')
+      changeMapState(true)
   $("#bookingFilters").submit (event) ->
     markAvailable()
     event.preventDefault()
@@ -60,6 +37,7 @@ markAvailable = () ->
   if $("#bookingRequestDate").val()
     requestFrom = $("#bookingRequestDate").val() + "T" + $("#bookingRequestFromTime").val()
     requestTo = $("#bookingRequestDate").val() + "T" + $("#bookingRequestToTime").val()
+    changeMapState(false)
     $.ajax(url: "/resources?bookingRequestFrom=#{requestFrom}&bookingRequestTo=#{requestTo}", dataType: "json").done (json) ->
       $("#map-container .resource").removeClass "available"
       for resourceID in json
@@ -68,6 +46,7 @@ markAvailable = () ->
           updateBookingForm($(this).parent())
           $(".popover").popover('hide')
           $('#bookingModal').modal()
+      changeMapState(true)
 
 createTable = (table) ->
   div = $ "<div>" # draw table
@@ -133,3 +112,19 @@ isEnoughHoursRemaining = (hrs_in_booking) ->
     $("#bookingModal .my-plan span.glyphicon-ok").show()
   else
     $("#bookingModal .my-plan span.text-warning").show()
+
+changeMapState = (state = true, message = '') ->
+  $button = $('#bookingFilters :submit')
+  $map_backdrop = $('#disable-map')
+  $map_backdrop[if state then 'hide' else 'show'].apply($map_backdrop, [])
+  $button.prop('disabled', !state)
+  if message && !state
+    $button.attr({
+      "data-toggle": "tooltip",
+      "data-placement": "right",
+      "title": message,
+      "data-original-title": message
+    })
+    $button.tooltip('show')
+  else
+    $button.tooltip('destroy')
