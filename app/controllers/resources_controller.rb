@@ -4,6 +4,7 @@ class ResourcesController < ApplicationController
     if params['bookingRequestFrom'] && params['bookingRequestTo']
       from = Time.strptime(params['bookingRequestFrom'], "%m/%d/%YT%l:%M %p")
       to = Time.strptime(params['bookingRequestTo'], "%m/%d/%YT%l:%M %p")
+      to = to + 1.day if to < from
 
       params['bookingRequestDate'] ||= from.to_s(:booking_day)
       params['bookingRequestFromTime'] ||= from.to_s(:booking_time)

@@ -57,15 +57,13 @@ group :development, :test do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   # gem 'spring'
 
-
   # Dotenv for storing environment variables in development
   gem 'dotenv-rails'
+end
 
+group :test do
   # Use Rspec for testing
   gem 'rspec-rails', '~> 3.0'
-
-  # Use WebMock for stubbing out API calls in tests
-  gem 'webmock', require: false
 
   # Use Timecop for stubbing out (freezing) dates for proper date match in tests
   # Use Sinon for doing the same in Javascript
@@ -79,5 +77,6 @@ group :development, :test do
   # Use Guard for auto-running tests
   gem 'guard-rspec', require: false
 
+  # Use WebMock for stubbing out API calls in tests
+  gem 'webmock', require: false
 end
-

@@ -1,4 +1,5 @@
 class BookingsController < ApplicationController
+  before_action :get_resources, only: [:index]
 
   def index
     @bookings = Booking.all(@coworker.id,[],true)
@@ -73,6 +74,10 @@ class BookingsController < ApplicationController
   end
 
   private
+
+  def get_resources
+    @resources = Resource.all
+  end
 
   def update_recurring
     old_booking = Booking.find(params[:id])

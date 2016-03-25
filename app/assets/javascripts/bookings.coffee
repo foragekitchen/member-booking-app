@@ -1,4 +1,4 @@
-$(document).ready ->  
+$(document).ready ->
   hideEditForm()
   activateEdit()
   activateTooltipsForDisabledCancelButtons()
@@ -7,18 +7,18 @@ hideEditForm = () ->
   # can't hide this form on pageload, since Chosen doesn't configure widths correctly unless elements are visible at start
   # we can work-around by calling chosen() again, and then hiding the form
   $(".chosen-select").chosen()
-  $("#editFormContainer").addClass("hidden") 
+  $("#editFormContainer").addClass("hidden")
 
 activateEdit = () ->
   $("#upcoming-bookings a.btn-edit").click (event) ->
     getBookingFromButton($(this))
     event.preventDefault()
-    
+
 getBookingFromButton = (btn) ->
   wipeBookingForm($(btn).parents("tr").first())
   $.ajax(url: $(btn).attr("href"), dataType: "json").done (data) ->
     generateEditForm(data,btn)
-  
+
 wipeBookingForm = (destination) ->
   # find the form, wipe it
   tr = $("#editFormContainer")
@@ -34,13 +34,13 @@ generateEditForm = (booking,btn) ->
   $("#inDate").text(booking.friendly_dates)
   $("#bookedFor").text(booking.coworker_full_name)
   $("#bookedBy").text(booking.updated_by)
-  
+
   times = booking.friendly_times.split(" - ")
   $('#bookingFrom').val(times[0]);
   $('#bookingTo').val(times[1]);
   $('#bookingResource').val(booking.resource_id)
-  $('#editBookingForm select').trigger("chosen:updated");  
-  
+  $('#editBookingForm select').trigger("chosen:updated");
+
   disableTimeIfImminent(booking)
   disableReductionIfImminent(booking)
   enableCheckRemainingHours(booking)
@@ -53,21 +53,21 @@ generateEditForm = (booking,btn) ->
   $('editBookingForm #btn-cancel').click (event) ->
     $("#editFormContainer").addClass("hidden")
     event.preventDefault()
-    
+
 disableTimeIfImminent = (booking) ->
   minutes_until_start = Math.abs( convertToUtc(booking.from_time) - convertToUtc(new Date()) ) / 1000 / 60
   if minutes_until_start <= booking.resource.late_cancellation_limit
     $('#bookingFrom').prop('disabled', true).trigger("chosen:updated")
     $('#bookingFrom_chosen').attr({
       "data-toggle": "tooltip",
-      "data-placement": "right", 
+      "data-placement": "right",
       "title": "Locked. This booking starts in less than 24 hours."
     })
     $('#bookingFrom_chosen').tooltip({trigger:'click'})
-    $('#bookingFrom_chosen').mouseleave -> 
+    $('#bookingFrom_chosen').mouseleave ->
       $(this).tooltip("hide")
   else $('#bookingFrom').prop('disabled', false).trigger("chosen:updated")
-    
+
 disableReductionIfImminent = (booking) ->
   minutes_until_start = Math.abs( convertToUtc(booking.from_time) - convertToUtc(new Date()) ) / 1000 / 60
   if minutes_until_start <= booking.resource.late_cancellation_limit
@@ -75,16 +75,16 @@ disableReductionIfImminent = (booking) ->
     $("#bookingTo option[value='" + selectedTime + "']").prevAll().prop('disabled', true)
     $("#bookingTo").trigger("chosen:updated")
   else $('#bookingTo option').prop('disabled', false).trigger("chosen:updated")
-    
+
 enableCheckRemainingHours = (booking) ->
   $('#editBookingForm select').change (event) ->
     hoursBooking = calculateHours() #TODO - DRY this up with the same fx in resources.coffee
-    hoursRemaining = $("#my-account-remaining-hours").text().split(" ")[0] 
+    hoursRemaining = $("#my-account-remaining-hours").text().split(" ")[0]
     hoursChange = hoursBooking - (booking.duration_in_minutes / 60)
     if hoursChange > hoursRemaining
       $('#bookingTo_chosen').attr({
         "data-toggle": "tooltip",
-        "data-placement": "right", 
+        "data-placement": "right",
         "title": "This exceeds the hours remaining in your plan, you will be invoiced any extras."
       })
       $('#bookingTo_chosen').tooltip('show')
@@ -98,7 +98,7 @@ convertToUtc = (datetime) ->
   utc = (new Date(datetime)).toISOString()
   return new Date(utc)
 
-calculateHours = () ->  
+calculateHours = () ->
   fromTime = $("#bookingFrom").val()
   toTime = $("#bookingTo").val()
   fromDateTime = new Date("1970-1-1 " + fromTime)
@@ -106,4 +106,3 @@ calculateHours = () ->
   toDateTime = new Date("1970-1-2 " + toTime) if toDateTime <= fromDateTime
   hours = ( toDateTime - fromDateTime ) / 1000 / 60 / 60
   return hours
-  

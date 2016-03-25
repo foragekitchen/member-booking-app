@@ -68,7 +68,7 @@
       <div class="col-md-3 row">
         <h5>Resource(s): <small>change your spot</small></h5>
         <div class="form-group form-inline">
-          <%= select_tag "bookingResource", options_for_select([["A. Hedgehog",42766734],["B. Chanterelle",42766735], ["C. Porcini",42766736]]), {:class => "chosen-select form-control col-sm-10"} %>
+          <%= select_tag "bookingResource", options_for_select(@resources.map {|resource| [resource.name, resource.id]}), {:class => "chosen-select form-control col-sm-10"} %>
           <a href=""><span class="glyphicon glyphicon-remove" aria-hidden="true"></span><span class="sr-only">remove</span></a><br />
         </div>
       </div>
