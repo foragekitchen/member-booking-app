@@ -1,6 +1,6 @@
 class Resource < NexudusBase
   attr_accessor :id, :description, :linked_resources, :location, :name, :resource_type_name, :timeslots, :visible, :late_cancellation_limit
-  REQUEST_URI = "/spaces/resources"
+  REQUEST_URI = '/spaces/resources'
 
   def initialize(params)
     params.map do |k,v|
@@ -10,17 +10,17 @@ class Resource < NexudusBase
   end
 
   def self.all(location = true, query = {})
-    query_params = {"Resource_ResourceType_Name" => "Prep Table", "Resource_Visible" => true}.merge(query)
+    query_params = {'Resource_ResourceType_Name' => 'Prep Table', 'Resource_Visible' => true}.merge(query)
     results = Rails.cache.fetch([REQUEST_URI, query_params], :expires => 12.hours) do
-      get(REQUEST_URI, :query => query_params)["Records"]
+      get(REQUEST_URI, :query => query_params)['Records']
     end
     resources = []
 
     results.each do |r|
-      next unless r["ResourceTypeName"] == query_params["Resource_ResourceType_Name"]
+      next unless r['ResourceTypeName'] == query_params['Resource_ResourceType_Name']
 
-      resource_with_details = find(r["Id"])
-      resource_with_details.id = r["Id"] #TODO - find better way for rspec; this is purely to help with rspec because every single-resource returns same id
+      resource_with_details = find(r['Id'])
+      resource_with_details.id = r['Id'] #TODO - find better way for rspec; this is purely to help with rspec because every single-resource returns same id
       if location && resource_with_details.linked_resources.present?
         resource_with_details.location = get_location_of_linked(resource_with_details.linked_resources.first)
       end
@@ -31,7 +31,7 @@ class Resource < NexudusBase
   end
 
   def self.available_ids(from_time = Time.now + 2.hours, to_time = Time.now + 6.hours)
-    Timeslot.available(from_time, to_time).collect{|t| t["ResourceId"]}.uniq
+    Timeslot.available(from_time, to_time).collect{|t| t['ResourceId']}.uniq
   end
 
   def self.booked_ids(from_time = Time.now + 2.hours, to_time = Time.now + 6.hours, resource_ids=[])
@@ -40,7 +40,7 @@ class Resource < NexudusBase
     from_time.utc
     to_time.utc
 
-    results = Booking.all("",resource_ids)
+    results = Booking.all('', resource_ids)
     set = resource_ids
 
     results.each do |booking|
@@ -64,7 +64,7 @@ class Resource < NexudusBase
     linked = find(id)
     location = nil
     if linked.present?
-      location = linked.description.include?("@") ? linked.description.split("@").last.split(",") : nil
+      location = linked.description.include?('@') ? linked.description.split('@').last.split(',') : nil
       location.map!{ |ft| ResourceLocation.new.convert_from_feet_to_inches(ft) } if location.is_a?(Array)
     end
     location

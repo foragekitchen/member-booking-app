@@ -10,20 +10,20 @@ class BookingsController < ApplicationController
     date_times = process_date_times(params['bookingDate'], params['bookingFrom'], params['bookingTo'])
 
     new_booking = {
-      "coworker_id" => @coworker.id,
-      "resource_id" => params["bookingResourceId"],
-      "from_time" => date_times["fromTime"],
-      "to_time" => date_times["toTime"],
-      "online" => true
+        'coworker_id' => @coworker.id,
+        'resource_id' => params['bookingResourceId'],
+        'from_time' => date_times['fromTime'],
+        'to_time' => date_times['toTime'],
+        'online' => true
     }
     booking = Booking.new(new_booking)
     response = booking.create
-    if ( @response = JSON.parse(response.body) ) && @response["WasSuccessful"]
-      flash[:notice] = @response["Message"]
-      flash[:booking_id] = @response["Value"]["Id"]
-      redirect_to resources_path(:anchor => "recurring-container")
+    if ( @response = JSON.parse(response.body) ) && @response['WasSuccessful']
+      flash[:notice] = @response['Message']
+      flash[:booking_id] = @response['Value']['Id']
+      redirect_to resources_path(:anchor => 'recurring-container')
     else
-      flash[:alert] = @response["Message"] || "There was an error saving your booking. Please try again."
+      flash[:alert] = @response['Message'] || 'There was an error saving your booking. Please try again.'
       redirect_to resources_path
     end
   end
@@ -35,37 +35,37 @@ class BookingsController < ApplicationController
     else
       date_times = process_date_times(params['bookingDate'], params['bookingFrom'], params['bookingTo'])
       booking_update = {
-        "id" => params["bookingId"],
-        "coworker_id" => @coworker.id,
-        "resource_id" => params["bookingResource"],
-        "from_time" => date_times["fromTime"],
-        "to_time" => date_times["toTime"],
-        "online" => true
+          'id' => params['bookingId'],
+          'coworker_id' => @coworker.id,
+          'resource_id' => params['bookingResource'],
+          'from_time' => date_times['fromTime'],
+          'to_time' => date_times['toTime'],
+          'online' => true
       }
       booking = Booking.new(booking_update)
       response = booking.update
     end
 
-    if ( @response = JSON.parse(response.body) ) && @response["WasSuccessful"]
-      flash[:notice] = @response["Message"]
+    if ( @response = JSON.parse(response.body) ) && @response['WasSuccessful']
+      flash[:notice] = @response['Message']
     else
-      flash[:alert] = @response["Message"] || "There was an error updating your booking. Please try again."
+      flash[:alert] = @response['Message'] || 'There was an error updating your booking. Please try again.'
     end
     redirect_to bookings_path
   end
 
   def destroy
-    response = Booking.new("id"=>params['id']).destroy
-    if ( @response = JSON.parse(response.body) ) && @response["WasSuccessful"]
-      flash[:notice] = @response["Message"]
+    response = Booking.new('id' => params['id']).destroy
+    if ( @response = JSON.parse(response.body) ) && @response['WasSuccessful']
+      flash[:notice] = @response['Message']
     else
-      flash[:alert] = @response["Message"] || "There was an error canceling your booking. Please contact us."
+      flash[:alert] = @response['Message'] || 'There was an error canceling your booking. Please contact us.'
     end
     redirect_to bookings_path
   end
 
   def edit
-    @booking = Booking.find(params[:id], :include => "resource")
+    @booking = Booking.find(params[:id], :include => 'resource')
     respond_to do |format|
       format.js { render :json => @booking }
       format.html { render :index }
@@ -98,8 +98,8 @@ class BookingsController < ApplicationController
     to_time = convert_to_universal_time(day, to)
     to_time = adjust_for_next_day(from_time, to_time)
     {
-      "fromTime" => from_time.to_s(:nexudus),
-      "toTime" => to_time.to_s(:nexudus)
+        'fromTime' => from_time.to_s(:nexudus),
+        'toTime' => to_time.to_s(:nexudus)
     }
   end
 
