@@ -14,7 +14,6 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
 
       before(:each) do
         execute_valid_login
-        sleep 1
       end
 
       after(:all) do
@@ -26,7 +25,7 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
         expect(page).to have_css('#map-container div.resource', count: 3, wait: 10)
       end
 
-      scenario "should see filters for date and time, with 'closed' times omitted and friendly hint (ex: 'sorry! our space is closed 3am-6am for cleaning')", js: true do
+      scenario "should see filters for date and time, with 'closed' times omitted and friendly hint", js: true do
         visit "/resources"
         expect(page).to have_content("When do you want to come in?")
         expect(page).to have_content("closed 2AM-8AM")
@@ -60,21 +59,21 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
           expect(page).to have_css("#map-container div.resource.available", :count => 1, :wait => 10)
         end
 
-        scenario "should see a warning if selecting a timespan of less than 4 hours", js:true do
+        scenario "should see a warning if selecting a timespan of less than 4 hours", js: true do
           visit "/resources"
           select_from_chosen("10:00 PM", from: "bookingRequestFromTime")
           select_from_chosen("11:00 PM", from: "bookingRequestToTime")
           expect(page).to have_text("Booking must be at least 4 hours.")
         end
 
-        scenario "should see a warning if selecting a timespan of more than 12 hours", js:true do
+        scenario "should see a warning if selecting a timespan of more than 12 hours", js: true do
           visit "/resources"
           select_from_chosen("11:00 PM", from: "bookingRequestFromTime")
           select_from_chosen("10:00 PM", from: "bookingRequestToTime")
           expect(page).to have_text("Booking cannot be more than 12 hours.")
         end
 
-        scenario "should see a warning if selecting a date/time that is already passed", js:true do
+        scenario "should see a warning if selecting a date/time that is already passed", js: true do
           visit "/resources"
           fill_in('When do you want to come in?', :with => (Time.now - 1.day).to_s(:booking_day))
           page.execute_script("$('#bookingRequestDate').trigger('change');")
@@ -90,7 +89,7 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
           expect(page).to have_text("1 hour remaining this month")
         end
 
-        scenario "should see a warning if the requested time exceeds the available hours, with notice about extra billing", js:true do
+        scenario "should see a warning if the requested time exceeds the available hours, with notice about extra billing", js: true do
           visit "/resources"
           select_from_chosen(" 2:00 PM", from: "bookingRequestToTime")
           page.execute_script("$('div.available div.button').first().trigger('click')") # Since we're using "fake" stubbed resources, they're all going to be displayed on top of one another. Trigger the click directly to avoid click conflicts.
@@ -104,10 +103,9 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
 
       before(:each) do
         execute_valid_login
-        sleep 1
       end
 
-      scenario "should be required to book a minimum of 4 hours", js:true do
+      scenario "should be required to book a minimum of 4 hours", js: true do
         visit "/resources"
         select_from_chosen("10:00 PM", from: "bookingRequestFromTime")
         select_from_chosen("11:00 PM", from: "bookingRequestToTime")
@@ -115,7 +113,7 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
         expect(page).to have_selector("#bookingFilters input[type=submit]:disabled")
       end
 
-      scenario "should be able to book up to 12 hours, but no more than 12 hours", js:true do
+      scenario "should be able to book up to 12 hours, but no more than 12 hours", js: true do
         visit "/resources"
         select_from_chosen(" 8:00 AM", from: "bookingRequestFromTime")
         select_from_chosen(" 8:00 PM", from: "bookingRequestToTime")

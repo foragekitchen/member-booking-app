@@ -21,7 +21,7 @@ activateFilter = () ->
   $("#bookingFilters select, #bookingFilters input").change (event) ->
     hoursArr = calculateHours()
     #TODO - query for the booking minimum/maximum time, instead of hardcoding 4/12 hours here
-    if new Date($('#bookingRequestDate').val() ) < (new Date()).setHours(0,0,0,0)
+    if moment($('#bookingRequestDate').val(), 'MM/DD/YYYY').isBefore(moment(new Date()), 'day')
       changeMapState(false, 'Booking cannot be in the past.')
     else if hoursArr[3] < 4
       changeMapState(false, 'Booking must be at least 4 hours.')
@@ -98,11 +98,11 @@ calculateHours = () ->
   date = $("#bookingRequestDate").val()
   fromTime = $("#bookingRequestFromTime").val()
   toTime = $("#bookingRequestToTime").val()
-  fromDateTime = new Date("1970-1-1 " + fromTime)
-  toDateTime = new Date("1970-1-1 " + toTime)
-  toDateTime = new Date("1970-1-2 " + toTime) if toDateTime <= fromDateTime
-  hours = ( toDateTime - fromDateTime ) / 1000 / 60 / 60
-  return [date,fromTime,toTime,hours]
+  fromDateTime = formatFullDate(fromTime.trim())
+  toDateTime = formatFullDate(toTime.trim())
+  toDateTime = formatFullDate(toTime.trim(), '1970-01-02') if toDateTime <= fromDateTime
+  hours = moment.duration(toDateTime.diff(fromDateTime)).asHours()
+  return [date, fromTime, toTime, hours]
 
 isEnoughHoursRemaining = (hrs_in_booking) ->
   $("#bookingModal .my-plan span.text-warning").hide()
@@ -128,3 +128,6 @@ changeMapState = (state = true, message = '') ->
     $button.tooltip('show')
   else
     $button.tooltip('destroy')
+
+formatFullDate = (time, date = '1970-01-01') ->
+  moment("#{date} #{time}", 'YYYY-MM-DD h:mm a')

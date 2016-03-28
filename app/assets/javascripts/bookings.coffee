@@ -55,7 +55,7 @@ generateEditForm = (booking,btn) ->
     event.preventDefault()
 
 disableTimeIfImminent = (booking) ->
-  minutes_until_start = Math.abs( convertToUtc(booking.from_time) - convertToUtc(new Date()) ) / 1000 / 60
+  minutes_until_start = Math.abs(moment.duration(moment(new Date()).diff(moment(booking.from_time))).asMinutes())
   if minutes_until_start <= booking.resource.late_cancellation_limit
     $('#bookingFrom').prop('disabled', true).trigger("chosen:updated")
     $('#bookingFrom_chosen').attr({
@@ -69,7 +69,7 @@ disableTimeIfImminent = (booking) ->
   else $('#bookingFrom').prop('disabled', false).trigger("chosen:updated")
 
 disableReductionIfImminent = (booking) ->
-  minutes_until_start = Math.abs( convertToUtc(booking.from_time) - convertToUtc(new Date()) ) / 1000 / 60
+  minutes_until_start = Math.abs(moment.duration(moment(new Date()).diff(moment(booking.from_time))).asMinutes())
   if minutes_until_start <= booking.resource.late_cancellation_limit
     selectedTime = $("#bookingTo").val()
     $("#bookingTo option[value='" + selectedTime + "']").prevAll().prop('disabled', true)
@@ -94,15 +94,13 @@ enableCheckRemainingHours = (booking) ->
 activateTooltipsForDisabledCancelButtons = () ->
   $(".disabled-cancel").tooltip()
 
-convertToUtc = (datetime) ->
-  utc = (new Date(datetime)).toISOString()
-  return new Date(utc)
-
 calculateHours = () ->
   fromTime = $("#bookingFrom").val()
   toTime = $("#bookingTo").val()
-  fromDateTime = new Date("1970-1-1 " + fromTime)
-  toDateTime = new Date("1970-1-1 " + toTime)
-  toDateTime = new Date("1970-1-2 " + toTime) if toDateTime <= fromDateTime
-  hours = ( toDateTime - fromDateTime ) / 1000 / 60 / 60
-  return hours
+  fromDateTime = formatFullDate(fromTime.trim())
+  toDateTime = formatFullDate(toTime.trim())
+  toDateTime = formatFullDate(toTime.trim(), '1970-01-02') if toDateTime <= fromDateTime
+  moment.duration(toDateTime.diff(fromDateTime)).asHours()
+
+formatFullDate = (time, date = '1970-01-01') ->
+  moment("#{date} #{time}", 'YYYY-MM-DD h:mm a')

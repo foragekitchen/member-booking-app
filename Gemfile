@@ -47,6 +47,9 @@ gem 'httparty','0.13.5'
 # Use Unit to convert measurements like feet to inches
 gem 'ruby-units'
 
+# Moment.js
+gem 'momentjs-rails'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   # gem 'byebug'
@@ -73,6 +76,7 @@ group :test do
   # Use Capybara for UI testing, with Selenium for support when needing to run javascript
   gem 'capybara'
   gem 'selenium-webdriver'
+  gem 'poltergeist'
 
   # Use Guard for auto-running tests
   gem 'guard-rspec', require: false

@@ -5,33 +5,6 @@ include ActionView::Helpers::DateHelper
 
 RSpec.feature "My Bookings:", type: :feature do
 
-  def create_booking(start_time = nil)
-    # Create a real booking - useful for doing before testing anything else
-    visit "/resources"
-    if start_time.present? && start_time.is_a?(Time)
-      # derive different date parts from the startTime
-      day = start_time.to_s(:booking_day)
-      from = start_time.beginning_of_hour
-      to = (from + 4.hours).to_s(:booking_time)
-      from = from.to_s(:booking_time)
-      # update the filters form
-      fill_in('When do you want to come in?', with: day)
-      select_from_chosen(from, from: "bookingRequestFromTime")
-      select_from_chosen(to, from: "bookingRequestToTime")
-      click_button("Refresh")
-    end
-    page.first("div.available div.button", wait: 10).click
-    # Remember some stuff so we can find this booking later
-    booking = {
-        resource_name: page.find(".modal-title span", wait: 10).text,
-        end_time: page.find(".modal-body h5 span", wait: 10).text.split("-").last
-    }
-    click_button("Save your booking")
-    sleep 3
-
-    return booking
-  end
-
   def find_booking_on_page(resource_name)
     page.first("td", text: resource_name)
   end
@@ -50,7 +23,6 @@ RSpec.feature "My Bookings:", type: :feature do
 
     before(:each) do
       execute_valid_login
-      sleep 1
     end
 
     after(:all) do
@@ -88,7 +60,6 @@ RSpec.feature "My Bookings:", type: :feature do
 
     before(:each) do
       execute_valid_login
-      sleep 1
     end
 
     after(:all) do
@@ -118,35 +89,30 @@ RSpec.feature "My Bookings:", type: :feature do
 
   end
 
-  context "when canceling an existing booking" do
-
+  context "(Real time) when canceling an existing booking" do
     before(:each) do
       #Let's test against the live server for this one
       WebMock.reset!
       WebMock.allow_net_connect!
       execute_valid_login
-      sleep 5
     end
 
     scenario "should be able to successfully complete a valid cancellation", js: true do
-      create_booking(Time.now + 2.days)
+      create_booking(Date.today + 2.days + hours_offset)
 
       visit "/bookings"
       count = page.all('#upcoming-bookings tbody tr', visible: true).count
       accept_confirm { first(:link, "Remove").click }
       expect(page).to have_css("tbody tr", count: count-1, wait: 10)
     end
-
   end
 
-  context "when saving changes to an existing booking" do
-
+  context "(Real time) when saving changes to an existing booking" do
     before(:each) do
       #Let's test against the live server for this one
       WebMock.reset!
       WebMock.allow_net_connect!
       execute_valid_login
-      sleep 5
     end
 
     after(:each) do
@@ -154,34 +120,37 @@ RSpec.feature "My Bookings:", type: :feature do
     end
 
     scenario "should see a warning if changing the booking-time conflicts with another booking", js: true do
-      create_booking(Date.today + 4.days)
-      sooner_booking = create_booking(Date.today + 4.days - 4.hours)
+      date = Date.today + 4.days + hours_offset
+      sooner_booking = create_booking(date)
+      create_booking(date + 4.hours)
 
       visit "/bookings"
       this_booking = find_booking_on_page(sooner_booking[:resource_name])
       expand_edit_form_for_booking(this_booking, sooner_booking[:end_time])
-      extended_to_time = (Date.today + 4.days + 1.hour).beginning_of_hour.to_s(:booking_time)
+      extended_to_time = (date + 5.hours).beginning_of_hour.to_s(:booking_time)
       select_from_chosen(extended_to_time, from: "bookingTo", wait: 10)
       click_button("Update")
-      sleep 1
 
       expect(page).to have_text("Oh no!")
       expect(page).to have_text("already booked")
     end
 
     scenario "should be able to successfully complete an update", js: true do
-      booking = create_booking(Date.today + 3.days)
+      booking = create_booking(Date.today + 3.days + hours_offset)
 
       visit "/bookings"
       this_booking = find_booking_on_page(booking[:resource_name])
       expand_edit_form_for_booking(this_booking, booking[:end_time])
       # Update some values
-      select_from_chosen(" 6:00 PM", from: "bookingFrom", wait: 10)
-      select_from_chosen("11:30 PM", from: "bookingTo", wait: 10)
+      if Booking::TIMESLOTS[Booking::TIMESLOTS.index(booking[:end_time]).next].nil?
+        select_from_chosen(Booking::TIMESLOTS[Booking::TIMESLOTS.index(booking[:end_time]) - 9], from: "bookingFrom", wait: 10)
+      else
+        select_from_chosen(Booking::TIMESLOTS[Booking::TIMESLOTS.index(booking[:end_time]).next], from: "bookingTo", wait: 10)
+      end
       click_button("Update")
-      sleep 1
 
-      expect(page).to have_text("6:00 PM - 11:30 PM")
+      expect(page).to have_text("Success!")
+      expect(page).to have_text("was successfully updated")
     end
 
   end
