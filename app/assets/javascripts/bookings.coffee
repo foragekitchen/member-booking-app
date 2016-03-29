@@ -1,3 +1,5 @@
+dateFormat = 'MM/DD/YYYY h:mm a'
+
 $(document).ready ->
   hideEditForm()
   activateEdit()
@@ -99,8 +101,8 @@ calculateHours = () ->
   toTime = $("#bookingTo").val()
   fromDateTime = formatFullDate(fromTime.trim())
   toDateTime = formatFullDate(toTime.trim())
-  toDateTime = formatFullDate(toTime.trim(), '1970-01-02') if toDateTime <= fromDateTime
+  toDateTime = formatFullDate(toTime.trim(), '01/02/1970') if toDateTime <= fromDateTime
   moment.duration(toDateTime.diff(fromDateTime)).asHours()
 
-formatFullDate = (time, date = '1970-01-01') ->
-  moment("#{date} #{time}", 'YYYY-MM-DD h:mm a')
+formatFullDate = (time, date = '01/01/1970') ->
+  moment("#{date} #{time}", dateFormat)

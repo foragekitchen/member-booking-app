@@ -115,6 +115,7 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
 
       scenario "should be able to book up to 12 hours, but no more than 12 hours", js: true do
         visit "/resources"
+        fill_in('When do you want to come in?', :with => (Time.now + 1.day).to_s(:booking_day))
         select_from_chosen(" 8:00 AM", from: "bookingRequestFromTime")
         select_from_chosen(" 8:00 PM", from: "bookingRequestToTime")
         expect(page).to_not have_content("Booking cannot be more than 12 hours.")

@@ -1,3 +1,8 @@
+dateField = '#bookingRequestDate'
+timeFromField = '#bookingRequestFromTime'
+timeToField = '#bookingRequestToTime'
+dateFormat = 'MM/DD/YYYY h:mm a'
+
 $(document).ready ->
   getResources()
   activateFilter()
@@ -21,7 +26,9 @@ activateFilter = () ->
   $("#bookingFilters select, #bookingFilters input").change (event) ->
     hoursArr = calculateHours()
     #TODO - query for the booking minimum/maximum time, instead of hardcoding 4/12 hours here
-    if moment($('#bookingRequestDate').val(), 'MM/DD/YYYY').isBefore(moment(new Date()), 'day')
+    dateFrom = moment("#{$(dateField).val()} #{$(timeFromField).val()}", dateFormat)
+    dateFrom = dateFrom.add(1, 'day') if hoursArr[4]
+    if dateFrom.isBefore(moment(new Date()))
       changeMapState(false, 'Booking cannot be in the past.')
     else if hoursArr[3] < 4
       changeMapState(false, 'Booking must be at least 4 hours.')
@@ -34,9 +41,10 @@ activateFilter = () ->
     event.preventDefault()
 
 markAvailable = () ->
-  if $("#bookingRequestDate").val()
-    requestFrom = $("#bookingRequestDate").val() + "T" + $("#bookingRequestFromTime").val()
-    requestTo = $("#bookingRequestDate").val() + "T" + $("#bookingRequestToTime").val()
+  $dateField = $(dateField)
+  if $dateField.val()
+    requestFrom = $dateField.val() + "T" + $(timeFromField).val()
+    requestTo = $dateField.val() + "T" + $(timeToField).val()
     changeMapState(false)
     $.ajax(url: "/resources?bookingRequestFrom=#{requestFrom}&bookingRequestTo=#{requestTo}", dataType: "json").done (json) ->
       $("#map-container .resource").removeClass "available"
@@ -75,7 +83,7 @@ getPosition = (latlong) ->
 updateBookingForm = (table) ->
   modal = $('#bookingModal')
   modal.find("h4 span").text( table.attr('data-original-title') )
-  html = $("#bookingRequestDate").val() + " from " + $("#bookingRequestFromTime").val() + " - " + $("#bookingRequestToTime").val()
+  html = $(dateField).val() + " from " + $(timeFromField).val() + " - " + $(timeToField).val()
   modal.find(".modal-body h5 span").html(html)
   hoursArr = calculateHours()
   modal.find(".hoursBooking").text("#{hoursArr[3]} hours")
@@ -95,14 +103,15 @@ toggleRecurringBookingForm = () ->
     $("#recurring-container form input").prop('disabled', false)
 
 calculateHours = () ->
-  date = $("#bookingRequestDate").val()
-  fromTime = $("#bookingRequestFromTime").val()
-  toTime = $("#bookingRequestToTime").val()
+  date = $(dateField).val()
+  fromTime = $(timeFromField).val()
+  toTime = $(timeToField).val()
   fromDateTime = formatFullDate(fromTime.trim())
   toDateTime = formatFullDate(toTime.trim())
-  toDateTime = formatFullDate(toTime.trim(), '1970-01-02') if toDateTime <= fromDateTime
+  plusDay = toDateTime <= fromDateTime
+  toDateTime = formatFullDate(toTime.trim(), '01/02/1970') if plusDay
   hours = moment.duration(toDateTime.diff(fromDateTime)).asHours()
-  return [date, fromTime, toTime, hours]
+  [date, fromTime, toTime, hours, plusDay]
 
 isEnoughHoursRemaining = (hrs_in_booking) ->
   $("#bookingModal .my-plan span.text-warning").hide()
@@ -129,5 +138,5 @@ changeMapState = (state = true, message = '') ->
   else
     $button.tooltip('destroy')
 
-formatFullDate = (time, date = '1970-01-01') ->
-  moment("#{date} #{time}", 'YYYY-MM-DD h:mm a')
+formatFullDate = (time, date = '01/01/1970') ->
+  moment("#{date} #{time}", dateFormat)
