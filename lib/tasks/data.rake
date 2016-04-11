@@ -10,7 +10,7 @@ namespace :data do
       timeslots.each do |t|
         n.class.delete("/spaces/resourcetimeslots/#{t["Id"]}")
       end
-      
+
       puts "Now creating clean timeslot record(s)..."
       count = 0
       resources = Resource.all
@@ -28,25 +28,25 @@ namespace :data do
             "FromTime" => Time.parse("1976-01-01T8:00:00").utc,
             "ToTime" => Time.parse("1976-01-01T23:59:59").utc
           }
-          n.class.post("/spaces/resourcetimeslots", 
+          n.class.post("/spaces/resourcetimeslots",
             :body => newNightSlot.to_json,
             :headers => { 'Content-Type' => 'application/json' })
           count += 1
-          n.class.post("/spaces/resourcetimeslots", 
+          n.class.post("/spaces/resourcetimeslots",
             :body => newDaySlot.to_json,
             :headers => { 'Content-Type' => 'application/json' })
           count += 1
         end
       end
-      
+
       puts "Created #{count} timeslot record(s)"
-      
+
     end
   end
 
   namespace :bookings do
     desc "Delete all upcoming bookings - USE WITH CAUTION AND ONLY WHEN TESTING"
-    task :deleteUpcoming => :environment do 
+    task :deleteUpcoming => :environment do
       bookings = Booking.all
       upcoming = bookings.reject{|b| b.from_time.to_time < Time.now}
       for booking in upcoming do
