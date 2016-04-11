@@ -47,6 +47,9 @@ gem 'httparty','0.13.5'
 # Use Unit to convert measurements like feet to inches
 gem 'ruby-units'
 
+# Moment.js
+gem 'momentjs-rails'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   # gem 'byebug'
@@ -57,15 +60,13 @@ group :development, :test do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   # gem 'spring'
 
-
   # Dotenv for storing environment variables in development
   gem 'dotenv-rails'
+end
 
+group :test do
   # Use Rspec for testing
   gem 'rspec-rails', '~> 3.0'
-
-  # Use WebMock for stubbing out API calls in tests
-  gem 'webmock', require: false
 
   # Use Timecop for stubbing out (freezing) dates for proper date match in tests
   # Use Sinon for doing the same in Javascript
@@ -75,9 +76,11 @@ group :development, :test do
   # Use Capybara for UI testing, with Selenium for support when needing to run javascript
   gem 'capybara'
   gem 'selenium-webdriver'
+  gem 'poltergeist'
 
   # Use Guard for auto-running tests
   gem 'guard-rspec', require: false
 
+  # Use WebMock for stubbing out API calls in tests
+  gem 'webmock', require: false
 end
-

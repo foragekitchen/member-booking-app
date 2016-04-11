@@ -52,23 +52,23 @@
         <h5 class="text-uppercase">Quick Edit</h5>
         <label>In Date:</label> <span id="inDate"></span><br />
         <label>Booked for:</label> <span id="bookedFor"></span><br />
-        <label>Booked by:</label> <span id="bookedBy"></span> 
+        <label>Booked by:</label> <span id="bookedBy"></span>
       </div>
       <div class="col-md-3 row">
         <h5>Time of day: <small>extend your hours</small></h5>
         <div class="form-group form-inline">
-          <label class="col-sm-4">In at:</label> 
+          <label class="col-sm-4">In at:</label>
           <%= select_tag "bookingFrom", options_for_select(Booking::TIMESLOTS), {:class => "chosen-select form-control col-sm-5"} %>
         </div>
         <div class="form-group form-inline">
-          <label class="col-sm-4">Out by:</label> 
+          <label class="col-sm-4">Out by:</label>
           <%= select_tag "bookingTo", options_for_select(Booking::TIMESLOTS), {:class => "chosen-select form-control col-sm-5"} %>
         </div>
       </div>
       <div class="col-md-3 row">
         <h5>Resource(s): <small>change your spot</small></h5>
         <div class="form-group form-inline">
-          <%= select_tag "bookingResource", options_for_select([["A. Hedgehog",42766734],["B. Chanterelle",42766735], ["C. Porcini",42766736]]), {:class => "chosen-select form-control col-sm-10"} %>
+          <%= select_tag "bookingResource", options_for_select(@resources.map {|resource| [resource.name, resource.id]}), {:class => "chosen-select form-control col-sm-10"} %>
           <a href=""><span class="glyphicon glyphicon-remove" aria-hidden="true"></span><span class="sr-only">remove</span></a><br />
         </div>
       </div>
@@ -85,10 +85,10 @@
 </table>
 
 <h2>
-  My Past Bookings 
-  <small class="glyphicon glyphicon-plus" data-toggle="collapse" data-target="#past-bookings"></small> 
+  My Past Bookings
+  <small class="glyphicon glyphicon-plus" data-toggle="collapse" data-target="#past-bookings"></small>
 </h2>
- 
+
 <div id="past-bookings" class="collapse in">
   <table class="table table-striped">
   <% for booking in @past do %>

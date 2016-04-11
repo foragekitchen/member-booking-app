@@ -19,6 +19,7 @@
 
 require 'capybara/rspec'
 require 'webmock/rspec'
+require 'capybara/poltergeist'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -44,9 +45,9 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
-  # WebMock configs! Route all API requests to our fake API app, 
-  # including feature integration tests, except where live connections are explicitly allowed 
-  # To enable a live connection, add a before(:each) in your specific feature test, 
+  # WebMock configs! Route all API requests to our fake API app,
+  # including feature integration tests, except where live connections are explicitly allowed
+  # To enable a live connection, add a before(:each) in your specific feature test,
   # followed by a WebMock.reset! and WebMock.allow_net_connect!
   # Most feature scenarios will also require "js:true" to work
   config.before(:each) do
@@ -114,3 +115,5 @@ end
 Capybara.register_driver :selenium do |app|
   Capybara::Selenium::Driver.new(app, :browser => :chrome)
 end
+
+Capybara.javascript_driver = :poltergeist
