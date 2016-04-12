@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
         flash[:info] = "Looks like you might've stepped away for a bit. Log in again to continue!"  
         redirect_to login_path
       else
-        Rails.logger.info "ZZZ CHECK: #{session[:user_id].inspect}"
+        puts "ZZZ CHECK: #{session[:user_id].inspect}"
         @coworker = Coworker.find_by_user(session[:user_id])
         session[:expiry_time] = Time.now
       end
