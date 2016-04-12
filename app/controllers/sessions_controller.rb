@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
     if result.is_a?(User)
     # Log the user in and redirect to the members homepage.
       session[:user_id] = result.id
-      puts "ZZZ LOGIN: #{session[:user_id].inspect}"
+      File.open('tmp/log.log', 'a') {|f| f.write("ZZZ LOGIN: #{session[:user_id].inspect}\n")}
       redirect_to resources_path
     else
     # Create an error message.
