@@ -10,6 +10,7 @@ class SessionsController < ApplicationController
     if result.is_a?(User)
     # Log the user in and redirect to the members homepage.
       session[:user_id] = result.id
+      Rails.logger.info "ZZZ LOGIN: #{session[:user_id].inspect}"
       redirect_to resources_path
     else
     # Create an error message.
