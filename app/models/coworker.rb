@@ -12,12 +12,13 @@ class Coworker < NexudusBase
   end
 
   def self.find_by_user(user_id, query = {})
-    raise(RuntimeError.new(user_id))
     # Find by UserId since it's all we have so far
     query_params = {'Coworker_User' => user_id}.merge(query)
     results = Rails.cache.fetch([REQUEST_URI, query_params], :expires => 24.hours) do
+      raise(RuntimeError.new(user_id))
       get(REQUEST_URI, :query => query_params)['Records']
     end
+    raise(RuntimeError.new(results.inspect))
     # Now query for single Coworker using Coworker.Id because it gives more info
     url = "#{REQUEST_URI}/#{results.first['Id']}"
     result = Rails.cache.fetch([url], :expires => 12.hours) do
