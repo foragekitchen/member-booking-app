@@ -12,6 +12,7 @@ class Coworker < NexudusBase
   end
 
   def self.find_by_user(user_id, query = {})
+    raise(RuntimeError.new(user_id))
     # Find by UserId since it's all we have so far
     query_params = {'Coworker_User' => user_id}.merge(query)
     results = Rails.cache.fetch([REQUEST_URI, query_params], :expires => 24.hours) do
