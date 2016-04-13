@@ -11,11 +11,11 @@ class BookingsController < ApplicationController
     date_times = process_date_times(params['bookingDate'], params['bookingFrom'], params['bookingTo'])
 
     new_booking = {
-        'coworker_id' => @coworker.id,
-        'resource_id' => params['bookingResourceId'],
-        'from_time' => date_times['fromTime'],
-        'to_time' => date_times['toTime'],
-        'online' => true
+        coworker_id: @coworker.id,
+        resource_id: params['bookingResourceId'],
+        from_time: date_times[:fromTime],
+        to_time: date_times[:toTime],
+        online: true
     }
     booking = Booking.new(new_booking)
     response = booking.create
@@ -103,8 +103,8 @@ class BookingsController < ApplicationController
     to_time = convert_to_universal_time(day, to)
     to_time = adjust_for_next_day(from_time, to_time)
     {
-        'fromTime' => from_time.to_s(:nexudus),
-        'toTime' => to_time.to_s(:nexudus)
+        fromTime: from_time.to_s(:nexudus),
+        toTime: to_time.to_s(:nexudus)
     }
   end
 

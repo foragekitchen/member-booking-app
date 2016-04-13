@@ -3,21 +3,21 @@ class Resource < NexudusBase
   REQUEST_URI = '/spaces/resources'
 
   def initialize(params)
-    params.map do |k,v|
-      attribute_name = k.underscore
+    params.map do |k, v|
+      attribute_name = k.to_s.underscore
       public_send("#{attribute_name}=", v) if respond_to?(attribute_name)
     end
   end
 
   def self.all(location = true, query = {})
-    query_params = {'Resource_ResourceType_Name' => 'Prep Table', 'Resource_Visible' => true}.merge(query)
+    query_params = {Resource_ResourceType_Name: 'Prep Table', Resource_Visible: true}.merge(query)
     results = Rails.cache.fetch([REQUEST_URI, query_params], :expires => 12.hours) do
       get(REQUEST_URI, :query => query_params)['Records']
     end
     resources = []
 
     results.each do |r|
-      next unless r['ResourceTypeName'] == query_params['Resource_ResourceType_Name']
+      next unless r['ResourceTypeName'] == query_params[:Resource_ResourceType_Name]
 
       resource_with_details = find(r['Id'])
       resource_with_details.id = r['Id'] #TODO - find better way for rspec; this is purely to help with rspec because every single-resource returns same id

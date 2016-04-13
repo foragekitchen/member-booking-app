@@ -8,8 +8,8 @@ class Booking < NexudusBase
   include ActionView::Helpers::DateHelper
 
   def initialize(params)
-    params.map do |k,v|
-      attribute_name = k.underscore
+    params.map do |k, v|
+      attribute_name = k.to_s.underscore
       public_send("#{attribute_name}=", v) if respond_to?(attribute_name)
     end
     if self.from_time.present? # protect against the times we're just quick-instantiating for a destroy
@@ -47,8 +47,8 @@ class Booking < NexudusBase
   end
 
   def create
-    attrs = Hash[instance_variables.map! { |name| [name.to_s.gsub(/@/,'').classify, instance_variable_get(name)] } ]
-    attrs = Hash[ attrs.map { |k,v| [k.start_with?('RepeatOn') || k == 'Repeat' ? k.pluralize : k, v] } ]
+    attrs = Hash[ instance_variables.map! { |name| [name.to_s.gsub(/@/,'').classify, instance_variable_get(name)] } ]
+    attrs = Hash[ attrs.map { |k, v| [k.start_with?('RepeatOn') || k == 'Repeat' ? k.pluralize : k, v] } ]
     self.class.post(REQUEST_URI, :body => attrs.to_json, :headers => { 'Content-Type' => 'application/json' })
   end
 
