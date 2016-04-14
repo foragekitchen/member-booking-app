@@ -10,8 +10,8 @@ $(document).ready ->
   toggleRecurringBookingForm()
 
 getResources = () ->
-  $.ajax(url: "/resources", dataType: "json").done (json) ->
-    positionTables(json)
+  $.ajax(url: "/resources", dataType: "script").done ->
+    console.log('done')
 
 positionTables = (resources) ->
   createTable resource for resource in resources

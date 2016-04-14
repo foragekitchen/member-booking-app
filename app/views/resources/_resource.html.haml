@@ -1,0 +1,21 @@
+- position = resource_position(resource)
+.resource{style: "top: #{position[:top]}px; left: #{position[:left]}px", class: ("available" if resource.available), id: "resource-#{resource.id}", data: { toggle: :popover, content: resource.description }, title: "#{resource.name} #{resource.resource_type_name}" }
+  .button
+
+
+-#div = $ "<div>" # draw table
+-#  div.addClass "resource"
+-#  div.attr({
+-#    "id": "resource-" + table.id
+-#    "data-toggle": "popover"
+-#    "title": "#{table.name} #{table.resource_type_name}"
+-#    "data-content": table.description
+-#  })
+-#  div.popover({animation: false, placement: "left", html: true, trigger: "hover"})
+-#  button = $ "<div>" # put button inside to open the booking modal
+-#  button.addClass "button"
+-#  div.append button
+-#  if $.isArray(table.location) # figure out the position
+-#    pos = getPosition(table.location)
+-#    div.css({top: pos[0], left: pos[1] })
+-#  $("#map-container").append div

@@ -37,3 +37,6 @@ enableMyAccountPopover = () ->
       "placement": "bottom",
       "container": "body"
     })
+
+jQuery ->
+  window.map_display = new MapDisplay
