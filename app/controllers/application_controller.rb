@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
       session[:expiry_time] ||= Time.now
       if session[:expiry_time] < 15.minutes.ago
         reset_session
-        flash[:info] = "Looks like you might've stepped away for a bit. Log in again to continue!"  
+        flash[:info] = "Looks like you might've stepped away for a bit. Log in again to continue!"
         redirect_to login_path
       else
         @coworker = Coworker.find_by_user(session[:user_id])

@@ -43,15 +43,15 @@
 </div><!-- /.modal -->
 
 <div id="filters">
-  <form id="bookingFilters" class="form-inline">
+  <%= form_tag(resources_path, method: "get", remote: true, id: "bookingFilters1", class: "form-inline") do %>
     <div class="form-group">
       <label for="bookingRequestDate">When do you want to come in?</label>
-      <input type="text" id="bookingRequestDate" class="form-control datepicker" value="<%= params["bookingRequestDate"] %>" />
+      <input type="text" id="bookingRequestDate" class="form-control datepicker" name="bookingRequestDate" value="<%= params["bookingRequestDate"] %>" />
       <%= select_tag "bookingRequestFromTime", options_for_select(Booking::TIMESLOTS, params["bookingRequestFromTime"]), {:class => "chosen-select form-control"} %> - 
       <%= select_tag "bookingRequestToTime", options_for_select(Booking::TIMESLOTS, params["bookingRequestToTime"]), {:class => "chosen-select form-control"} %>
       <input type="submit" value="Refresh" class="btn btn-default" />
     </div>
-  </form>
+  <%end%>
 </div>
 
 <div id="map-container">
