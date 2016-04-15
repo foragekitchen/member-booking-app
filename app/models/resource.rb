@@ -25,11 +25,11 @@ class Resource < NexudusBase
   end
 
   def load_location
-    unless prep_table? && linked_resources.first && linked_resources.first == self.id && (linked_resource = Resource.find(linked_resources.first))
+    unless prep_table? && linked_resources.first && linked_resources.first != self.id && (linked_resource = Resource.find(linked_resources.first))
       self.location ||= [0, 0]
     else
       loc = linked_resource.description.include?('@') ? linked_resource.description.split('@').last.split(',') : nil
-      self.location ||= loc.map!{ |ft| ResourceLocation.new.convert_from_feet_to_inches(ft) } if loc
+      self.location ||= loc ? loc.map!{ |ft| ResourceLocation.new.convert_from_feet_to_inches(ft) } : [0, 0]
     end
   end
 
