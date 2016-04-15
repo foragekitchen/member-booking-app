@@ -57,7 +57,7 @@ RSpec.configure do |config|
   end
 
   config.after(:suite) do
-    Rake::Task['tmp:cache:clear'].invoke
+    `rake tmp:cache:clear`
   end
 
 # The settings below are suggested to provide a good initial experience

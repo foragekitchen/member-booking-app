@@ -24,7 +24,7 @@ class window.BookingModal
     @holder.find('.my-plan span.text-warning, .my-plan span.glyphicon-ok').hide()
     hrs_remaining = $("#hours-remaining").text()
     if total < hrs_remaining.split(" ")[0]
-      @holder.find('.my-plan span.glyphicon-ok').hide()
+      @holder.find('.my-plan span.glyphicon-ok').show()
     else
-      @holder.find('.my-plan span.text-warning').hide()
+      @holder.find('.my-plan span.text-warning').show()
 
