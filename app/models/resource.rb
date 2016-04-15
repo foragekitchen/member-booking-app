@@ -25,9 +25,12 @@ class Resource < NexudusBase
   end
 
   def load_location
-    return unless prep_table? && linked_resources.first && (linked_resource = Resource.find(linked_resources.first))
-    loc = linked_resource.description.include?('@') ? linked_resource.description.split('@').last.split(',') : nil
-    self.location ||= loc.map!{ |ft| ResourceLocation.new.convert_from_feet_to_inches(ft) } if loc
+    unless prep_table? && linked_resources.first && linked_resources.first == self.id && (linked_resource = Resource.find(linked_resources.first))
+      self.location ||= [0, 0]
+    else
+      loc = linked_resource.description.include?('@') ? linked_resource.description.split('@').last.split(',') : nil
+      self.location ||= loc.map!{ |ft| ResourceLocation.new.convert_from_feet_to_inches(ft) } if loc
+    end
   end
 
   class << self
@@ -49,11 +52,17 @@ class Resource < NexudusBase
     end
 
     def all_with_available(from_time = Time.now + 2.hours, to_time = Time.now + 6.hours)
+      from_time = Time.parse(from_time).utc if from_time.is_a?(String) #just in case; this should already be in correct Time format
+      to_time = Time.parse(to_time).utc if to_time.is_a?(String) #just in case; this should already be in correct Time format
+
       resources = all
       bookings = Booking.all('', Timeslot.available(from_time, to_time).collect{|t| t['ResourceId']}.uniq)
+
       bookings.each do |booking|
         resource = resources.select{ |r| r.id == booking.resource_id }.first
         next unless resource
+        puts "@@@@ #{booking.from_time.inspect} -- #{from_time.inspect} -- #{booking.resource_id}"
+        puts "@@@@ #{booking.to_time.inspect} -- #{to_time.inspect} -- #{booking.resource_id}"
         next if booking.from_time >= from_time && booking.to_time <= to_time # falls exactly inside the slot
         next if booking.from_time >= from_time && booking.from_time < to_time # overlaps after requested start
         next if booking.from_time <= from_time && booking.to_time > from_time # overlaps before requested start

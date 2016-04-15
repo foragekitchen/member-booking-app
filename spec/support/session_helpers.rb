@@ -8,7 +8,7 @@ module SessionHelpers
     # We need an actual Coworker to accurately create member bookings; Coworkers are different from Users and Contacts in the Nexudus world
     fill_in 'Email', with: Rails.application.secrets.nexudus_test_username
     fill_in 'Password', with: Rails.application.secrets.nexudus_test_password
-    click_button "Log in"
+    click_button 'Log in'
     wait_for_selector('#resources')
   end
 

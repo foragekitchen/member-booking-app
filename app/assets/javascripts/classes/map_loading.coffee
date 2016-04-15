@@ -4,7 +4,6 @@ class window.MapLoading
     @button = $('#booking-filter :submit')
 
     $(document).on 'map:loading:change', (e, state, message) =>
-      console.log(message)
       @map[if !state then 'hide' else 'show'].apply(@map, [])
       @button.prop('disabled', state)
       if message && state
