@@ -1,8 +1,5 @@
 jQuery ->
-  $.ajax(url: "/resources", dataType: "script").done ->
-    $('#bookingFilter').submit()
-
-
+  $('#bookingFilter').submit()
 
 
 
