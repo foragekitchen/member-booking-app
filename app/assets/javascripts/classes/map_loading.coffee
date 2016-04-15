@@ -1,12 +1,13 @@
 class window.MapLoading
   constructor: ->
     @map = $('#disable-map')
-    @button = $('#bookingFilters :submit')
+    @button = $('#booking-filter :submit')
 
-    $(document).on 'map:loading:change', (e, state, message = '') =>
+    $(document).on 'map:loading:change', (e, state, message) =>
+      console.log(message)
       @map[if !state then 'hide' else 'show'].apply(@map, [])
-      @button.prop('disabled', !state)
-      if message && !state
+      @button.prop('disabled', state)
+      if message && state
         @button.attr({
           "data-toggle": "tooltip",
           "data-placement": "right",
