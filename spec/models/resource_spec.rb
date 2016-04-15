@@ -22,38 +22,42 @@ RSpec.describe Resource, type: :model do
     describe "that are available" do
 
       it "only includes resources that are offered during the requested timeframe" do
-        available = Resource.all_with_available("2015-09-01T12:00:00PST", "2015-09-01T16:00:00PST")
-        expect(available.select(&:available).map(&:id)).to eq [100,101]
+        available = Resource.send(:available_ids, "2015-09-01T12:00:00PST", "2015-09-01T16:00:00PST")
+        expect(available).to eq [100,101]
       end
 
       it "returns empty set if nothing is offered during the requested timeframe" do
-        available = Resource.all_with_available("2015-09-01T02:00:00PST","2015-09-01T04:00:00PST")
-        expect(available.select(&:available).map(&:id)).to eq []
+        available = Resource.send(:available_ids, "2015-09-01T02:00:00PST", "2015-09-01T04:00:00PST")
+        expect(available).to eq []
       end
 
-      # it "only includes resources that are not already booked, i.e. falls exactly inside the requested time" do
-      #   # Requesting 2-6PM on 9/1 but already booked 8AM-12PM and 1PM-7PM
-      #   available = Resource.all_with_available("2015-09-01T14:00:00PST", "2015-09-01T18:00:00PST", [100,101,102])
-      #   expect(available.select(&:available).map(&:id)).to eq [101,102]
-      # end
-      #
-      # it "only includes resources that are not already booked, i.e. booked before the requested start time but overlaps" do
-      #   # Requesting 10AM-2PM on 9/2 but already booked 8AM-12PM
-      #   available = Resource.all_with_available("2015-09-02T10:00:00PST", "2015-09-02T14:00:00PST", [100,101,102])
-      #   expect(available).to eq [100,102]
-      # end
-      #
-      # it "only includes resources that are not already booked, i.e. booked after the requested start time but overlaps" do
-      #   # Requesting 8PM-Midnight on 9/3 but already booked 10PM-2AM
-      #   available = Resource.all_with_available("2015-09-03T20:00:00PST", "2015-09-04T00:00:00PST", [100,101,102])
-      #   expect(available.select(&:available).map(&:id)).to eq [100,101]
-      # end
-      #
-      # it "returns empty set if all resources are already booked during the requested timeframe" do
-      #   # Requesting 10AM-2PM on 9/1 but already booked 8AM-12PM and 1PM-7PM
-      #   available = Resource.all_with_available("2015-09-01T10:00:00PST","2015-09-01T14:00:00PST", [100,104])
-      #   expect(available.select(&:available).map(&:id)).to eq []
-      # end
+      it "only includes resources that are not already booked, i.e. falls exactly inside the requested time" do
+        # Requesting 2-6PM on 9/1 but already booked 8AM-12PM and 1PM-7PM
+        allow(Resource).to receive_messages(available_ids: [100,101,102])
+        available = Resource.all_with_available("2015-09-01T14:00:00PST", "2015-09-01T18:00:00PST")
+        expect(available.select(&:available).map(&:id)).to eq [101,102]
+      end
+
+      it "only includes resources that are not already booked, i.e. booked before the requested start time but overlaps" do
+        # Requesting 10AM-2PM on 9/2 but already booked 8AM-12PM
+        allow(Resource).to receive_messages(available_ids: [100,101,102])
+        available = Resource.all_with_available("2015-09-02T10:00:00PST", "2015-09-02T14:00:00PST")
+        expect(available.select(&:available).map(&:id)).to eq [100,102]
+      end
+
+      it "only includes resources that are not already booked, i.e. booked after the requested start time but overlaps" do
+        # Requesting 8PM-Midnight on 9/3 but already booked 10PM-2AM
+        allow(Resource).to receive_messages(available_ids: [100,101,102])
+        available = Resource.all_with_available("2015-09-03T20:00:00PST", "2015-09-04T00:00:00PST")
+        expect(available.select(&:available).map(&:id)).to eq [100,101]
+      end
+
+      it "returns empty set if all resources are already booked during the requested timeframe" do
+        # Requesting 10AM-2PM on 9/1 but already booked 8AM-12PM and 1PM-7PM
+        allow(Resource).to receive_messages(available_ids: [100,104])
+        available = Resource.all_with_available("2015-09-01T10:00:00PST","2015-09-01T14:00:00PST")
+        expect(available.select(&:available).map(&:id)).to eq [101,102]
+      end
 
     end
 
