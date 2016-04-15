@@ -11,14 +11,22 @@ class Resource < NexudusBase
     load_location
   end
 
+  def prep_table?
+    resource_type_name == 'Prep Table'
+  end
+
+  def location?
+    resource_type_name == 'Resource Location'
+  end
+
   private
   def load_available
     self.available ||= false
   end
 
   def load_location
-    Rails.logger.info "!!! #{self.description.inspect}"
-    loc = self.description.include?('@') ? self.description.split('@').last.split(',') : nil
+    return unless prep_table? && linked_resources.first && (linked_resource = Resource.find(linked_resources.first))
+    loc = linked_resource.description.include?('@') ? linked_resource.description.split('@').last.split(',') : nil
     self.location ||= loc.map!{ |ft| ResourceLocation.new.convert_from_feet_to_inches(ft) } if loc
   end
 
