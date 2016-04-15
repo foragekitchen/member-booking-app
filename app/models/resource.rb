@@ -61,9 +61,13 @@ class Resource < NexudusBase
 
       bookings.each do |booking|
         next unless available.include?(booking.resource_id) && (resource = resources.select{ |r| r.id == booking.resource_id }.first)
-        next if booking.from_time >= from_time && booking.to_time <= to_time # falls exactly inside the slot
-        next if booking.from_time >= from_time && booking.from_time < to_time # overlaps after requested start
-        next if booking.from_time <= from_time && booking.to_time > from_time # overlaps before requested start
+        if booking.from_time >= from_time && booking.to_time <= to_time || # falls exactly inside the slot
+           booking.from_time >= from_time && booking.from_time < to_time || # overlaps after requested start
+           booking.from_time <= from_time && booking.to_time > from_time # overlaps before requested start
+          resource.available = false
+          available.delete(resource.id)
+          next
+        end
         resource.available = true
       end
       resources
