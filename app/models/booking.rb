@@ -78,7 +78,6 @@ class Booking < NexudusBase
       str += from.to_s(:booking)
     end
     str += " (#{pluralize(days, 'day')})" if days > 1
-
     str
   end
 

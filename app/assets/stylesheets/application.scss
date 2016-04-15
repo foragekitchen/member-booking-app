@@ -50,3 +50,7 @@ footer {
   // workaround. #disable-map should not be above of datepicker.
   z-index: 100 !important;
 }
+
+input.btn[disabled] {
+  cursor: progress;
+}

@@ -36,12 +36,12 @@ class BookingsController < ApplicationController
     else
       date_times = process_date_times(params['bookingDate'], params['bookingFrom'], params['bookingTo'])
       booking_update = {
-          'id' => params['bookingId'],
-          'coworker_id' => @coworker.id,
-          'resource_id' => params['bookingResource'],
-          'from_time' => date_times['fromTime'],
-          'to_time' => date_times['toTime'],
-          'online' => true
+          id: params['bookingId'],
+          coworker_id: @coworker.id,
+          resource_id: params['bookingResource'],
+          from_time: date_times[:fromTime],
+          to_time: date_times[:toTime],
+          online: true
       }
       booking = Booking.new(booking_update)
       response = booking.update
@@ -115,11 +115,7 @@ class BookingsController < ApplicationController
   end
 
   def adjust_for_next_day(from_time, to_time)
-    # Expects both as time objects
     # Add one day to toTime if the ending hour is "less" than the starting hour
-    # Fixes for when end-time is in the AM hours of the next day
-    # TODO this scrub should really happen on the coffeescript layer before it comes in as input
-    # but temporarily fixing it here because it's just easier :P
     to_time += 1.day if to_time < from_time
     to_time
   end
