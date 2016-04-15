@@ -3,8 +3,8 @@ class ResourcesController < ApplicationController
 
   def index
     if params[:bookingRequestDate]
-      params['bookingRequestFrom'] = "#{params[:bookingRequestDate]}T#{params['booking-filter-from']}"
-      params['bookingRequestTo'] = "#{params[:bookingRequestDate]}T#{params['booking-filter-to']}"
+      params['bookingRequestFrom'] = "#{params[:bookingRequestDate]}T#{params['bookingRequestFromTime']}"
+      params['bookingRequestTo'] = "#{params[:bookingRequestDate]}T#{params['bookingRequestToTime']}"
     end
 
 

@@ -56,11 +56,11 @@ class Resource < NexudusBase
       to_time = Time.parse(to_time).utc if to_time.is_a?(String) #just in case; this should already be in correct Time format
 
       resources = all
-      bookings = Booking.all('', available_ids(from_time, to_time))
+      available = available_ids(from_time, to_time)
+      bookings = Booking.all('', available)
 
       bookings.each do |booking|
-        resource = resources.select{ |r| r.id == booking.resource_id }.first
-        next unless resource
+        next unless available.include?(booking.resource_id) && (resource = resources.select{ |r| r.id == booking.resource_id }.first)
         next if booking.from_time >= from_time && booking.to_time <= to_time # falls exactly inside the slot
         next if booking.from_time >= from_time && booking.from_time < to_time # overlaps after requested start
         next if booking.from_time <= from_time && booking.to_time > from_time # overlaps before requested start

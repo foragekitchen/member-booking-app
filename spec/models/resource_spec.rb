@@ -56,7 +56,7 @@ RSpec.describe Resource, type: :model do
         # Requesting 10AM-2PM on 9/1 but already booked 8AM-12PM and 1PM-7PM
         allow(Resource).to receive_messages(available_ids: [100,104])
         available = Resource.all_with_available("2015-09-01T10:00:00PST","2015-09-01T14:00:00PST")
-        expect(available.select(&:available).map(&:id)).to eq [101,102]
+        expect(available.select(&:available).map(&:id)).to eq []
       end
 
     end

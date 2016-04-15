@@ -46,8 +46,8 @@
     .form-group
       %label{for: "booking-filter-date"} When do you want to come in?
       %input#booking-filter-date.form-control.datepicker{name: "bookingRequestDate", type: "text", value: "#{params["bookingRequestDate"]}"}/
-      = select_tag "booking-filter-from", options_for_select(Booking::TIMESLOTS, params["bookingRequestFromTime"]), {class: "chosen-select form-control"}
-      = select_tag "booking-filter-to", options_for_select(Booking::TIMESLOTS, params["bookingRequestToTime"]), {:class => "chosen-select form-control"}
+      = select_tag "bookingRequestFromTime", options_for_select(Booking::TIMESLOTS, params["bookingRequestFromTime"]), {class: "chosen-select form-control"}
+      = select_tag "bookingRequestToTime", options_for_select(Booking::TIMESLOTS, params["bookingRequestToTime"]), {:class => "chosen-select form-control"}
       %input.btn.btn-default{type: "submit", value: "Refresh"}/
 #map-container
   #disable-map
