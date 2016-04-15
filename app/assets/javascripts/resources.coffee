@@ -29,13 +29,13 @@ activateFilter = () ->
     dateFrom = moment("#{$(dateField).val()} #{$(timeFromField).val()}", dateFormat)
     dateFrom = dateFrom.add(1, 'day') if hoursArr[4]
     if dateFrom.isBefore(moment(new Date()))
-      changeMapState(false, 'Booking cannot be in the past.')
+      changeMapState(off, 'Booking cannot be in the past.')
     else if hoursArr[3] < 4
-      changeMapState(false, 'Booking must be at least 4 hours.')
+      changeMapState(off, 'Booking must be at least 4 hours.')
     else if hoursArr[3] > 12
-      changeMapState(false, 'Booking cannot be more than 12 hours.')
+      changeMapState(off, 'Booking cannot be more than 12 hours.')
     else
-      changeMapState(true)
+      changeMapState(on)
   $("#bookingFilters").submit (event) ->
     markAvailable()
     event.preventDefault()
