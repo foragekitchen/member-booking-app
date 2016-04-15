@@ -43,7 +43,7 @@
 </div><!-- /.modal -->
 
 <div id="filters">
-  <%= form_tag(resources_path, method: "get", remote: true, id: "bookingFilters1", class: "form-inline") do %>
+  <%= form_tag(resources_path, method: "get", remote: true, id: "bookingFilter", class: "form-inline") do %>
     <div class="form-group">
       <label for="bookingRequestDate">When do you want to come in?</label>
       <input type="text" id="bookingRequestDate" class="form-control datepicker" name="bookingRequestDate" value="<%= params["bookingRequestDate"] %>" />

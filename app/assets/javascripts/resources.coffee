@@ -1,20 +1,25 @@
+jQuery ->
+  $.ajax(url: "/resources", dataType: "script").done ->
+    $('#bookingFilter').submit()
+
+
+
+
+
+
+
+
 dateField = '#bookingRequestDate'
 timeFromField = '#bookingRequestFromTime'
 timeToField = '#bookingRequestToTime'
 dateFormat = 'MM/DD/YYYY h:mm a'
 
 $(document).ready ->
-  getResources()
   activateFilter()
   activateBookingModal()
   toggleRecurringBookingForm()
 
-getResources = () ->
-  $.ajax(url: "/resources", dataType: "script").done ->
-    console.log('done')
-
 positionTables = (resources) ->
-  createTable resource for resource in resources
   markAvailable()
 
 activateBookingModal = () ->
@@ -55,30 +60,6 @@ markAvailable = () ->
           $(".popover").popover('hide')
           $('#bookingModal').modal()
       changeMapState(true)
-
-createTable = (table) ->
-  div = $ "<div>" # draw table
-  div.addClass "resource"
-  div.attr({
-    "id": "resource-" + table.id
-    "data-toggle": "popover"
-    "title": "#{table.name} #{table.resource_type_name}"
-    "data-content": table.description
-  })
-  div.popover({animation: false, placement: "left", html: true, trigger: "hover"})
-  button = $ "<div>" # put button inside to open the booking modal
-  button.addClass "button"
-  div.append button
-  if $.isArray(table.location) # figure out the position
-    pos = getPosition(table.location)
-    div.css({top: pos[0], left: pos[1] })
-  $("#map-container").append div
-
-getPosition = (latlong) ->
-  scale = .76 #Used for converting from inches (distance away from top left corner of space) to pixels (representing on the image)
-  offsetTop = 55 #Offset for extra border on the map around the actual space
-  offsetLeft = 45
-  return [latlong[0]*scale+offsetTop,latlong[1]*scale+offsetLeft]
 
 updateBookingForm = (table) ->
   modal = $('#bookingModal')
