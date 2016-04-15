@@ -1,0 +1,33 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title NexudusApp
+    = stylesheet_link_tag    'application', media: 'all'
+    = javascript_include_tag 'application'
+    - if defined?(Timecop) && Timecop.top_stack_item
+      - unix_millis = (Time.now.to_f * 1000.0).to_i
+      = javascript_include_tag "/assets/sinon.js"
+      :javascript
+        sinon.useFakeTimers(#{unix_millis});
+    = csrf_meta_tags
+  %body{:id => controller_name}
+    %nav#nav-main.navbar.navbar-default
+      .container-fluid
+        .navbar-header
+          / toggle nav button on responsive layout
+          %button.navbar-toggle.collapsed{"aria-expanded" => "false", "data-target" => "#subnav-collapse-1", "data-toggle" => "collapse", type: "button"}
+            %span.sr-only Toggle navigation
+            %span.icon-bar
+            %span.icon-bar
+            %span.icon-bar
+          / logo
+          %a.navbar-brand{href: "#"}= image_tag "logo-forage-kitchen-small.png", alt: "Forage Kitchen"
+          = render "layouts/nav_main" if user_signed_in?
+        = render "layouts/nav_secondary" if user_signed_in?
+    .container-fluid
+      = yield
+    %footer
+      .container-fluid
+        %h5 This is a footer!
+        %p It should contain helpful links and contact information.
