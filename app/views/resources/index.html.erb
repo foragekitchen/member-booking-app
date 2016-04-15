@@ -46,8 +46,8 @@
     <div class="form-group">
       <label for="booking-filter-date">When do you want to come in?</label>
       <input type="text" id="booking-filter-date" class="form-control datepicker" name="bookingRequestDate" value="<%= params["bookingRequestDate"] %>" />
-      <%= select_tag "booking-filter-from", options_for_select(Booking::TIMESLOTS, params["bookingRequestFromTime"]), {:class => "chosen-select form-control"} %> -
-      <%= select_tag "booking-filter-to", options_for_select(Booking::TIMESLOTS, params["bookingRequestToTime"]), {:class => "chosen-select form-control"} %>
+      <%= select_tag "bookingRequestFromTime", options_for_select(Booking::TIMESLOTS, params["bookingRequestFromTime"]), {:class => "chosen-select form-control"} %> -
+      <%= select_tag "bookingRequestToTime", options_for_select(Booking::TIMESLOTS, params["bookingRequestToTime"]), {:class => "chosen-select form-control"} %>
       <input type="submit" value="Refresh" class="btn btn-default" />
     </div>
   <%end%>

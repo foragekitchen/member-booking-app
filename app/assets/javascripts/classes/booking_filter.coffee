@@ -13,8 +13,8 @@ class window.BookingFilter
 
   timesState: ->
     date = @holder.find('#booking-filter-date').val()
-    fromTime = @holder.find('#booking-filter-from').val()
-    toTime = @holder.find('#booking-filter-to').val()
+    fromTime = @holder.find('#bookingRequestFromTime').val()
+    toTime = @holder.find('#bookingRequestToTime').val()
     fromDateTime = formatFullDate(fromTime.trim())
     toDateTime = formatFullDate(toTime.trim())
     plusDay = toDateTime <= fromDateTime
@@ -23,4 +23,4 @@ class window.BookingFilter
     {date: date, from: fromTime, to: toTime, total: hours, plus_day: plusDay}
 
   datetimeFrom: ->
-    formatFullDate(@holder.find('#booking-filter-from').val(), @holder.find('#booking-filter-date').val())
+    formatFullDate(@holder.find('#bookingRequestFromTime').val(), @holder.find('#booking-filter-date').val())
