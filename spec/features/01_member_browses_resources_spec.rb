@@ -51,12 +51,12 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
         scenario "should see the resources' availability accurately update upon changing the requested date/times and clicking 'refresh'", js: true do
           visit "/resources"
           # Defaults: 2 out of 3 offered (100, 101)
-          expect(page).to have_css("#map-container div.resource.available", :count => 2, :wait => 10)
+          expect(page).to have_css("#map-container div.resource.available", count: 2, wait: 10)
           # Change to time that conflicts with booking for ID:100
           select_from_chosen(" 8:00 PM", from: "bookingRequestFromTime")
           select_from_chosen("12:00 AM", from: "bookingRequestToTime")
           click_button("Refresh")
-          expect(page).to have_css("#map-container div.resource.available", :count => 1, :wait => 10)
+          expect(page).to have_css("#map-container div.resource.available", count: 1, wait: 10)
         end
 
         scenario "should see a warning if selecting a timespan of less than 4 hours", js: true do
