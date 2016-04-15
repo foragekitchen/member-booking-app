@@ -105,4 +105,4 @@ calculateHours = () ->
   moment.duration(toDateTime.diff(fromDateTime)).asHours()
 
 formatFullDate = (time, date = '01/01/1970') ->
-  moment("#{date} #{time}", dateFormat)
+  moment("#{date} #{time}", 'MM/DD/YYYY h:mm a')
