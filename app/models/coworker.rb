@@ -14,13 +14,13 @@ class Coworker < NexudusBase
   def self.find_by_user(user_id, query = {})
     # Find by UserId since it's all we have so far
     query_params = {Coworker_User: user_id}.merge(query)
-    results = Rails.cache.fetch([REQUEST_URI, query_params], :expires => 24.hours) do
+    results = Rails.cache.fetch([REQUEST_URI, query_params], expires: 24.hours) do
       get(REQUEST_URI, :query => query_params)['Records']
     end
     # Now query for single Coworker using Coworker.Id because it gives more info
     return nil unless results.first
     url = "#{REQUEST_URI}/#{results.first['Id']}"
-    result = Rails.cache.fetch([url], :expires => 12.hours) do
+    result = Rails.cache.fetch([url], expires: 12.hours) do
       get(url).parsed_response
     end
     new(result)
@@ -28,7 +28,7 @@ class Coworker < NexudusBase
 
   def total_hours_in_plan
     query_params = {CoworkerExtraService_Coworker: self.id, CoworkerExtraService_ExtraService_Name: 'Prep Table', CoworkerExtraService_IsFromTariff: true}
-    results = Rails.cache.fetch([BILLING_URI, query_params], :expires => 12.hours) do
+    results = Rails.cache.fetch([BILLING_URI, query_params], expires: 12.hours) do
       self.class.get(BILLING_URI, :query => query_params)['Records']
     end
     results.first['TotalUses'] / 60
@@ -36,7 +36,7 @@ class Coworker < NexudusBase
 
   def billing_plan
     url = "#{BILLING_PLANS_URI}/#{next_tariff_id}/"
-    result = Rails.cache.fetch([url], :expires => 24.hours) do
+    result = Rails.cache.fetch([url], expires: 24.hours) do
       self.class.get(url).parsed_response
     end
     result['Name']
@@ -44,7 +44,7 @@ class Coworker < NexudusBase
 
   def extra_service_cost_per_hour
     query_params = {CoworkerExtraService_Coworker: self.id, CoworkerExtraService_ExtraService_Name: 'Prep Table', CoworkerExtraService_IsFromTariff: true}
-    results = Rails.cache.fetch([BILLING_URI, query_params], :expires => 12.hours) do
+    results = Rails.cache.fetch([BILLING_URI, query_params], expires: 12.hours) do
       self.class.get(BILLING_URI, :query => query_params)['Records']
     end
     results.first['Price']/(total_hours_in_plan)

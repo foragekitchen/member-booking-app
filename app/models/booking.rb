@@ -13,80 +13,79 @@ class Booking < NexudusBase
       public_send("#{attribute_name}=", v) if respond_to?(attribute_name)
     end
     if self.from_time.present? # protect against the times we're just quick-instantiating for a destroy
-      public_send('friendly_dates=', friendly_dates)
-      public_send('friendly_date=', Time.parse(self.from_time).to_s(:booking_day))
-      public_send('friendly_times=', friendly_times)
-      public_send('duration_in_minutes=', duration_in_minutes)
+      load_friendly_dates
+      load_friendly_times
+      load_friendly_date
+      load_duration_in_minutes
     end
   end
 
-  def self.find(id, options = {})
-    booking = get("#{REQUEST_URI}/#{id}").parsed_response
-    booking = new(booking)
-    if options[:include].present?
-      booking.public_send('resource=', booking.resource)
+  class << self
+    def find(id, options = {})
+      booking = get("#{REQUEST_URI}/#{id}").parsed_response
+      booking = new(booking)
+      booking.public_send('resource=', booking.resource) if options[:include].present?
+      booking
     end
-    return booking
-  end
 
-  def self.all(coworker_id = '', resource_ids = [], include_passed = false)
-    request_params = []
-    request_params += ["Booking_Coworker=#{coworker_id}"] if coworker_id.present?
-    request_params += ['Booking_Invoiced=false'] unless include_passed # Relies on 'Booking_Invoiced' to guess at whether it's passed or future; maybe there is/will be a better way from Nexudus API
+    def all(coworker_id = nil, resource_ids = [], include_passed = nil)
+      params = []
+      params << "Booking_Coworker=#{coworker_id}" if coworker_id.present?
+      params << 'Booking_Invoiced=false' unless include_passed # Relies on 'Booking_Invoiced' to guess at whether it's passed or future; maybe there is/will be a better way from Nexudus API
 
-    bookings = []
-    if resource_ids.present?
+      bookings = []
       resource_ids.uniq.each do |id|
-        result = get("#{REQUEST_URI}?"+(request_params + ["Booking_Resource=#{id}"]).join('&'))['Records']
+        result = get("#{REQUEST_URI}?#{(params + ["Booking_Resource=#{id}"]).join('&')}")['Records']
         bookings << result.map{|b| new(b) }
       end
-    else
-      bookings << get("#{REQUEST_URI}?"+request_params.join('&'))['Records'].map{|b| new(b)}
+      bookings = get("#{REQUEST_URI}?#{params.join('&')}")['Records'].map{ |b| new(b) } unless resource_ids.present?
+      bookings.flatten.reject(&:blank?).sort_by{ |b| b.from_time }
     end
-    bookings.flatten.reject(&:blank?).sort_by{|b| b.from_time}
   end
 
   def create
     attrs = Hash[ instance_variables.map! { |name| [name.to_s.gsub(/@/,'').classify, instance_variable_get(name)] } ]
     attrs = Hash[ attrs.map { |k, v| [k.start_with?('RepeatOn') || k == 'Repeat' ? k.pluralize : k, v] } ]
-    self.class.post(REQUEST_URI, :body => attrs.to_json, :headers => { 'Content-Type' => 'application/json' })
+    self.class.post(REQUEST_URI, body: attrs.to_json, headers: { 'Content-Type' => 'application/json' })
   end
 
   def update
     attrs = Hash[instance_variables.map! { |name| [name.to_s.gsub(/@/,'').classify, instance_variable_get(name)] } ]
-    self.class.put(REQUEST_URI, :body => attrs.to_json, :headers => { 'Content-Type' => 'application/json' })
+    self.class.put(REQUEST_URI, body: attrs.to_json, headers: { 'Content-Type' => 'application/json' })
   end
 
   def destroy
-    self.class.delete(REQUEST_URI+"/#{id}")
+    self.class.delete("#{REQUEST_URI}/#{id}")
   end
 
   def resource
     Resource.find(resource_id)
   end
 
-  def friendly_dates
-    str = ''
+  private
+  def load_friendly_dates
     from = Time.parse(from_time).localtime
     to = Time.parse(to_time).localtime
     days = ((to - from) / 1.day).to_i
 
     if from >= Time.now && from < Time.now + 3.days
-      str += "In #{time_ago_in_words(from)}"
-      str += " (#{from.to_s(:booking_short)})"
+      self.friendly_dates = "In #{time_ago_in_words(from)} (#{from.to_s(:booking_short)})"
     else
-      str += from.to_s(:booking)
+      self.friendly_dates = from.to_s(:booking)
     end
-    str += " (#{pluralize(days, 'day')})" if days > 1
-    str
+    self.friendly_dates = "#{self.friendly_dates} (#{pluralize(days, 'day')})" if days > 1
   end
 
-  def friendly_times
-    Time.parse(from_time).localtime.to_s(:booking_time) + ' - ' + Time.parse(to_time).localtime.to_s(:booking_time)
+  def load_friendly_times
+    self.friendly_times = "#{Time.parse(from_time).localtime.to_s(:booking_time)} - #{Time.parse(to_time).localtime.to_s(:booking_time)}"
   end
 
-  def duration_in_minutes
-    (Time.parse(to_time) - Time.parse(from_time)) / 60
+  def load_friendly_date
+    self.friendly_date = Time.parse(self.from_time).to_s(:booking_day)
+  end
+
+  def load_duration_in_minutes
+    self.duration_in_minutes = (Time.parse(to_time) - Time.parse(from_time)) / 60
   end
 
 end
