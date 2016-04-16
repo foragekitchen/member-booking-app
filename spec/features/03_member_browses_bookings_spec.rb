@@ -4,6 +4,8 @@ NexudusApp::Application.load_tasks
 include ActionView::Helpers::DateHelper
 
 RSpec.feature "My Bookings:", type: :feature do
+  let(:from_time) { DateTime.strptime("2015-09-01T16:00:00Z").in_time_zone.to_time.strftime('%l:%M %p').strip }
+  let(:to_time) { DateTime.strptime("2015-09-01T20:00:00Z").in_time_zone.to_time.strftime('%l:%M %p').strip }
 
   def find_booking_on_page(resource_name)
     page.first("td", text: resource_name)
@@ -33,9 +35,9 @@ RSpec.feature "My Bookings:", type: :feature do
 
     scenario "should see a list of upcoming bookings, ordered by soonest at the top" do
       visit "/bookings"
-      expect(page).to have_css("table#upcoming-bookings tbody tr", count: 2+1) # account for the hidden EditForm row
+      expect(page).to have_css("table#upcoming-bookings tbody tr", count: 2 + 1) # account for the hidden EditForm row
       expect(page.first("table tr td:nth-child(2)")).to have_content("In about 8 hours (Sep 2)")
-      expect(page.first("table tr td:nth-child(3)")).to have_content("7:00 PM - 11:00 PM")
+      expect(page.first("table tr td:nth-child(3)")).to have_content("#{from_time} - #{to_time}")
     end
 
     scenario "should see a link to past bookings" do
@@ -68,20 +70,20 @@ RSpec.feature "My Bookings:", type: :feature do
 
     scenario "should see a warning if editing date/time within 24 hours of the original start-time", js: true do
       visit "/bookings"
-      expand_edit_form_for_booking(find_booking_on_page("A. Hedgehog Prep Table"), "11:00 PM")
-      page.find("a", text: "7:00 PM").click
+      expand_edit_form_for_booking(find_booking_on_page("A. Hedgehog Prep Table"), to_time)
+      page.find("a", text: from_time).click
       expect(page).to have_css("div", text: "Locked. This booking starts in less than 24 hours.", visible: true, wait: 10)
     end
 
     scenario "should not be able to reduce hours within 24 hours of the original start-time", js: true do
       visit "/bookings"
-      expand_edit_form_for_booking(find_booking_on_page("A. Hedgehog Prep Table"), " 1:00 PM")
+      expand_edit_form_for_booking(find_booking_on_page("A. Hedgehog Prep Table"), to_time)
       expect(page).to have_css("#bookingTo option[disabled]", text: "12:00 PM", visible: false, wait: 10)
     end
 
     scenario "should see a warning if the requested time exceeds the available hours in their plan", js: true do
       visit "/bookings"
-      expand_edit_form_for_booking(find_booking_on_page("A. Hedgehog Prep Table"), "11:00 PM")
+      expand_edit_form_for_booking(find_booking_on_page("A. Hedgehog Prep Table"), to_time)
       select_from_chosen(" 2:00 AM", from: "bookingTo")
       expect(page).to have_text("exceeds the hours remaining in your plan")
       expect(page).to have_text("you will be invoiced")

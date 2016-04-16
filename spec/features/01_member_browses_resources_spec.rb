@@ -110,7 +110,7 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
         select_from_chosen("10:00 PM", from: "bookingRequestFromTime")
         select_from_chosen("11:00 PM", from: "bookingRequestToTime")
         expect(page).to have_content("Booking must be at least 4 hours.")
-        expect(page).to have_selector("#bookingFilters input[type=submit]:disabled")
+        expect(page).to have_selector("#booking-filter input[type=submit]:disabled")
       end
 
       scenario "should be able to book up to 12 hours, but no more than 12 hours", js: true do
@@ -121,7 +121,7 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
         expect(page).to_not have_content("Booking cannot be more than 12 hours.")
         select_from_chosen(" 8:30 PM", from: "bookingRequestToTime")
         expect(page).to have_content("Booking cannot be more than 12 hours.")
-        expect(page).to have_selector("#bookingFilters input[type=submit]:disabled")
+        expect(page).to have_selector("#booking-filter input[type=submit]:disabled")
       end
 
       pending "should see a warning if booking more than a month in advance"

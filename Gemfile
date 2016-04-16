@@ -84,3 +84,6 @@ group :test do
   # Use WebMock for stubbing out API calls in tests
   gem 'webmock', require: false
 end
+
+gem 'responders'
+gem 'haml-rails'

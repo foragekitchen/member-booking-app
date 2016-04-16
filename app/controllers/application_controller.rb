@@ -6,27 +6,27 @@ class ApplicationController < ActionController::Base
   before_filter :check_session
 
   def check_session
-    if session[:user_id]
-      session[:expiry_time] ||= Time.now
-      if session[:expiry_time] < 15.minutes.ago
-        reset_session
-        flash[:info] = "Looks like you might've stepped away for a bit. Log in again to continue!"
-        redirect_to login_path
-      else
-        @coworker = Coworker.find_by_user(session[:user_id])
-        if @coworker
-          session[:expiry_time] = Time.now
-        else
-          reset_session
-          flash[:info] = 'You cannot login into the system. Please contact administrator for further instructions'
-          redirect_to login_path
-        end
-      end
+    return redirect_to_login('Please log in.') unless session[:user_id]
+    session[:expiry_time] ||= Time.now
+
+    if session[:expiry_time] < 15.minutes.ago
+      redirect_to_login("Looks like you might've stepped away for a bit. Log in again to continue!")
     else
-      #... authenticate
-      session[:expiry_time] = Time.now
-      flash[:info] = 'Please log in.'
-      redirect_to login_path
+      if (@coworker = Coworker.find_by_user(session[:user_id]))
+        session[:expiry_time] = Time.now
+      else
+        redirect_to_login('You cannot login into the system. Please contact administrator for further instructions')
+      end
+    end
+  end
+
+  private
+  def redirect_to_login(message = nil)
+    reset_session
+    flash[:info] = message
+    respond_to do |format|
+      format.html { redirect_to login_path }
+      format.js { render 'shared/unauthorized' }
     end
   end
 
