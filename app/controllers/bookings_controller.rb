@@ -2,7 +2,7 @@ class BookingsController < ApplicationController
   before_action :get_resources, only: [:index]
 
   def index
-    @bookings = Booking.all(@coworker.id,[],true)
+    @bookings = Booking.all(@coworker.id, [], true)
     @upcoming = @bookings.reject{|b| b.from_time.to_time < Time.now}
     @past = @bookings.reject{|b| b.from_time.to_time > Time.now}
   end

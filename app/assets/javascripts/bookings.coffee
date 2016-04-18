@@ -1,44 +1,8 @@
-dateFormat = 'MM/DD/YYYY h:mm a'
-
-$(document).ready ->
-  activateTooltipsForDisabledCancelButtons()
-
 generateEditForm = (booking,btn) ->
 
-  disableTimeIfImminent(booking)
   disableReductionIfImminent(booking)
   enableCheckRemainingHours(booking)
 
-  $("#editBookingForm .btn-primary").first().click (event) ->
-    $("#editBookingForm").attr({"action":"/bookings/" + booking.id})
-    $('#bookingFrom').prop('disabled', false).trigger("chosen:updated")
-    $("#editBookingForm").submit()
-
-  $('editBookingForm #btn-cancel').click (event) ->
-    $("#editFormContainer").addClass("hidden")
-    event.preventDefault()
-
-disableTimeIfImminent = (booking) ->
-  minutes_until_start = Math.abs(moment.duration(moment(new Date()).diff(moment(booking.from_time))).asMinutes())
-  if minutes_until_start <= booking.resource.late_cancellation_limit
-    $('#bookingFrom').prop('disabled', true).trigger("chosen:updated")
-    $('#bookingFrom_chosen').attr({
-      "data-toggle": "tooltip",
-      "data-placement": "right",
-      "title": "Locked. This booking starts in less than 24 hours."
-    })
-    $('#bookingFrom_chosen').tooltip({trigger:'click'})
-    $('#bookingFrom_chosen').mouseleave ->
-      $(this).tooltip("hide")
-  else $('#bookingFrom').prop('disabled', false).trigger("chosen:updated")
-
-disableReductionIfImminent = (booking) ->
-  minutes_until_start = Math.abs(moment.duration(moment(new Date()).diff(moment(booking.from_time))).asMinutes())
-  if minutes_until_start <= booking.resource.late_cancellation_limit
-    selectedTime = $("#bookingTo").val()
-    $("#bookingTo option[value='" + selectedTime + "']").prevAll().prop('disabled', true)
-    $("#bookingTo").trigger("chosen:updated")
-  else $('#bookingTo option').prop('disabled', false).trigger("chosen:updated")
 
 enableCheckRemainingHours = (booking) ->
   $('#editBookingForm select').change (event) ->
@@ -54,9 +18,6 @@ enableCheckRemainingHours = (booking) ->
       $('#bookingTo_chosen').tooltip('show')
     else
       $('#bookingTo_chosen').tooltip('destroy')
-
-activateTooltipsForDisabledCancelButtons = () ->
-  $(".disabled-cancel").tooltip()
 
 calculateHours = () ->
   fromTime = $("#bookingFrom").val()

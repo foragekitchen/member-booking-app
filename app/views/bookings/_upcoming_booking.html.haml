@@ -9,13 +9,16 @@
       %span.glyphicon.glyphicon-pencil{'aria-hidden' => true}
       Edit
   - if ((Time.parse(booking.from_time) - Time.now)/1.minute) <= booking.resource.late_cancellation_limit
-    %td.disabled-cancel{"data-placement" => "left", "data-toggle" => "tooltip", title: "Locked. This booking starts in less than 24 hours."}= link_to('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Remove'.html_safe, "#", class: "btn btn-default btn-sm disabled")
+    %td{"data-placement" => "left", "data-toggle" => "tooltip", title: "Locked. This booking starts in less than 24 hours."}
+      = link_to "#", class: "btn btn-default btn-sm disabled" do
+        %span.glyphicon.glyphicon-remove{'aria-hidden' => true}
+        Remove
   - else
     %td
       = link_to '#', method: :delete, data: {confirm: "Are you sure you want to cancel this booking for #{Date.parse(booking.from_time)}?"}, class: "btn btn-default btn-sm" do
         %span.glyphicon.glyphicon-remove{'aria-hidden' => true}
         Remove
-%tr.hidden.edit-booking{id: "edit-booking-#{booking.id}"}
+%tr.hidden.edit-booking{id: "edit-booking-#{booking.id}", data: { booking: booking.to_json, resource: booking.resource.to_json }}
   %td.row{colspan: "5"}
     = form_for bookings_path, method: :put do |f|
       = f.hidden_field :id, value: booking.id, name: :id
@@ -47,10 +50,6 @@
           %small change your spot
         .form-group.form-inline
           = select_tag :bookingResource, options_from_collection_for_select(@resources, :id, :name, booking.resource_id), class: "chosen-select form-control col-sm-5"
-          %a{href: ""}
-            %span.glyphicon.glyphicon-remove{"aria-hidden" => "true"}
-            %span.sr-only remove
-          %br/
       .col-md-3.text-center
         = f.submit 'Update', class: 'btn btn-primary'
         %br/
