@@ -20,7 +20,7 @@
         Remove
 %tr.hidden.edit-booking{id: "edit-booking-#{booking.id}", data: { booking: booking.to_json, resource: booking.resource.to_json }}
   %td.row{colspan: "5"}
-    = form_for bookings_path, method: :put do |f|
+    = form_for :booking, url: booking_path(id: booking.id), method: :put do |f|
       = f.hidden_field :id, value: booking.id, name: :id
       = f.hidden_field :id, value: booking.id, name: :bookingId
       = f.hidden_field :date, value: booking.friendly_date, name: :bookingDate
