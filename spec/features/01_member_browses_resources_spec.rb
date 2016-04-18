@@ -35,9 +35,9 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
 
       scenario "should be able to filter by date and time they want to come in; defaulted to today, 2 hours from now, minimum of 4 hours" do
         visit "/resources"
-        expect(page).to have_field("bookingRequestDate", :with => Date.today.strftime("%m/%d/%Y"))
-        expect(page).to have_select("bookingRequestFromTime", :selected => (Time.now + 2.hours).beginning_of_hour.strftime("%l:%M %p").strip)
-        expect(page).to have_select("bookingRequestToTime", :selected => (Time.now + 6.hours).beginning_of_hour.strftime("%l:%M %p").strip)
+        expect(page).to have_field("bookingRequestDate", with: Date.today.strftime("%m/%d/%Y"))
+        expect(page).to have_select("bookingRequestFromTime", selected: (Time.now + 2.hours).beginning_of_hour.strftime("%l:%M %p").strip)
+        expect(page).to have_select("bookingRequestToTime", selected: (Time.now + 6.hours).beginning_of_hour.strftime("%l:%M %p").strip)
       end
 
       scenario "should see basic description details when hovering on a resource (ex. dimensions, suggestions for how many people can fit - whatever is entered into the backend Nexudus system in the 'description' field)", js: true do
@@ -75,7 +75,7 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
 
         scenario "should see a warning if selecting a date/time that is already passed", js: true do
           visit "/resources"
-          fill_in('When do you want to come in?', :with => (Time.now - 1.day).to_s(:booking_day))
+          fill_in('When do you want to come in?', with: (Time.now - 1.day).to_s(:booking_day))
           page.execute_script("$('#bookingRequestDate').trigger('change');")
           expect(page).to have_text("Booking cannot be in the past.")
         end
@@ -115,7 +115,7 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
 
       scenario "should be able to book up to 12 hours, but no more than 12 hours", js: true do
         visit "/resources"
-        fill_in('When do you want to come in?', :with => (Time.now + 1.day).to_s(:booking_day))
+        fill_in('When do you want to come in?', with: (Time.now + 1.day).to_s(:booking_day))
         select_from_chosen(" 8:00 AM", from: "bookingRequestFromTime")
         select_from_chosen(" 8:00 PM", from: "bookingRequestToTime")
         expect(page).to_not have_content("Booking cannot be more than 12 hours.")
