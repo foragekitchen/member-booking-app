@@ -12,7 +12,7 @@ RSpec.feature "My Bookings:", type: :feature do
   end
 
   def expand_edit_form_for_booking(booking_element, end_time_for_validation)
-    booking_element.find(:xpath,'../..').first('.btn-edit').click
+    booking_element.find(:xpath, '../..').first('.btn-edit').click
     page.find("#bookingTo_chosen span", visible: false, text: end_time_for_validation.strip, wait: 10) # wait till the form's properly loaded/updated before doing anything else, by checking for its availability
   end
 
@@ -35,7 +35,7 @@ RSpec.feature "My Bookings:", type: :feature do
 
     scenario "should see a list of upcoming bookings, ordered by soonest at the top" do
       visit "/bookings"
-      expect(page).to have_css("table#upcoming-bookings tbody tr", count: 2 + 1) # account for the hidden EditForm row
+      expect(page).to have_css("table#upcoming-bookings tbody tr", count: 2 * 2) # account for the hidden edit forms
       expect(page.first("table tr td:nth-child(2)")).to have_content("In about 8 hours (Sep 2)")
       expect(page.first("table tr td:nth-child(3)")).to have_content("#{from_time} - #{to_time}")
     end
@@ -48,7 +48,7 @@ RSpec.feature "My Bookings:", type: :feature do
     scenario "should be given the option to edit a booking" do
       visit "/bookings"
       expect(page).to have_selector(:link_or_button, 'Edit')
-      expect(page).to have_css("#editBookingForm")
+      expect(page).to have_css('.edit-booking', visible: true)
     end
 
   end
@@ -84,7 +84,7 @@ RSpec.feature "My Bookings:", type: :feature do
     scenario "should see a warning if the requested time exceeds the available hours in their plan", js: true do
       visit "/bookings"
       expand_edit_form_for_booking(find_booking_on_page("A. Hedgehog Prep Table"), to_time)
-      select_from_chosen(" 2:00 AM", from: "bookingTo")
+      within('.edit-booking:first') { select_from_chosen(" 2:00 AM", from: "bookingTo") }
       expect(page).to have_text("exceeds the hours remaining in your plan")
       expect(page).to have_text("you will be invoiced")
     end
@@ -105,7 +105,7 @@ RSpec.feature "My Bookings:", type: :feature do
       visit "/bookings"
       count = page.all('#upcoming-bookings tbody tr', visible: true).count
       accept_confirm { first(:link, "Remove").click }
-      expect(page).to have_css("tbody tr", count: count-1, wait: 10)
+      expect(page).to have_css("tbody tr", count: count - 1, wait: 10)
     end
   end
 
