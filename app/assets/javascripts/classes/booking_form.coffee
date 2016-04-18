@@ -3,6 +3,7 @@ class window.BookingForm
     @holder = holder
     @booking = @holder.data('booking')
     @resource = @holder.data('resource')
+    @holder.find('.chosen-select').chosen()
     @disableTimeIfImminent()
     @disableReductionIfImminent()
     @enableCheckRemainingHours()

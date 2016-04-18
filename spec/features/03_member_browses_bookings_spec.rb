@@ -84,7 +84,7 @@ RSpec.feature "My Bookings:", type: :feature do
     scenario "should see a warning if the requested time exceeds the available hours in their plan", js: true do
       visit "/bookings"
       expand_edit_form_for_booking(find_booking_on_page("A. Hedgehog Prep Table"), to_time)
-      within('.edit-booking:first') { select_from_chosen(" 2:00 AM", from: "bookingTo") }
+      within('.edit-booking', visible: true) { select_from_chosen(" 2:00 AM", from: "bookingTo") }
       expect(page).to have_text("exceeds the hours remaining in your plan")
       expect(page).to have_text("you will be invoiced")
     end
