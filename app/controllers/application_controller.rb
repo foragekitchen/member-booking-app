@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
     return redirect_to_login('Please log in.') unless session[:user_id]
     session[:expiry_time] ||= Time.now
 
-    if session[:expiry_time] < (ENV['EXPIRED_PERIOD'] || 15).minutes.ago
+    if session[:expiry_time] < (ENV['EXPIRED_PERIOD'] || 15).to_i.minutes.ago
       redirect_to_login("Looks like you might've stepped away for a bit. Log in again to continue!")
     else
       if (@coworker = Coworker.find_by_user(session[:user_id]))
