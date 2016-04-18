@@ -1,0 +1,57 @@
+%tr
+  %td
+    = booking.resource.name
+    = booking.resource.resource_type_name
+  %td= booking.friendly_dates
+  %td= booking.friendly_times
+  %td
+    = link_to '#', class: 'btn btn-default btn-sm btn-edit booking-edit', data: { id: booking.id } do
+      %span.glyphicon.glyphicon-pencil{'aria-hidden' => true}
+      Edit
+  - if ((Time.parse(booking.from_time) - Time.now)/1.minute) <= booking.resource.late_cancellation_limit
+    %td.disabled-cancel{"data-placement" => "left", "data-toggle" => "tooltip", title: "Locked. This booking starts in less than 24 hours."}= link_to('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Remove'.html_safe, "#", class: "btn btn-default btn-sm disabled")
+  - else
+    %td
+      = link_to '#', method: :delete, data: {confirm: "Are you sure you want to cancel this booking for #{Date.parse(booking.from_time)}?"}, class: "btn btn-default btn-sm" do
+        %span.glyphicon.glyphicon-remove{'aria-hidden' => true}
+        Remove
+%tr.hidden.edit-booking{id: "edit-booking-#{booking.id}"}
+  %td.row{colspan: "5"}
+    = form_for bookings_path, method: :put do |f|
+      = f.hidden_field :id, value: booking.id, name: :id
+      = f.hidden_field :id, value: booking.id, name: :bookingId
+      = f.hidden_field :date, value: booking.friendly_date, name: :bookingDate
+      .col-md-3
+        %h5.text-uppercase Quick Edit
+        %label In Date:
+        %span= booking.friendly_dates
+        %br/
+        %label Booked for:
+        %span= booking.coworker_full_name
+        %br/
+        %label Booked by:
+        %span= booking.updated_by
+      .col-md-3.row
+        %h5
+          Time of day:
+          %small extend your hours
+        .form-group.form-inline
+          %label.col-sm-4 In at:
+          = select_tag "bookingFrom", options_for_select(Booking::TIMESLOTS, booking.formatted_from_time), {class: "chosen-select form-control col-sm-5"}
+        .form-group.form-inline
+          %label.col-sm-4 Out by:
+          = select_tag "bookingTo", options_for_select(Booking::TIMESLOTS, booking.formatted_to_time), {class: "chosen-select form-control col-sm-5"}
+      .col-md-3.row
+        %h5
+          Resource(s):
+          %small change your spot
+        .form-group.form-inline
+          = select_tag :bookingResource, options_from_collection_for_select(@resources, :id, :name, booking.resource_id), class: "chosen-select form-control col-sm-5"
+          %a{href: ""}
+            %span.glyphicon.glyphicon-remove{"aria-hidden" => "true"}
+            %span.sr-only remove
+          %br/
+      .col-md-3.text-center
+        = f.submit 'Update', class: 'btn btn-primary'
+        %br/
+        %a.booking-close{href: "#", data: { id: booking.id }} Close

@@ -62,6 +62,14 @@ class Booking < NexudusBase
     Resource.find(resource_id)
   end
 
+  def formatted_from_time
+    Time.parse(from_time).localtime.to_s(:booking_time)
+  end
+
+  def formatted_to_time
+    Time.parse(to_time).localtime.to_s(:booking_time)
+  end
+
   private
   def load_friendly_dates
     from = Time.parse(from_time).localtime
@@ -77,7 +85,7 @@ class Booking < NexudusBase
   end
 
   def load_friendly_times
-    self.friendly_times = "#{Time.parse(from_time).localtime.to_s(:booking_time)} - #{Time.parse(to_time).localtime.to_s(:booking_time)}"
+    self.friendly_times = "#{formatted_from_time} - #{formatted_to_time}"
   end
 
   def load_friendly_date

@@ -1,4 +1,4 @@
 jQuery ->
   $('.collapse').collapse()
-  $(".chosen-select").chosen()
-  $(".datepicker").datepicker()
+  $('.chosen-select').chosen()
+  $('.datepicker').datepicker()
