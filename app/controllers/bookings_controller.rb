@@ -2,7 +2,7 @@ class BookingsController < ApplicationController
   before_action :get_resources, only: [:index]
 
   def index
-    @bookings = Booking.all(@coworker.id,[],true)
+    @bookings = Booking.all(@coworker.id, [], true)
     @upcoming = @bookings.reject{|b| b.from_time.to_time < Time.now}
     @past = @bookings.reject{|b| b.from_time.to_time > Time.now}
   end
@@ -63,14 +63,6 @@ class BookingsController < ApplicationController
       flash[:alert] = @response['Message'] || 'There was an error canceling your booking. Please contact us.'
     end
     redirect_to bookings_path
-  end
-
-  def edit
-    @booking = Booking.find(params[:id], :include => 'resource')
-    respond_to do |format|
-      format.js { render :json => @booking }
-      format.html { render :index }
-    end
   end
 
   private

@@ -1,8 +1,8 @@
 class RSpec::Core::ExampleGroup
-  def hours_offset
-    # This is offset for real-time tests.
-    # Change this value if your real-time tests are failing
-    8.hours
+  def available_start_time(time)
+    res = time.to_time.in_time_zone('Pacific Time (US & Canada)')
+    res = res.change(hour: 11, min: res.min)
+    res - res.utc_offset
   end
 
   def wait_for_ajax
@@ -33,12 +33,12 @@ class RSpec::Core::ExampleGroup
       select_from_chosen(to, from: "bookingRequestToTime")
       click_button("Refresh")
     end
-    wait_for_ajax
+    # wait_for_ajax
     page.first("div.available div.button", wait: 10).click
     # Remember some stuff so we can find this booking later
     booking = {
         resource_name: page.find(".modal-title span", wait: 10).text,
-        end_time: page.find(".modal-body h5 span", wait: 10).text.split("-").last
+        end_time: page.find(".modal-body h5 span", wait: 10).text.split(' to ').last
     }
     booking[:end_time] = booking[:end_time].strip if booking[:end_time].length > 8
     click_button("Save your booking")
