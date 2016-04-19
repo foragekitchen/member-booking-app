@@ -22,7 +22,7 @@
             %span.icon-bar
             %span.icon-bar
           / logo
-          %a.navbar-brand{href: "#"}= image_tag "logo-forage-kitchen-small.png", alt: "Forage Kitchen"
+          = link_to image_tag("logo-forage-kitchen-small.png", alt: "Forage Kitchen"), root_path, class: 'navbar-brand'
           = render "layouts/nav_main" if user_signed_in?
         = render "layouts/nav_secondary" if user_signed_in?
     .container-fluid

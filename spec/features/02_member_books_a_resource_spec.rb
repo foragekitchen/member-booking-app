@@ -17,9 +17,10 @@ RSpec.feature "Booking Kitchen Time:", type: :feature do
     end
 
     scenario "should be able to change date, and/or start and end time(s), and see if it's still available", js: true do
+      date = available_start_time(Time.current)
       visit "/resources"
-      select_from_chosen(" 8:00 PM", from: "bookingRequestFromTime")
-      select_from_chosen("12:00 AM", from: "bookingRequestToTime")
+      select_from_chosen(date.to_s(:booking_time), from: "bookingRequestFromTime")
+      select_from_chosen((date + 4.hours).to_s(:booking_time), from: "bookingRequestToTime")
       click_button("Refresh")
       page.first("div.available div.button", wait: 10).click
       expect(page).to have_link("Change")
@@ -30,7 +31,7 @@ RSpec.feature "Booking Kitchen Time:", type: :feature do
       bookings = page.find('table#upcoming-bookings tbody').all('tr')
       count = bookings.size
 
-      create_booking(available_start_time(Date.today + 1.day))
+      create_booking(available_start_time(Time.current + 1.day))
 
       visit "/bookings"
       expect(page).to have_css("table#upcoming-bookings tbody tr", count: count + 1, wait: 10)

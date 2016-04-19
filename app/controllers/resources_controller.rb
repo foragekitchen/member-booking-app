@@ -7,7 +7,6 @@ class ResourcesController < ApplicationController
       params['bookingRequestTo'] = "#{params[:bookingRequestDate]}T#{params['bookingRequestToTime']}"
     end
 
-
     if params['bookingRequestFrom'] && params['bookingRequestTo']
       from = Time.strptime(params['bookingRequestFrom'], "%m/%d/%YT%l:%M %p")
       to = Time.strptime(params['bookingRequestTo'], "%m/%d/%YT%l:%M %p")
@@ -24,9 +23,15 @@ class ResourcesController < ApplicationController
       # 1) Start by getting all the resources ever (regardless of whether they're "open for business" right now)
       @resources = Resource.all
 
-      params['bookingRequestDate'] ||= (Time.now).to_s(:booking_day)
-      params['bookingRequestFromTime'] ||= (Time.now + 2.hours).beginning_of_hour.to_s(:booking_time)
-      params['bookingRequestToTime'] ||= (Time.now + 6.hours).beginning_of_hour.to_s(:booking_time)
+      params['bookingRequestDate'] ||= (Time.current).to_s(:booking_day)
+      params['bookingRequestFromTime'] ||= (Time.current + 2.hours).beginning_of_hour.to_s(:booking_time)
+      params['bookingRequestToTime'] ||= (Time.current + 6.hours).beginning_of_hour.to_s(:booking_time)
+      unless Booking::TIMESLOTS.map(&:strip).include?(params['bookingRequestFromTime']) && Booking::TIMESLOTS.map(&:strip).include?(params['bookingRequestToTime'])
+        # @todo: remove hardcode
+        params['bookingRequestFromTime'] = ' 8:00 AM'
+        params['bookingRequestToTime'] = '12:00 PM'
+        params['bookingRequestDate'] = (Time.current + 1.day).to_s(:booking_day) unless Booking::TIMESLOTS.map(&:strip).include?(params['bookingRequestToTime'])
+      end
     end
 
     # respond_to do |format|

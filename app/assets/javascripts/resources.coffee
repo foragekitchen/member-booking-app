@@ -6,5 +6,5 @@ jQuery ->
 
   $('#booking-filter input').trigger('change')
 
-  $('#map-container').on 'click', '.button', (e) ->
+  $('#map-container').on 'click', '.button.available', (e) ->
     new BookingModal($(@).parent())

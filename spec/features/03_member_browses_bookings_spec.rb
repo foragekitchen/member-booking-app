@@ -102,7 +102,7 @@ RSpec.feature "My Bookings:", type: :feature do
     end
 
     scenario "should be able to successfully complete a valid cancellation", js: true do
-      create_booking(available_start_time(Date.today + 2.days))
+      create_booking(available_start_time(Time.current + 2.days))
 
       visit "/bookings"
       count = page.all('#upcoming-bookings tbody tr', visible: true).count
@@ -124,7 +124,7 @@ RSpec.feature "My Bookings:", type: :feature do
     end
 
     scenario "should see a warning if changing the booking-time conflicts with another booking", js: true do
-      date = available_start_time(Date.today + 4.days)
+      date = available_start_time(Time.current + 4.days)
       sooner_booking = create_booking(date)
       create_booking(date + 4.hours)
 
@@ -142,7 +142,7 @@ RSpec.feature "My Bookings:", type: :feature do
     end
 
     scenario "should be able to successfully complete an update", js: true do
-      booking = create_booking(available_start_time(Date.today + 3.days))
+      booking = create_booking(available_start_time(Time.current + 3.days))
 
       visit "/bookings"
       this_booking = find_booking_on_page(booking[:resource_name])

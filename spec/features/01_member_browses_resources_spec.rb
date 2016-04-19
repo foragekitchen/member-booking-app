@@ -36,8 +36,8 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
       scenario "should be able to filter by date and time they want to come in; defaulted to today, 2 hours from now, minimum of 4 hours" do
         visit "/resources"
         expect(page).to have_field("bookingRequestDate", with: Date.today.strftime("%m/%d/%Y"))
-        expect(page).to have_select("bookingRequestFromTime", selected: (Time.now + 2.hours).beginning_of_hour.strftime("%l:%M %p").strip)
-        expect(page).to have_select("bookingRequestToTime", selected: (Time.now + 6.hours).beginning_of_hour.strftime("%l:%M %p").strip)
+        expect(page).to have_select("bookingRequestFromTime", selected: (Time.current + 2.hours).beginning_of_hour.strftime("%l:%M %p").strip)
+        expect(page).to have_select("bookingRequestToTime", selected: (Time.current + 6.hours).beginning_of_hour.strftime("%l:%M %p").strip)
       end
 
       scenario "should see basic description details when hovering on a resource (ex. dimensions, suggestions for how many people can fit - whatever is entered into the backend Nexudus system in the 'description' field)", js: true do

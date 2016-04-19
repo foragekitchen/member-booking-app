@@ -1,8 +1,6 @@
 class RSpec::Core::ExampleGroup
   def available_start_time(time)
-    res = time.to_time.in_time_zone('Pacific Time (US & Canada)')
-    res = res.change(hour: 11, min: res.min)
-    res - res.utc_offset
+    time.change(hour: 11).utc + Time.now.utc_offset
   end
 
   def wait_for_ajax

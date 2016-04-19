@@ -18,7 +18,7 @@ class Coworker < NexudusBase
       get(REQUEST_URI, :query => query_params)['Records']
     end
     # Now query for single Coworker using Coworker.Id because it gives more info
-    return nil unless results.first
+    return nil if results.nil? || results.first.nil?
     url = "#{REQUEST_URI}/#{results.first['Id']}"
     result = Rails.cache.fetch([url], expires: 12.hours) do
       get(url).parsed_response
