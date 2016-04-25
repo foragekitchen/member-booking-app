@@ -4,6 +4,7 @@ jQuery ->
 $.fn.bookingFilterTime = ->
   @each ->
     $(@).on 'change', ->
+      return unless window.booking_filter
       timesState = window.booking_filter.timesState()
       dateFrom = window.booking_filter.datetimeFrom()
       dateFrom = dateFrom.add(1, 'day') if timesState.plus_day

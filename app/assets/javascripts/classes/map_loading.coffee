@@ -7,6 +7,7 @@ class window.MapLoading
       @map[if !state then 'hide' else 'show'].apply(@map, [])
       @button.prop('disabled', state)
       if message && state
+        return if @button.next('.tooltip').is(':visible') && @button.attr('title') == message
         @button.attr({
           "data-toggle": "tooltip",
           "data-placement": "right",
