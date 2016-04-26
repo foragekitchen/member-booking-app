@@ -14,11 +14,11 @@ class ResourcesController < ApplicationController
       @to_date = @to_date + 1.day if @to_date < @from_date
     else
       from = Time.current + 2.hours
-      to = Time.current + 6.hours
+      to = from + 4.hours
       params[:bookingRequestDate] = (Time.current).to_s(:booking_day)
       params[:bookingRequestFromTime] = from.beginning_of_hour.to_s(:booking_time)
       params[:bookingRequestToTime] = to.beginning_of_hour.to_s(:booking_time)
-      if (from.hour < 8 || from.hour > 2) || (to.hour < 8 || to.hour > 2)
+      if (from.hour < 8 && from.hour > 2) || (to.hour < 8 && to.hour > 2)
         params[:bookingRequestFromTime] = '8:00 AM'
         params[:bookingRequestToTime] = '12:00 PM'
         params[:bookingRequestDate] = to.to_s(:booking_day) if (to.hour < 8 || to.hour > 2)
