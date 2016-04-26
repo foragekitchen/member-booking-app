@@ -2,6 +2,7 @@ require 'rails_helper'
 include ActionView::Helpers::DateHelper
 
 RSpec.feature "Browsing Available Resources:", type: :feature do
+  subject { page }
 
   context "A Member visiting the 'Resources' page" do
 
@@ -22,22 +23,33 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
 
       scenario "should see ALL offered resources (i.e. prep tables) plotted on a map of the space, with unavailable resources grayed out", js: true do
         visit "/resources"
-        expect(page).to have_css('#map-container div.resource', count: 3, wait: 10)
+        should have_css('#map-container div.resource', count: 3, wait: 10)
       end
 
       scenario "should see filters for date and time, with 'closed' times omitted and friendly hint", js: true do
         visit "/resources"
-        expect(page).to have_content("When do you want to come in?")
-        expect(page).to have_content("closed 2AM-8AM")
+        should have_content("When do you want to come in?")
+        should have_content("closed 2AM-8AM")
         # page.find("#bookingRequestToTime_chosen").click # Why are we clicking it?
-        expect(page.find("#filters", visible: false)).to_not have_content(" 3:00 AM")
+        expect(find("#filters", visible: false)).to_not have_content(" 3:00 AM")
       end
 
       scenario "should be able to filter by date and time they want to come in; defaulted to today, 2 hours from now, minimum of 4 hours" do
         visit "/resources"
-        expect(page).to have_field("bookingRequestDate", with: Date.today.strftime("%m/%d/%Y"))
-        expect(page).to have_select("bookingRequestFromTime", selected: (Time.current + 2.hours).beginning_of_hour.strftime("%l:%M %p").strip)
-        expect(page).to have_select("bookingRequestToTime", selected: (Time.current + 6.hours).beginning_of_hour.strftime("%l:%M %p").strip)
+        from = (Time.current + 2.hours).beginning_of_hour
+        to = (Time.current + 6.hours).beginning_of_hour
+        date = (Time.current).to_s(:booking_day)
+        if (from.hour < 8 || from.hour > 2) || (to.hour < 8 || to.hour > 2)
+          date = to.to_s(:booking_day) if (to.hour < 8 || to.hour > 2)
+          from = '8:00 AM'
+          to = '12:00 PM'
+        else
+          form = from.to_s(:booking_time)
+          to = to.to_s(:booking_time)
+        end
+        should have_field("bookingRequestDate", with: date)
+        expect(find('#bookingRequestFromTime').value).to eq from
+        expect(find('#bookingRequestToTime').value).to eq to
       end
 
       scenario "should see basic description details when hovering on a resource (ex. dimensions, suggestions for how many people can fit - whatever is entered into the backend Nexudus system in the 'description' field)", js: true do
@@ -51,33 +63,25 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
         scenario "should see the resources' availability accurately update upon changing the requested date/times and clicking 'refresh'", js: true do
           visit "/resources"
           # Defaults: 2 out of 3 offered (100, 101)
-          expect(page).to have_css("#map-container div.resource.available", count: 2, wait: 10)
+          should have_css("#map-container .resource", count: 3, wait: 10)
           # Change to time that conflicts with booking for ID:100
-          select_from_chosen(" 8:00 PM", from: "bookingRequestFromTime")
-          select_from_chosen("12:00 AM", from: "bookingRequestToTime")
+          set_time_range('#filter-time-slider', "13:00 PM", "19:00 PM")
           click_button("Refresh")
-          expect(page).to have_css("#map-container div.resource.available", count: 1, wait: 10)
-        end
-
-        scenario "should see a warning if selecting a timespan of less than 4 hours", js: true do
-          visit "/resources"
-          select_from_chosen("10:00 PM", from: "bookingRequestFromTime")
-          select_from_chosen("11:00 PM", from: "bookingRequestToTime")
-          expect(page).to have_text("Booking must be at least 4 hours.")
+          # sleep 20
+          should have_css("#map-container .resource.available", count: 1, wait: 10)
         end
 
         scenario "should see a warning if selecting a timespan of more than 12 hours", js: true do
           visit "/resources"
-          select_from_chosen("11:00 PM", from: "bookingRequestFromTime")
-          select_from_chosen("10:00 PM", from: "bookingRequestToTime")
-          expect(page).to have_text("Booking cannot be more than 12 hours.")
+          set_time_range('#filter-time-slider', "8:00 AM", "9:00 PM")
+          should have_text("Booking cannot be more than 12 hours.")
         end
 
         scenario "should see a warning if selecting a date/time that is already passed", js: true do
           visit "/resources"
           fill_in('When do you want to come in?', with: (Time.now - 1.day).to_s(:booking_day))
           page.execute_script("$('#bookingRequestDate').trigger('change');")
-          expect(page).to have_text("Booking cannot be in the past.")
+          should have_text("Booking cannot be in the past.")
         end
 
       end
@@ -86,14 +90,15 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
         scenario "should see available remaining hours", js: true do
           visit "/resources"
           page.find(:css, "li.accounts-nav a").click
-          expect(page).to have_text("1 hour remaining this month")
+          should have_text("1 hour remaining this month")
         end
 
         scenario "should see a warning if the requested time exceeds the available hours, with notice about extra billing", js: true do
           visit "/resources"
-          select_from_chosen(" 2:00 PM", from: "bookingRequestToTime")
-          page.execute_script("$('div.available div.button').first().trigger('click')") # Since we're using "fake" stubbed resources, they're all going to be displayed on top of one another. Trigger the click directly to avoid click conflicts.
-          expect(page).to have_text("1 hour (you will be invoiced any extras)")
+          fill_in('When do you want to come in?', with: (Time.current + 1.day).to_s(:booking_day))
+          set_time_range('#filter-time-slider', "8:00 AM", "2:00 PM")
+          page.execute_script("$('div.available:first').trigger('click')") # Since we're using "fake" stubbed resources, they're all going to be displayed on top of one another. Trigger the click directly to avoid click conflicts.
+          should have_text("1 hour (you will be invoiced any extras)")
         end
       end
 
@@ -105,23 +110,14 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
         execute_valid_login
       end
 
-      scenario "should be required to book a minimum of 4 hours", js: true do
-        visit "/resources"
-        select_from_chosen("10:00 PM", from: "bookingRequestFromTime")
-        select_from_chosen("11:00 PM", from: "bookingRequestToTime")
-        expect(page).to have_content("Booking must be at least 4 hours.")
-        expect(page).to have_selector("#booking-filter input[type=submit]:disabled")
-      end
-
       scenario "should be able to book up to 12 hours, but no more than 12 hours", js: true do
         visit "/resources"
         fill_in('When do you want to come in?', with: (Time.now + 1.day).to_s(:booking_day))
-        select_from_chosen(" 8:00 AM", from: "bookingRequestFromTime")
-        select_from_chosen(" 8:00 PM", from: "bookingRequestToTime")
-        expect(page).to_not have_content("Booking cannot be more than 12 hours.")
-        select_from_chosen(" 8:30 PM", from: "bookingRequestToTime")
-        expect(page).to have_content("Booking cannot be more than 12 hours.")
-        expect(page).to have_selector("#booking-filter input[type=submit]:disabled")
+        set_time_range('#filter-time-slider', "10:00 AM", "10:00 PM")
+        should_not have_content("Booking cannot be more than 12 hours.")
+        set_time_range('#filter-time-slider', "10:00 AM", "10:30 PM")
+        should have_content("Booking cannot be more than 12 hours.")
+        should have_selector("#booking-filter input[type=submit]:disabled")
       end
 
       pending "should see a warning if booking more than a month in advance"

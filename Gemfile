@@ -49,6 +49,7 @@ gem 'ruby-units'
 
 # Moment.js
 gem 'momentjs-rails'
+gem 'moment_timezone-rails'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

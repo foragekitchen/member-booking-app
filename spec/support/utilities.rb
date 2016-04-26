@@ -27,8 +27,7 @@ class RSpec::Core::ExampleGroup
       from = from.to_s(:booking_time)
       # update the filters form
       fill_in('When do you want to come in?', with: day)
-      select_from_chosen(from, from: "bookingRequestFromTime")
-      select_from_chosen(to, from: "bookingRequestToTime")
+      set_time_range('#filter-time-slider', from, to)
       click_button("Refresh")
     end
     # wait_for_ajax
@@ -50,6 +49,14 @@ class RSpec::Core::ExampleGroup
       sleep 0.1
       break if current_url.include?(string)
     end
+  end
+
+  def set_time_range(selector, from, to)
+    from = Time.parse("1970-01-01 #{from}")
+    to = Time.parse("1970-01-01 #{to}")
+    values = [(from.hour - 8) * 60 + from.min, (to.hour + (to < from ? 24 : 0) - 8) * 60 + to.min]
+    page.evaluate_script("$('#{selector}').slider('option', 'values', #{values.inspect})")
+    page.evaluate_script("$('#{selector}').trigger('slide')")
   end
 
   private

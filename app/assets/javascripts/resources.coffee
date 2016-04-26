@@ -6,5 +6,5 @@ jQuery ->
 
   window.booking_filter.submit()
 
-  $('#map-container').on 'click', '.button.available', (e) ->
-    new BookingModal($(@).parent())
+  $('#map-container').on 'click', '.resource.available', (e) ->
+    new BookingModal($(@))

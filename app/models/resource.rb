@@ -51,13 +51,16 @@ class Resource < NexudusBase
       new(result.merge(predefined_params.merge('id' => id)))
     end
 
-    def all_with_available(from_time = Time.now + 2.hours, to_time = Time.now + 6.hours)
-      from_time = Time.parse(from_time).utc if from_time.is_a?(String) #just in case; this should already be in correct Time format
-      to_time = Time.parse(to_time).utc if to_time.is_a?(String) #just in case; this should already be in correct Time format
+    def all_with_available(from_time = Time.current + 2.hours, to_time = Time.current + 6.hours)
+      from_time = Time.parse(from_time) if from_time.is_a?(String)
+      to_time = Time.parse(to_time) if to_time.is_a?(String)
 
       resources = all
       available = available_ids(from_time, to_time)
+
       bookings = Booking.all('', available)
+
+      resources.each { |resource| resource.available = true if available.include?(resource.id) }
 
       bookings.each do |booking|
         next unless available.include?(booking.resource_id) && (resource = resources.select{ |r| r.id == booking.resource_id }.first)
@@ -68,13 +71,12 @@ class Resource < NexudusBase
           available.delete(resource.id)
           next
         end
-        resource.available = true
       end
       resources
     end
 
     private
-    def available_ids(from_time = Time.now + 2.hours, to_time = Time.now + 6.hours)
+    def available_ids(from_time = Time.current + 2.hours, to_time = Time.current + 6.hours)
       Timeslot.available(from_time, to_time).collect{|t| t['ResourceId']}.uniq
     end
 
