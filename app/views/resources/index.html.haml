@@ -43,12 +43,17 @@
 / /.modal
 #filters
   = form_tag(resources_path, method: "get", remote: true, id: "booking-filter", class: "form-inline") do
+    = hidden_field_tag 'bookingRequestFromTime', params[:bookingRequestFromTime]
+    = hidden_field_tag 'bookingRequestToTime', params[:bookingRequestToTime]
     .form-group
       %label{for: "booking-filter-date"} When do you want to come in?
-      %input#booking-filter-date.form-control.datepicker{name: "bookingRequestDate", type: "text", value: "#{params["bookingRequestDate"]}"}/
-      = select_tag "bookingRequestFromTime", options_for_select(Booking::TIMESLOTS, params["bookingRequestFromTime"]), {class: "chosen-select form-control"}
-      = select_tag "bookingRequestToTime", options_for_select(Booking::TIMESLOTS, params["bookingRequestToTime"]), {:class => "chosen-select form-control"}
-      %input.btn.btn-default{type: "submit", value: "Refresh"}/
+      %input#booking-filter-date.form-control.datepicker{name: "bookingRequestDate", type: "text", value: params[:bookingRequestDate]}
+      .dropdown.dropdown-time-range
+        = link_to '', '#', id: 'time-slider-range-holder', 'data-toggle' => 'dropdown'
+        %ul.dropdown-menu
+          %li
+            #filter-time-slider.time-slider-range{data: {target: '#time-slider-range-holder', from_target: '#bookingRequestFromTime', to_target: '#bookingRequestToTime', from: params["bookingRequestFromTime"], to: params["bookingRequestToTime"]}}
+      %input.btn.btn-default{type: "submit", value: "Refresh"}
 #map-container
   #disable-map
   #map

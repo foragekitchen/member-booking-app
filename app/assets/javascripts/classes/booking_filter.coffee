@@ -9,7 +9,7 @@ class window.BookingFilter
       $(document).trigger('map:loading:change', on)
 
   submit: ->
-    @holder.submit()
+    @holder.submit() unless @holder.find('input:submit').is(':disabled')
 
   timesState: ->
     date = @holder.find('#booking-filter-date').val()

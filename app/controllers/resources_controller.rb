@@ -1,38 +1,29 @@
 class ResourcesController < ApplicationController
   respond_to :html, :json
+  before_action :load_date_intervals
 
   def index
-    if params[:bookingRequestDate]
-      params['bookingRequestFrom'] = "#{params[:bookingRequestDate]}T#{params['bookingRequestFromTime']}"
-      params['bookingRequestTo'] = "#{params[:bookingRequestDate]}T#{params['bookingRequestToTime']}"
-    end
+    @resources = (@from_date && @to_date) ? Resource.all_with_available(@from_date, @to_date) : Resource.all
+  end
 
-
-    if params['bookingRequestFrom'] && params['bookingRequestTo']
-      from = Time.strptime(params['bookingRequestFrom'], "%m/%d/%YT%l:%M %p")
-      to = Time.strptime(params['bookingRequestTo'], "%m/%d/%YT%l:%M %p")
-      to = to + 1.day if to < from
-
-      params['bookingRequestDate'] ||= from.to_s(:booking_day)
-      params['bookingRequestFromTime'] ||= from.to_s(:booking_time)
-      params['bookingRequestToTime'] ||= to.to_s(:booking_time)
-
-      # 3) Finally, winnow the list further by seeing which ones are not already booked by someone else
-      @resources = Resource.all_with_available(from, to)
-      # See resources.coffee for where the real action happens
+  private
+  def load_date_intervals
+    if params[:bookingRequestFromTime] && params[:bookingRequestToTime]
+      @from_date = Time.strptime("#{params[:bookingRequestDate]}T#{params[:bookingRequestFromTime]} #{Time.current.zone}", "%m/%d/%YT%l:%M %p %z")
+      @to_date = Time.strptime("#{params[:bookingRequestDate]}T#{params[:bookingRequestToTime]} #{Time.current.zone}", "%m/%d/%YT%l:%M %p %z")
+      @to_date = @to_date + 1.day if @to_date < @from_date
     else
-      # 1) Start by getting all the resources ever (regardless of whether they're "open for business" right now)
-      @resources = Resource.all
-
-      params['bookingRequestDate'] ||= (Time.now).to_s(:booking_day)
-      params['bookingRequestFromTime'] ||= (Time.now + 2.hours).beginning_of_hour.to_s(:booking_time)
-      params['bookingRequestToTime'] ||= (Time.now + 6.hours).beginning_of_hour.to_s(:booking_time)
+      from = Time.current + 2.hours
+      to = Time.current + 6.hours
+      params[:bookingRequestDate] = (Time.current).to_s(:booking_day)
+      params[:bookingRequestFromTime] = from.beginning_of_hour.to_s(:booking_time)
+      params[:bookingRequestToTime] = to.beginning_of_hour.to_s(:booking_time)
+      if (from.hour < 8 || from.hour > 2) || (to.hour < 8 || to.hour > 2)
+        params[:bookingRequestFromTime] = '8:00 AM'
+        params[:bookingRequestToTime] = '12:00 PM'
+        params[:bookingRequestDate] = to.to_s(:booking_day) if (to.hour < 8 || to.hour > 2)
+      end
     end
-
-    # respond_to do |format|
-    #   format.js { render :index }
-    #   format.html { render :index }
-    # end
   end
 
 end

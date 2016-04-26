@@ -1,6 +1,6 @@
 / main nav
 %ul#nav-main.nav.navbar-nav.navbar-left
   %li.bookings-nav
-    %a{href: "/bookings"} My Reservations
+    = link_to 'My Reservations', bookings_path
   %li.resources-nav
-    %a{href: "/"} Book Kitchen Time
+    = link_to 'Book Kitchen Time', resources_path
