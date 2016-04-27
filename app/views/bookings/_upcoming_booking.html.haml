@@ -38,12 +38,14 @@
         %h5
           Time of day:
           %small extend your hours
-        .form-group.form-inline
-          %label.col-sm-4 In at:
-          = select_tag "bookingFrom", options_for_select(Booking::TIMESLOTS, booking.formatted_from_time), {class: "chosen-select form-control col-sm-5"}
-        .form-group.form-inline
-          %label.col-sm-4 Out by:
-          = select_tag "bookingTo", options_for_select(Booking::TIMESLOTS, booking.formatted_to_time), {class: "chosen-select form-control col-sm-5"}
+        = hidden_field_tag 'bookingFrom', booking.formatted_from_time, id: "bookingFrom-#{booking.id}"
+        = hidden_field_tag 'bookingTo', booking.formatted_to_time, id: "bookingTo-#{booking.id}"
+        .form-group.time-range
+          .dropdown.dropdown-time-range
+            = link_to '', 'javascript:void(0);', id: "time-slider-range-holder-#{booking.id}", 'data-toggle' => 'dropdown'
+            %ul.dropdown-menu
+              %li
+                #filter-time-slider.time-slider-range{data: {target: "#time-slider-range-holder-#{booking.id}", from_target: "#bookingFrom-#{booking.id}", to_target: "#bookingTo-#{booking.id}", from: booking.formatted_from_time, to: booking.formatted_to_time, edit: 'true'}}
       .col-md-3.row
         %h5
           Resource(s):

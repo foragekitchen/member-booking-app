@@ -3,13 +3,12 @@ class BookingsController < ApplicationController
 
   def index
     @bookings = Booking.all(@coworker.id, [], true)
-    @upcoming = @bookings.reject{|b| b.from_time.to_time < Time.now}
-    @past = @bookings.reject{|b| b.from_time.to_time > Time.now}
+    @upcoming = @bookings.reject{|b| b.from_time.to_time < Time.now.utc}
+    @past = @bookings.reject{|b| b.from_time.to_time > Time.now.utc}
   end
 
   def create
     date_times = process_date_times(params['bookingDate'], params['bookingFrom'], params['bookingTo'])
-
     new_booking = {
         coworker_id: @coworker.id,
         resource_id: params['bookingResourceId'],
@@ -103,7 +102,7 @@ class BookingsController < ApplicationController
   def convert_to_universal_time(date, time)
     # Expects both date and time as strings, likely from params
     # Returns time object for further manipulation
-    Time.strptime("#{date}T#{time}","%m/%d/%YT%l:%M %p").utc
+    Time.strptime("#{date}T#{time} #{Time.current.zone}","%m/%d/%YT%l:%M %p %z").utc
   end
 
   def adjust_for_next_day(from_time, to_time)

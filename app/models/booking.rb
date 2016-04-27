@@ -1,5 +1,5 @@
 class Booking < NexudusBase
-  attr_accessor :id, :resource_id, :resource_name, :resource, :coworker_id, :coworker_full_name, :from_time, :to_time, :online, :updated_by, :friendly_start_date, :friendly_dates, :friendly_date, :friendly_times, :duration_in_minutes, :repeat_series_unique_id, :repeat_booking, :repeats, :repeat_every, :repeat_until, :repeat_on_mondays, :repeat_on_tuesdays, :repeat_on_wednesdays, :repeat_on_thursdays, :repeat_on_fridays, :repeat_on_saturdays, :repeat_on_sundays
+  attr_accessor :id, :resource_id, :resource_name, :resource, :coworker_id, :coworker_full_name, :from_time, :to_time, :online, :updated_by, :friendly_start_date, :friendly_dates, :friendly_date, :friendly_times, :friendly_from_time, :friendly_to_time, :duration_in_minutes, :repeat_series_unique_id, :repeat_booking, :repeats, :repeat_every, :repeat_until, :repeat_on_mondays, :repeat_on_tuesdays, :repeat_on_wednesdays, :repeat_on_thursdays, :repeat_on_fridays, :repeat_on_saturdays, :repeat_on_sundays
   REQUEST_URI = '/spaces/bookings'
 
   TIMESLOTS = [' 8:00 AM', ' 8:30 AM', ' 9:00 AM', ' 9:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM', ' 1:00 PM', ' 1:30 PM', ' 2:00 PM', ' 2:30 PM', ' 3:00 PM', ' 3:30 PM', ' 4:00 PM', ' 4:30 PM', ' 5:00 PM', ' 5:30 PM', ' 6:00 PM', ' 6:30 PM', ' 7:00 PM', ' 7:30 PM', ' 8:00 PM', ' 8:30 PM', ' 9:00 PM', ' 9:30 PM', '10:00 PM', '10:30 PM', '11:00 PM', '11:30 PM', '12:00 AM', '12:30 AM', ' 1:00 AM', ' 1:30 AM', ' 2:00 AM']
@@ -63,20 +63,20 @@ class Booking < NexudusBase
   end
 
   def formatted_from_time
-    Time.parse(from_time).localtime.to_s(:booking_time)
+    Time.zone.parse(from_time).to_s(:booking_time)
   end
 
   def formatted_to_time
-    Time.parse(to_time).localtime.to_s(:booking_time)
+    Time.zone.parse(to_time).to_s(:booking_time)
   end
 
   private
   def load_friendly_dates
-    from = Time.parse(from_time).localtime
-    to = Time.parse(to_time).localtime
+    from = Time.zone.parse(from_time)
+    to = Time.zone.parse(to_time)
     days = ((to - from) / 1.day).to_i
 
-    if from >= Time.now && from < Time.now + 3.days
+    if from >= Time.current && from < Time.current + 3.days
       self.friendly_dates = "In #{time_ago_in_words(from)} (#{from.to_s(:booking_short)})"
     else
       self.friendly_dates = from.to_s(:booking)
@@ -85,15 +85,17 @@ class Booking < NexudusBase
   end
 
   def load_friendly_times
-    self.friendly_times = "#{formatted_from_time} - #{formatted_to_time}"
+    self.friendly_from_time = formatted_from_time.strip
+    self.friendly_to_time = formatted_to_time.strip
+    self.friendly_times = "#{self.friendly_from_time} - #{self.friendly_to_time}"
   end
 
   def load_friendly_date
-    self.friendly_date = Time.parse(self.from_time).to_s(:booking_day)
+    self.friendly_date = Time.zone.parse(self.from_time).to_s(:booking_day)
   end
 
   def load_duration_in_minutes
-    self.duration_in_minutes = (Time.parse(to_time) - Time.parse(from_time)) / 60
+    self.duration_in_minutes = (Time.zone.parse(to_time) - Time.zone.parse(from_time)) / 60
   end
 
 end

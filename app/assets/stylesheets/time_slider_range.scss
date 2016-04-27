@@ -1,3 +1,28 @@
+.form-group.time-range {
+  margin-bottom: 10px;
+}
+
+.dropdown-time-range {
+  display: inline-block;
+  padding: 0 10px;
+  min-width: 155px;
+
+  & > a {
+    color: #000000;
+  }
+  & > .tooltip {
+    margin-left: 15px;
+    width: 150px;
+  }
+  & > .dropdown-menu {
+    z-index: 10000;
+    & > li {
+      padding: 0 10px;
+      width: 400px;
+    }
+  }
+}
+
 .time-slider-range p {
   font-family:"Arial", sans-serif;
   font-size:14px;

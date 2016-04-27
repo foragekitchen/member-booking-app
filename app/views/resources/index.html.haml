@@ -45,11 +45,11 @@
   = form_tag(resources_path, method: "get", remote: true, id: "booking-filter", class: "form-inline") do
     = hidden_field_tag 'bookingRequestFromTime', params[:bookingRequestFromTime]
     = hidden_field_tag 'bookingRequestToTime', params[:bookingRequestToTime]
-    .form-group
+    .form-group.time-range
       %label{for: "booking-filter-date"} When do you want to come in?
       %input#booking-filter-date.form-control.datepicker{name: "bookingRequestDate", type: "text", value: params[:bookingRequestDate]}
       .dropdown.dropdown-time-range
-        = link_to '', '#', id: 'time-slider-range-holder', 'data-toggle' => 'dropdown'
+        = link_to '', 'javascript:void(0);', id: 'time-slider-range-holder', 'data-toggle' => 'dropdown'
         %ul.dropdown-menu
           %li
             #filter-time-slider.time-slider-range{data: {target: '#time-slider-range-holder', from_target: '#bookingRequestFromTime', to_target: '#bookingRequestToTime', from: params["bookingRequestFromTime"], to: params["bookingRequestToTime"]}}
