@@ -52,7 +52,7 @@
         = link_to '', 'javascript:void(0);', id: 'time-slider-range-holder', 'data-toggle' => 'dropdown'
         %ul.dropdown-menu
           %li
-            #filter-time-slider.time-slider-range{data: {target: '#time-slider-range-holder', from_target: '#bookingRequestFromTime', to_target: '#bookingRequestToTime', from: params["bookingRequestFromTime"], to: params["bookingRequestToTime"]}}
+            #filter-time-slider.time-slider-range{data: {target: '#time-slider-range-holder', from_target: '#bookingRequestFromTime', to_target: '#bookingRequestToTime', from: params[:bookingRequestFromTime], to: params[:bookingRequestToTime]}}
       %input.btn.btn-default{type: "submit", value: "Refresh"}
 #map-container
   #disable-map

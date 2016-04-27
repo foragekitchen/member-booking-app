@@ -22,7 +22,7 @@ class window.TimeSliderRange
     ).trigger('slide')
 
     @holder.on 'slide', (e, ui) =>
-      values = if ui then ui.values else @holder.slider('option', 'values')
+      values = if ui && ui.values then ui.values else @holder.slider('option', 'values')
       return false if values[1] - values[0] < @limit
       return false if ui && !@isTimeIfImminent(values)
       return false if ui && !@isReductionIfImminent(values)
@@ -39,7 +39,6 @@ class window.TimeSliderRange
   isTimeIfImminent: (values) ->
     if @booking && @resource
       minutes_until_start = Math.abs(moment.duration(currentTime().diff(moment(@booking.from_time))).asMinutes())
-
       if minutes_until_start <= @resource.late_cancellation_limit && @sliderValueToTime(values[0]) != @booking.friendly_from_time
         @showTooltip('Locked. This booking starts in less than 24 hours.')
         return false
@@ -52,12 +51,13 @@ class window.TimeSliderRange
     true
 
   enableCheckRemainingHours: (values) ->
-    hoursRemaining = $("#my-account-remaining-hours").text().split(" ")[0]
-    hoursChange = (values[1] - values[0]) / 60 - (@booking.duration_in_minutes / 60)
-    if hoursChange > hoursRemaining
-      @showTooltip('This exceeds the hours remaining in your plan, you will be invoiced any extras.')
-    else
-      @target.tooltip('destroy')
+    if @booking && @resource
+      hoursRemaining = $("#my-account-remaining-hours").text().split(" ")[0]
+      hoursChange = (values[1] - values[0]) / 60 - (@booking.duration_in_minutes / 60)
+      if hoursChange > hoursRemaining
+        @showTooltip('This exceeds the hours remaining in your plan, you will be invoiced any extras.')
+      else
+        @target.tooltip('destroy')
 
   showTooltip: (message) ->
     @target.attr({

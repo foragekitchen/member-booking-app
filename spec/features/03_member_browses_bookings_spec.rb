@@ -6,17 +6,17 @@ include ActionView::Helpers::DateHelper
 RSpec.feature "My Bookings:", type: :feature do
   subject { page }
 
-  let(:from_time) { DateTime.strptime("2015-09-01T16:00:00Z").in_time_zone.to_time.strftime('%l:%M %p').strip }
-  let(:to_time) { DateTime.strptime("2015-09-01T20:00:00Z").in_time_zone.to_time.strftime('%l:%M %p').strip }
+  let(:from_time) { Time.zone.parse("2015-09-01T16:00:00Z").to_s(:booking_time).strip }
+  let(:to_time) { Time.zone.parse("2015-09-01T20:00:00Z").to_s(:booking_time).strip }
 
   def find_booking_on_page(resource_name)
     first("td", text: resource_name)
   end
 
-  def expand_edit_form_for_booking(booking_element, end_time_for_validation)
-    booking_element.find(:xpath, '../..').first('.btn-edit').click
+  def expand_edit_form_for_booking(booking_element, time_interval)
+    booking_element.find(:xpath, '..').first('.btn-edit').click
     within('.edit-booking', visible: true) do
-      find("#bookingTo_chosen span", visible: false, text: end_time_for_validation.strip, wait: 10) # wait till the form's properly loaded/updated before doing anything else, by checking for its availability
+      expect(find('.dropdown-time-range a', text: time_interval, wait: 10)).not_to be_nil
     end
   end
 
@@ -24,7 +24,7 @@ RSpec.feature "My Bookings:", type: :feature do
 
     before(:all) do
       # Default present time to 9/2/2015 12:01AM (see fixtures for mock data)
-      Timecop.travel(DateTime.strptime('2015-09-02T08:30:00Z').in_time_zone.to_time)
+      Timecop.travel(Time.zone.parse('2015-09-02T08:30:00Z').to_time)
     end
 
     before(:each) do
@@ -61,7 +61,7 @@ RSpec.feature "My Bookings:", type: :feature do
 
     before(:all) do
       # Default present time to 9/2/2015 12:01AM (see fixtures for mock data)
-      Timecop.travel(DateTime.strptime('2015-09-02T08:30:00Z').in_time_zone.to_time)
+      Timecop.travel(Time.zone.parse('2015-09-02T08:30:00Z').to_time)
     end
 
     before(:each) do
@@ -72,25 +72,31 @@ RSpec.feature "My Bookings:", type: :feature do
       Timecop.return
     end
 
-    scenario "should see a warning if editing date/time within 24 hours of the original start-time", js: true do
-      visit "/bookings"
-      expand_edit_form_for_booking(find_booking_on_page("A. Hedgehog Prep Table"), to_time)
-      find("a", text: from_time).click
-      should have_css("div", text: "Locked. This booking starts in less than 24 hours.", visible: true, wait: 10)
-    end
 
-    scenario "should not be able to reduce hours within 24 hours of the original start-time", js: true do
-      visit "/bookings"
-      expand_edit_form_for_booking(find_booking_on_page("A. Hedgehog Prep Table"), to_time)
-      should have_css("#bookingTo option[disabled]", text: "12:00 PM", visible: false, wait: 10)
-    end
+    describe do
+      before do
+        visit "/bookings"
+        node = find_booking_on_page("A. Hedgehog Prep Table")
+        @booking_id = node.find(:xpath, '..')['id']
+        expand_edit_form_for_booking(node, "#{from_time} - #{to_time}")
+      end
+      scenario "should see a warning if editing date/time within 24 hours of the original start-time", js: true do
+        set_time_range("#filter-time-slider-#{@booking_id}", '11:00 AM', '15:00 PM')
+        should have_css("div", text: "Locked. This booking starts in less than 24 hours.", visible: true, wait: 10)
+      end
 
-    scenario "should see a warning if the requested time exceeds the available hours in their plan", js: true do
-      visit "/bookings"
-      expand_edit_form_for_booking(find_booking_on_page("A. Hedgehog Prep Table"), to_time)
-      within('.edit-booking', visible: true) { select_from_chosen(" 2:00 AM", from: "bookingTo") }
-      should have_text("exceeds the hours remaining in your plan")
-      should have_text("you will be invoiced")
+      scenario "should not be able to reduce hours within 24 hours of the original start-time", js: true do
+        set_time_range("#filter-time-slider-#{@booking_id}", '8:00 PM', '12:00 AM')
+        within('.edit-booking', visible: true) do
+          expect(find('.dropdown-time-range a', text: '9:00 AM - 1:00 PM', wait: 10)).not_to be_nil
+        end
+      end
+
+      scenario "should see a warning if the requested time exceeds the available hours in their plan", js: true do
+        set_time_range("#filter-time-slider-#{@booking_id}", '9:00 AM', '4:00 PM')
+        should have_text("exceeds the hours remaining in your plan")
+        should have_text("you will be invoiced")
+      end
     end
 
   end
@@ -129,13 +135,13 @@ RSpec.feature "My Bookings:", type: :feature do
       date = available_start_time(Time.current + 4.days)
       sooner_booking = create_booking(date)
       create_booking(date + 4.hours)
-
       visit "/bookings"
-      this_booking = find_booking_on_page(sooner_booking[:resource_name])
-      expand_edit_form_for_booking(this_booking, sooner_booking[:end_time])
+      node = find_booking_on_page(sooner_booking[:resource_name])
+      expand_edit_form_for_booking(node, "#{sooner_booking[:start_time]} - #{sooner_booking[:end_time]}")
       extended_to_time = (date + 5.hours).beginning_of_hour.to_s(:booking_time)
+      booking_id = node.find(:xpath, '..')['id']
       within('.edit-booking', visible: true) do
-        select_from_chosen(extended_to_time, from: "bookingTo", wait: 10)
+        set_time_range("#filter-time-slider-#{booking_id}", sooner_booking[:start_time], extended_to_time)
         click_button("Update")
       end
 
@@ -144,18 +150,15 @@ RSpec.feature "My Bookings:", type: :feature do
     end
 
     scenario "should be able to successfully complete an update", js: true do
-      booking = create_booking(available_start_time(Time.current + 3.days))
+      start_time = available_start_time(Time.current + 3.days)
+      booking = create_booking(start_time)
 
       visit "/bookings"
-      this_booking = find_booking_on_page(booking[:resource_name])
-      expand_edit_form_for_booking(this_booking, booking[:end_time])
+      node = find_booking_on_page(booking[:resource_name])
+      expand_edit_form_for_booking(node, booking[:end_time])
+      booking_id = node.find(:xpath, '..')['id']
       within('.edit-booking', visible: true) do
-        # Update some values
-        if Booking::TIMESLOTS[Booking::TIMESLOTS.index(booking[:end_time]).next].nil?
-          select_from_chosen(Booking::TIMESLOTS[Booking::TIMESLOTS.index(booking[:end_time]) - 9], from: "bookingFrom", wait: 10)
-        else
-          select_from_chosen(Booking::TIMESLOTS[Booking::TIMESLOTS.index(booking[:end_time]).next], from: "bookingTo", wait: 10)
-        end
+        set_time_range("#filter-time-slider-#{booking_id}", booking[:start_time], (start_time + 6.hours).to_s(:booking_time))
         click_button("Update")
       end
 

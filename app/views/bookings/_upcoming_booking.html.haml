@@ -1,4 +1,4 @@
-%tr
+%tr{id: booking.id}
   %td
     = booking.resource.name
     = booking.resource.resource_type_name
@@ -45,7 +45,7 @@
             = link_to '', 'javascript:void(0);', id: "time-slider-range-holder-#{booking.id}", 'data-toggle' => 'dropdown'
             %ul.dropdown-menu
               %li
-                #filter-time-slider.time-slider-range{data: {target: "#time-slider-range-holder-#{booking.id}", from_target: "#bookingFrom-#{booking.id}", to_target: "#bookingTo-#{booking.id}", from: booking.formatted_from_time, to: booking.formatted_to_time, edit: 'true'}}
+                .time-slider-range{id: "filter-time-slider-#{booking.id}", data: {target: "#time-slider-range-holder-#{booking.id}", from_target: "#bookingFrom-#{booking.id}", to_target: "#bookingTo-#{booking.id}", from: booking.formatted_from_time, to: booking.formatted_to_time, edit: 'true'}}
       .col-md-3.row
         %h5
           Resource(s):
