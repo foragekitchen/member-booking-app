@@ -15,7 +15,7 @@ class Coworker < NexudusBase
     # Find by UserId since it's all we have so far
     query_params = {Coworker_User: user_id}.merge(query)
     results = Rails.cache.fetch([REQUEST_URI, query_params], expires: 24.hours) do
-      get(REQUEST_URI, :query => query_params)['Records']
+      get(REQUEST_URI, query: query_params)['Records']
     end
     # Now query for single Coworker using Coworker.Id because it gives more info
     return nil if results.nil? || results.first.nil?
@@ -29,7 +29,7 @@ class Coworker < NexudusBase
   def total_hours_in_plan
     query_params = {CoworkerExtraService_Coworker: self.id, CoworkerExtraService_ExtraService_Name: 'Prep Table', CoworkerExtraService_IsFromTariff: true}
     results = Rails.cache.fetch([BILLING_URI, query_params], expires: 12.hours) do
-      self.class.get(BILLING_URI, :query => query_params)['Records']
+      self.class.get(BILLING_URI, query: query_params)['Records']
     end
     results.first['TotalUses'] / 60
   end
@@ -45,7 +45,7 @@ class Coworker < NexudusBase
   def extra_service_cost_per_hour
     query_params = {CoworkerExtraService_Coworker: self.id, CoworkerExtraService_ExtraService_Name: 'Prep Table', CoworkerExtraService_IsFromTariff: true}
     results = Rails.cache.fetch([BILLING_URI, query_params], expires: 12.hours) do
-      self.class.get(BILLING_URI, :query => query_params)['Records']
+      self.class.get(BILLING_URI, query: query_params)['Records']
     end
     results.first['Price']/(total_hours_in_plan)
   end
@@ -54,7 +54,7 @@ class Coworker < NexudusBase
     # Unfortunately, this only counts the bookings that have been charged, i.e. bookings already passed
     # See 'remaining_hours_in_plan' for actual total remaining hours
     query_params = {CoworkerExtraService_Coworker: self.id, CoworkerExtraService_ExtraService_Name: 'Prep Table', CoworkerExtraService_IsFromTariff: true}
-    results = self.class.get(BILLING_URI, :query => query_params)['Records']
+    results = self.class.get(BILLING_URI, query: query_params)['Records']
     results.first['RemainingUses'] / 60
   end
 
