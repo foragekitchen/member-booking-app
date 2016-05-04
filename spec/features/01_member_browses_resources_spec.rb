@@ -66,9 +66,8 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
           should have_css("#map-container .resource", count: 3, wait: 10)
           # Change to time that conflicts with booking for ID:100
           set_time_range('#filter-time-slider', "13:00 PM", "19:00 PM")
-          click_button("Refresh")
-          # sleep 20
-          should have_css("#map-container .resource.available", count: 1, wait: 10)
+          wait_for_ajax
+          should have_css("#map-container .resource.available", count: 2, wait: 10)
         end
 
         scenario "should see a warning if selecting a timespan of more than 12 hours", js: true do
@@ -117,7 +116,7 @@ RSpec.feature "Browsing Available Resources:", type: :feature do
         should_not have_content("Booking cannot be more than 12 hours.")
         set_time_range('#filter-time-slider', "10:00 AM", "10:30 PM")
         should have_content("Booking cannot be more than 12 hours.")
-        should have_selector("#booking-filter input[type=submit]:disabled")
+        should have_selector("#disable-map", visible: true)
       end
 
       pending "should see a warning if booking more than a month in advance"

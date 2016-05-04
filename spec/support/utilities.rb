@@ -27,10 +27,9 @@ class RSpec::Core::ExampleGroup
     # update the filters form
     fill_in('When do you want to come in?', with: day)
     set_time_range('#filter-time-slider', from, to)
-    click_button("Refresh")
 
-    # wait_for_ajax
-    page.first("div.available div.button", wait: 10).click
+    wait_for_ajax
+    page.first(".resource.available", wait: 10).click
     # Remember some stuff so we can find this booking later
     booking = {
         resource_name: page.find(".modal-title span", wait: 10).text,

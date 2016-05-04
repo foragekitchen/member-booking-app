@@ -23,6 +23,7 @@ class window.BookingFilter
       @holder.submit()
 
   isValid: ->
+    return true unless $('#booking-filter-date').length
     timesState = @.timesState()
     dateFrom = @.datetimeFrom()
     dateFrom = dateFrom.add(1, 'day') if timesState.plus_day
