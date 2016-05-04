@@ -17,19 +17,17 @@ class window.BookingFilter
       $(document).trigger('map:loading:change', on)
 
   submit: ->
-    if @.isValid()
-      $.each xhrPool, (idx, jqXHR) ->
-        jqXHR.abort()
-      @holder.submit()
+    return false unless isValid()
+    $.each xhrPool, (idx, jqXHR) ->
+      jqXHR.abort()
+    @holder.submit()
 
   isValid: ->
     return true unless $('#booking-filter-date').length
     timesState = @.timesState()
     dateFrom = @.datetimeFrom()
     dateFrom = dateFrom.add(1, 'day') if timesState.plus_day
-    if dateFrom.isBefore(currentTime()) || timesState.total < 4 || timesState.total > 12
-      return false
-    return true
+    !(dateFrom.isBefore(currentTime()) || timesState.total < 4 || timesState.total > 12)
 
   timesState: ->
     date = @holder.find('#booking-filter-date').val()
