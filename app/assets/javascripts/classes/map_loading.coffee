@@ -1,19 +1,19 @@
 class window.MapLoading
   constructor: ->
     @map = $('#disable-map')
-    @button = $('#booking-filter :submit')
+    @dropdown = $('.dropdown.dropdown-time-range')
 
     $(document).on 'map:loading:change', (e, state, message) =>
       @map[if !state then 'hide' else 'show'].apply(@map, [])
-      @button.prop('disabled', state)
       if message && state
-        return if @button.next('.tooltip').is(':visible') && @button.attr('title') == message
-        @button.attr({
+        return if @dropdown.next('.tooltip').is(':visible') && @dropdown.attr('title') == message
+        @dropdown.attr({
           "data-toggle": "tooltip",
           "data-placement": "right",
           "title": message,
           "data-original-title": message
+          "data-trigger": "manual"
         })
-        @button.tooltip('show')
+        @dropdown.tooltip('show')
       else
-        @button.tooltip('destroy')
+        @dropdown.tooltip('destroy')

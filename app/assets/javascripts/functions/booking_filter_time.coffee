@@ -1,5 +1,5 @@
 jQuery ->
-  $('#booking-filter select, #booking-filter input').bookingFilterTime()
+  $('#booking-filter input').bookingFilterTime()
 
 $.fn.bookingFilterTime = ->
   @each ->
@@ -16,4 +16,3 @@ $.fn.bookingFilterTime = ->
         $(document).trigger('map:loading:change', [on, 'Booking cannot be more than 12 hours.'])
       else
         $(document).trigger('map:loading:change', off)
-
