@@ -21,8 +21,8 @@ RSpec.feature "Booking Kitchen Time:", type: :feature do
       date = available_start_time(Time.current)
       visit "/resources"
       set_time_range('#filter-time-slider', date.to_s(:booking_time), (date + 4.hours).to_s(:booking_time))
-      click_button("Refresh")
-      first("div.available div.button", wait: 10).click
+      wait_for_ajax
+      first(".resource.available", wait: 10).click
       should have_link("Change")
     end
 

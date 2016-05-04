@@ -34,6 +34,9 @@ class window.TimeSliderRange
       @to_target.val(to).trigger('change')
       @target.html("#{from} - #{to}")
 
+    @holder.on 'slidestop', (e, ui) =>
+      window.booking_filter.submit()
+
     @holder.trigger('slide')
 
   isTimeIfImminent: (values) ->

@@ -1,6 +1,14 @@
 class window.BookingFilter
+  xhrPool = []
   constructor: ->
     @holder = $('#booking-filter')
+
+    @holder.on 'ajax:beforeSend', (e, jqXHR, options) ->
+      xhrPool.push(jqXHR)
+
+    @holder.on 'ajax:complete', (e, jqXHR, options) ->
+      xhrPool = $.grep xhrPool, (x) ->
+        x != jqXHR
 
     @holder.on 'ajax:success', ->
       $(document).trigger('map:loading:change', off)
@@ -9,7 +17,17 @@ class window.BookingFilter
       $(document).trigger('map:loading:change', on)
 
   submit: ->
-    @holder.submit() unless @holder.find('input:submit').is(':disabled')
+    return false unless @isValid()
+    $.each xhrPool, (idx, jqXHR) ->
+      jqXHR.abort()
+    @holder.submit()
+
+  isValid: ->
+    return true unless $('#booking-filter-date').length
+    timesState = @.timesState()
+    dateFrom = @.datetimeFrom()
+    dateFrom = dateFrom.add(1, 'day') if timesState.plus_day
+    !(dateFrom.isBefore(currentTime()) || timesState.total < 4 || timesState.total > 12)
 
   timesState: ->
     date = @holder.find('#booking-filter-date').val()
