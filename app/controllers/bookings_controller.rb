@@ -23,7 +23,7 @@ class BookingsController < ApplicationController
       flash[:booking_id] = @response['Value']['Id']
       redirect_to resources_path(:anchor => 'recurring-container')
     else
-      flash[:alert] = @response['Message'] || 'There was an error saving your booking. Please try again.'
+      flash[:alert] = 'An error occurred while saving your booking. Please refresh the page and try again.'
       redirect_to resources_path
     end
   end
@@ -49,7 +49,7 @@ class BookingsController < ApplicationController
     if ( @response = JSON.parse(response.body) ) && @response['WasSuccessful']
       flash[:notice] = @response['Message']
     else
-      flash[:alert] = @response['Message'] || 'There was an error updating your booking. Please try again.'
+      flash[:alert] = 'An error occurred while updating your booking. Please refresh the page and try again.'
     end
     redirect_to bookings_path
   end
@@ -59,7 +59,7 @@ class BookingsController < ApplicationController
     if ( @response = JSON.parse(response.body) ) && @response['WasSuccessful']
       flash[:notice] = @response['Message']
     else
-      flash[:alert] = @response['Message'] || 'There was an error canceling your booking. Please contact us.'
+      flash[:alert] = 'An error occurred while canceling your booking. Please contact us.'
     end
     redirect_to bookings_path
   end
