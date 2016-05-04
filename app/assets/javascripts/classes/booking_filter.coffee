@@ -17,7 +17,7 @@ class window.BookingFilter
       $(document).trigger('map:loading:change', on)
 
   submit: ->
-    return false unless isValid()
+    return false unless @isValid()
     $.each xhrPool, (idx, jqXHR) ->
       jqXHR.abort()
     @holder.submit()
