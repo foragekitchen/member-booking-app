@@ -59,6 +59,11 @@
   #map
     #overlay
 #recurring-container
+  .hide.alert.alert-success.alert-dismissible{role: "alert"}
+    %button.close{"aria-label" => "Close", "data-dismiss" => "alert", type: "button"}
+      %span{"aria-hidden" => "true"} ×
+    %strong Success!
+    Your booking has been saved!
   %h2 Make it recurring?
   %p Got your favorite table? Put a hold on it now by telling us when you plan to come in regularly! Note that you can only book 3 weeks in advance. Make a mistake? You may cancel up to 2 days a month, with at least 24 hours notice.
   = form_tag("/bookings/#{flash[:booking_id]}", method: "put", id: "bookingRecurringForm", class: "form-horizontal") do
