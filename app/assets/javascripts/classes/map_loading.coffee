@@ -8,11 +8,11 @@ class window.MapLoading
       if message && state
         return if @dropdown.next('.tooltip').is(':visible') && @dropdown.attr('title') == message
         @dropdown.attr({
-          "data-toggle": "tooltip",
-          "data-placement": "right",
-          "title": message,
-          "data-original-title": message
-          "data-trigger": "manual"
+          'data-toggle': 'tooltip',
+          'data-placement': 'right',
+          'title': message,
+          'data-original-title': message
+          'data-trigger': 'manual'
         })
         @dropdown.tooltip('show')
       else

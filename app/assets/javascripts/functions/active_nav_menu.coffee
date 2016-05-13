@@ -3,4 +3,4 @@ jQuery ->
 
 $.fn.activeNavMenu = ->
   @each ->
-    $("#nav-main .#{$(@).attr('id')}-nav").addClass("active")
+    $("#nav-main .#{$(@).attr('id')}-nav").addClass('active')

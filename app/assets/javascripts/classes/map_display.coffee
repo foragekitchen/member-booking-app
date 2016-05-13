@@ -4,7 +4,7 @@ class window.MapDisplay
     @map_loading = new MapLoading
 
   turnOff: ->
-    @holder.find('.resource').removeClass("available")
+    @holder.find('.resource').removeClass('available')
 
   removeResources: ->
     @holder.find('.resource').remove()
@@ -12,4 +12,4 @@ class window.MapDisplay
   addResource: (content) ->
     content = $(content)
     @holder.append(content)
-    content.popover( { animation: false, placement: "left", html: true, trigger: "hover" } )
+    content.popover( { animation: false, placement: 'left', html: true, trigger: 'hover' } )

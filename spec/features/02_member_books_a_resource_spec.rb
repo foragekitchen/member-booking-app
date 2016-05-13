@@ -1,42 +1,38 @@
 require 'rails_helper'
 require 'rake'
 NexudusApp::Application.load_tasks
-
-RSpec.feature "Booking Kitchen Time:", type: :feature do
+RSpec.feature 'Booking Kitchen Time:', type: :feature do
   subject { page }
 
-  context "(Real time) when booking a table for a chosen date/time" do
+  context '(Real time) when booking a table for a chosen date/time' do
     before(:each) do
-      #Let's test against the live server for this one
+      # Let's test against the live server for this one
       WebMock.reset!
       WebMock.allow_net_connect!
       execute_valid_login
     end
-
     after(:all) do
-      Rake::Task['data:bookings:deleteUpcoming'].invoke
+      Rake::Task['data:bookings:delete_upcoming'].invoke
     end
 
-    scenario "should be able to change date, and/or start and end time(s), and see if it's still available", js: true do
+    scenario 'should be able to change date, and/or start and end time(s), and see if it\'s still available', js: true do
       date = available_start_time(Time.current)
-      visit "/resources"
+      visit '/resources'
       set_time_range('#filter-time-slider', date.to_s(:booking_time), (date + 4.hours).to_s(:booking_time))
       wait_for_ajax
-      first(".resource.available", wait: 10).click
-      should have_link("Change")
+      first('.resource.available', wait: 10).click
+      should have_link('Change')
     end
 
-    scenario "should be able to save a valid booking and see it appear on My Reservations", js: true do
-      visit "/bookings"
+    scenario 'should be able to save a valid booking and see it appear on My Reservations', js: true do
+      visit '/bookings'
       bookings = page.find('table#upcoming-bookings tbody').all('tr')
       count = bookings.size
 
       create_booking(available_start_time(Time.current + 1.day))
 
-      visit "/bookings"
-      should have_css("table#upcoming-bookings tbody tr", count: count + 1, wait: 10)
+      visit '/bookings'
+      should have_css('table#upcoming-bookings tbody tr', count: count + 1, wait: 10)
     end
-
   end
-
 end

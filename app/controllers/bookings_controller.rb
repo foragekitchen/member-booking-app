@@ -1,27 +1,27 @@
 class BookingsController < ApplicationController
-  before_action :get_resources, only: [:index]
+  before_action :load_resources, only: [:index]
 
   def index
-    @bookings = Booking.all(@coworker.id, [], true)
-    @upcoming = @bookings.reject{|b| b.from_time.to_time < Time.now.utc}
-    @past = @bookings.reject{|b| b.from_time.to_time > Time.now.utc}
+    @bookings = Booking.all(coworker_id: @coworker.id, include_passed: true)
+    @upcoming = @bookings.reject { |b| b.from_time.to_time < Time.now.utc }
+    @past = @bookings.reject { |b| b.from_time.to_time > Time.now.utc }
   end
 
   def create
     date_times = process_date_times(params['bookingDate'], params['bookingFrom'], params['bookingTo'])
     new_booking = {
-        coworker_id: @coworker.id,
-        resource_id: params['bookingResourceId'],
-        from_time: date_times[:fromTime],
-        to_time: date_times[:toTime],
-        online: true
+      coworker_id: @coworker.id,
+      resource_id: params['bookingResourceId'],
+      from_time: date_times[:fromTime],
+      to_time: date_times[:toTime],
+      online: true
     }
     booking = Booking.new(new_booking)
     response = booking.create
-    if ( @response = JSON.parse(response.body) ) && @response['WasSuccessful']
+    if (@response = JSON.parse(response.body)) && @response['WasSuccessful']
       flash[:notice] = @response['Message']
       flash[:booking_id] = @response['Value']['Id']
-      redirect_to resources_path(:anchor => 'recurring-container')
+      redirect_to resources_path(anchor: 'recurring-container')
     else
       flash[:alert] = 'An error occurred while saving your booking. Please refresh the page and try again.'
       redirect_to resources_path
@@ -35,18 +35,18 @@ class BookingsController < ApplicationController
     else
       date_times = process_date_times(params['bookingDate'], params['bookingFrom'], params['bookingTo'])
       booking_update = {
-          id: params['bookingId'],
-          coworker_id: @coworker.id,
-          resource_id: params['bookingResource'],
-          from_time: date_times[:fromTime],
-          to_time: date_times[:toTime],
-          online: true
+        id: params['bookingId'],
+        coworker_id: @coworker.id,
+        resource_id: params['bookingResource'],
+        from_time: date_times[:fromTime],
+        to_time: date_times[:toTime],
+        online: true
       }
       booking = Booking.new(booking_update)
       response = booking.update
     end
 
-    if ( @response = JSON.parse(response.body) ) && @response['WasSuccessful']
+    if (@response = JSON.parse(response.body)) && @response['WasSuccessful']
       flash[:notice] = @response['Message']
     else
       flash[:alert] = 'An error occurred while updating your booking. Please refresh the page and try again.'
@@ -56,7 +56,7 @@ class BookingsController < ApplicationController
 
   def destroy
     response = Booking.new('id' => params['id']).destroy
-    if ( @response = JSON.parse(response.body) ) && @response['WasSuccessful']
+    if (@response = JSON.parse(response.body)) && @response['WasSuccessful']
       flash[:notice] = @response['Message']
     else
       flash[:alert] = 'An error occurred while canceling your booking. Please contact us.'
@@ -66,7 +66,7 @@ class BookingsController < ApplicationController
 
   private
 
-  def get_resources
+  def load_resources
     @resources = Resource.all
   end
 
@@ -74,11 +74,11 @@ class BookingsController < ApplicationController
     old_booking = Booking.find(params[:id])
     booking = old_booking
     old_booking.destroy # Apparently this doesn't work by doing just a plain update, so we have to destroy the old one first
-    booking.id = nil  #...and create a brand new one with the same settings but with recurring added
+    booking.id = nil #...and create a brand new one with the same settings but with recurring added
     booking.repeat_booking = true
     booking.repeats = params[:booking_repeats]
     booking.repeat_every = 1
-    booking.repeat_until = (Time.parse(booking.from_time) + (params[:booking_numdays].to_i).days).to_s(:nexudus)
+    booking.repeat_until = (Time.parse(booking.from_time) + params[:booking_numdays].to_i.days).to_s(:nexudus)
     booking.repeat_on_mondays = params[:booking_repeat_on_mondays] || true
     booking.repeat_on_tuesdays = params[:booking_repeat_on_tuesdays] || true
     booking.repeat_on_wednesdays = params[:booking_repeat_on_wednesdays] || true
@@ -94,15 +94,15 @@ class BookingsController < ApplicationController
     to_time = convert_to_universal_time(day, to)
     to_time = adjust_for_next_day(from_time, to_time)
     {
-        fromTime: from_time.to_s(:nexudus),
-        toTime: to_time.to_s(:nexudus)
+      fromTime: from_time.to_s(:nexudus),
+      toTime: to_time.to_s(:nexudus)
     }
   end
 
   def convert_to_universal_time(date, time)
     # Expects both date and time as strings, likely from params
     # Returns time object for further manipulation
-    Time.strptime("#{date}T#{time} #{Time.current.zone}","%m/%d/%YT%l:%M %p %z").utc
+    Time.strptime("#{date}T#{time} #{Time.current.zone}", '%m/%d/%YT%l:%M %p %z').utc
   end
 
   def adjust_for_next_day(from_time, to_time)
@@ -110,5 +110,4 @@ class BookingsController < ApplicationController
     to_time += 1.day if to_time < from_time
     to_time
   end
-
 end

@@ -18,7 +18,7 @@ class RSpec::Core::ExampleGroup
 
   def create_booking(start_time)
     # Create a real booking - useful for doing before testing anything else
-    visit "/resources"
+    visit '/resources'
 
     day = start_time.to_s(:booking_day)
     from = start_time.beginning_of_hour
@@ -29,14 +29,14 @@ class RSpec::Core::ExampleGroup
     set_time_range('#filter-time-slider', from, to)
 
     wait_for_ajax
-    page.first(".resource.available", wait: 10).click
+    page.first('.resource.available', wait: 10).click
     # Remember some stuff so we can find this booking later
     booking = {
-        resource_name: page.find(".modal-title span", wait: 10).text,
-        start_time: from.strip,
-        end_time: to.strip
+      resource_name: page.find('.modal-title span', wait: 10).text,
+      start_time: from.strip,
+      end_time: to.strip
     }
-    click_button("Save your booking")
+    click_button('Save your booking')
     wait_for_url_to_have('#recurring-container')
 
     booking
