@@ -125,7 +125,7 @@ RSpec.feature 'My Bookings:', type: :feature do
       end
 
       should have_text('Oh no!')
-      should have_text('already booked')
+      should have_text('An error occurred while updating your booking')
     end
 
     scenario 'should be able to successfully complete an update', js: true do
