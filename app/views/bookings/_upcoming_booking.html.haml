@@ -9,13 +9,13 @@
       %span.glyphicon.glyphicon-pencil{'aria-hidden' => true}
       Edit
   - if ((Time.parse(booking.from_time) - Time.now)/1.minute) <= booking.resource.late_cancellation_limit
-    %td{"data-placement" => "left", "data-toggle" => "tooltip", title: "Locked. This booking starts in less than 24 hours."}
+    %td{data: {placement: 'left', toggle: 'tooltip'}, title: 'Locked. This booking starts in less than 24 hours.'}
       = link_to '#', class: "btn btn-default btn-sm disabled" do
         %span.glyphicon.glyphicon-remove{'aria-hidden' => true}
         Remove
   - else
     %td
-      = link_to booking_path(id: booking.id), method: :delete, data: {confirm: "Are you sure you want to cancel this booking for #{Date.parse(booking.from_time)}?"}, class: "btn btn-default btn-sm" do
+      = link_to booking_path(id: booking.id), method: :delete, data: {confirm: "Are you sure you want to cancel this booking for #{Date.parse(booking.from_time)}?"}, class: 'btn btn-default btn-sm' do
         %span.glyphicon.glyphicon-remove{'aria-hidden' => true}
         Remove
 %tr.hidden.edit-booking{id: "edit-booking-#{booking.id}", data: { booking: booking.to_json, resource: booking.resource.to_json }}

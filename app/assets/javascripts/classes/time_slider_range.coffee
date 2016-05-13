@@ -55,7 +55,7 @@ class window.TimeSliderRange
 
   enableCheckRemainingHours: (values) ->
     if @booking && @resource
-      hoursRemaining = $("#my-account-remaining-hours").text().split(" ")[0]
+      hoursRemaining = $('#my-account-remaining-hours').text().split(' ')[0]
       hoursChange = (values[1] - values[0]) / 60 - (@booking.duration_in_minutes / 60)
       if hoursChange > hoursRemaining
         @showTooltip('This exceeds the hours remaining in your plan, you will be invoiced any extras.')
@@ -64,9 +64,9 @@ class window.TimeSliderRange
 
   showTooltip: (message) ->
     @target.attr({
-      "data-toggle": "tooltip",
-      "data-placement": "right",
-      "title": message
+      'data-toggle': 'tooltip',
+      'data-placement': 'right',
+      'title': message
     })
     unless @target.next('.tooltip').is(':visible') && @target.attr('title') == message
       @target.tooltip('show')

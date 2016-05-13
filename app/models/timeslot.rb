@@ -1,18 +1,18 @@
 class Timeslot < NexudusBase
-  REQUEST_URI = '/spaces/resourcetimeslots'
+  REQUEST_URI = '/spaces/resourcetimeslots'.freeze
 
   class << self
-    def all_by_day(day_of_week = Date.today.wday)
-      query_params = {ResourceTimeSlot_DayOfWeek: day_of_week}
-      result = Rails.cache.fetch([REQUEST_URI, query_params], :expires => 12.hours) do
+    def all_by_day(day_of_week = Time.zone.today.wday)
+      query_params = { ResourceTimeSlot_DayOfWeek: day_of_week }
+      result = Rails.cache.fetch([REQUEST_URI, query_params], expires: 12.hours) do
         get(REQUEST_URI, query: query_params)['Records']
       end
       result
     end
 
-    def available(from_time = Time.current + 2.hours, to_time = Time.current + 6.hours)
-      from_time = Time.parse(from_time) if from_time.is_a?(String) #just in case; this should already be in correct Time format
-      to_time = Time.parse(to_time) if to_time.is_a?(String) #just in case; this should already be in correct Time format
+    def available(from_time: Time.current + 2.hours, to_time: Time.current + 6.hours)
+      from_time = Time.parse(from_time) if from_time.is_a?(String) # just in case; this should already be in correct Time format
+      to_time = Time.parse(to_time) if to_time.is_a?(String) # just in case; this should already be in correct Time format
       from_time_from_day_beginning = from_time.to_f - from_time.change(hour: 0, min: 0).to_f
       to_time_from_day_beginning = to_time.to_f - from_time.change(hour: 0, min: 0).to_f
 
@@ -33,6 +33,7 @@ class Timeslot < NexudusBase
     end
 
     private
+
     def normalize_slots(slots)
       grouped = Hash.new { |hash, key| hash[key] = [] }
       slots.each do |time_slot|
@@ -43,7 +44,7 @@ class Timeslot < NexudusBase
 
       res = []
       grouped.each do |_, grouped_slots|
-        grouped_slots = grouped_slots.sort_by{|time_slot| Time.parse(time_slot['FromTime'])}
+        grouped_slots = grouped_slots.sort_by { |time_slot| Time.parse(time_slot['FromTime']) }
         index = 0
         loop do
           break if !grouped_slots[index + 1] || index >= grouped_slots.size
@@ -60,7 +61,5 @@ class Timeslot < NexudusBase
       end
       res.flatten
     end
-
   end
-
 end

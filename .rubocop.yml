@@ -1,0 +1,16 @@
+Rails:
+  Enabled: true
+AllCops:
+  TargetRubyVersion: 2.3
+  Exclude:
+    - 'bin/*'
+Metrics/LineLength:
+  Max: 130
+Documentation:
+  Enabled: false
+Style/SignalException:
+  Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: false
