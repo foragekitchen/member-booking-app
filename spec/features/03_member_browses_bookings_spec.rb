@@ -38,7 +38,7 @@ RSpec.feature 'My Bookings:', type: :feature do
 
     scenario 'should see a link to past bookings' do
       visit '/bookings'
-      should have_css('#past-bookings.collapse')
+      should have_css('#past-bookings')
     end
 
     scenario 'should be given the option to edit a booking' do
@@ -96,8 +96,8 @@ RSpec.feature 'My Bookings:', type: :feature do
 
       visit '/bookings'
       count = all('#upcoming-bookings tbody tr', visible: true).count
-        accept_confirm { first(:link, 'Remove').click }
-      should have_css('tbody tr', count: count - 1, wait: 10)
+      accept_confirm { first(:link, 'Remove').click }
+      should have_css('#upcoming-bookings tbody tr', count: count - 1, wait: 10)
     end
   end
 
