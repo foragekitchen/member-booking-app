@@ -49,7 +49,8 @@
       %label{for: "booking-filter-date"} When do you want to come in?
       %input#booking-filter-date.form-control.datepicker{name: "bookingRequestDate", type: "text", value: params[:bookingRequestDate]}
       .dropdown.dropdown-time-range
-        = link_to '', 'javascript:void(0);', id: 'time-slider-range-holder', 'data-toggle' => 'dropdown'
+        = link_to 'javascript:void(0);', id: 'time-slider-range-holder', 'data-toggle' => 'dropdown' do
+          %span
         %ul.dropdown-menu
           %li
             #filter-time-slider.time-slider-range{data: {target: '#time-slider-range-holder', from_target: '#bookingRequestFromTime', to_target: '#bookingRequestToTime', from: params[:bookingRequestFromTime], to: params[:bookingRequestToTime]}}

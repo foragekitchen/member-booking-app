@@ -32,7 +32,7 @@ class window.TimeSliderRange
       @from_target.val(from).trigger('change')
       to = @sliderValueToTime(values[1])
       @to_target.val(to).trigger('change')
-      @target.html("#{from} - #{to}")
+      @target.find('span').html("#{from} - #{to} ")
 
     @holder.on 'slidestop', (e, ui) =>
       window.booking_filter.submit()

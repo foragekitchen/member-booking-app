@@ -18,6 +18,7 @@ nav {
   }
 
   &.navbar-default {
+    position: relative;
     background-color: rgba(255,255,255,0.7);
     border: 0px;
     border-radius: 0px;
@@ -30,6 +31,10 @@ nav {
       .icon-bar {
         background-color: #1f4b60;
       }
+    }
+    .accounts-nav {
+      position: absolute;
+      right: 0px;
     }
   }
 
@@ -105,10 +110,19 @@ nav {
   }
   nav {
     .navbar-brand {
-        padding-top: 10px;
-        padding-bottom: 10px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      float: none;
+      width: 84px;
+      margin: 0px auto;
+      display: block;
       img {
         height: 54px;
+      }
+    }
+    &.navbar-default {
+      .accounts-nav {
+        position: relative;
       }
     }
     .navbar-nav {

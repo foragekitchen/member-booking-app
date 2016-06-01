@@ -17,31 +17,5 @@
       =link_to 'Classes', '#'
     %li
       =link_to 'Events', '#'
-    -if user_signed_in?
-      %li.accounts-nav
-        %a{"data-toggle" => "popover", "data-trigger" => "focus", role: "button", tabindex: "0", title: "My Account"} #{@coworker.salutation || "you"}
-    -else
-      %li.active
-        =link_to 'Log In', '#'
--if user_signed_in?
-  #my_account_popover.hidden
-    .col-md-12
-      .col-md-6
-        %small
-          You have
-          %br/
-        %span#my-account-remaining-hours= pluralize(@coworker.remaining_hours_in_plan.to_i, "hour")
-        %br/
-        %small remaining this month
-      %div
-        %small
-          Your Plan:
-          %br/
-        = @coworker.billing_plan
-        %br/
-        %small
-          (#{@coworker.total_hours_in_plan.to_i} hrs, #{number_to_currency(@coworker.extra_service_cost_per_hour)}/hr add'l)
-      %hr/
-      = link_to "Logout", logout_path, class: "btn btn-default", method: "delete"
-      %br/
-      %br/
+    %li.active
+      =link_to 'Log In', '#'

@@ -4,11 +4,21 @@
 
 .dropdown-time-range {
   display: inline-block;
-  padding: 0 10px;
+  padding: 0px;
   min-width: 155px;
 
   & > a {
-    color: #000000;
+    color: #1f4b60;
+    padding: 0px 10px;
+    display: block;
+    height: 42px;
+    border: 1px solid #cccccc;
+    background-color: #fafafa;
+    border-radius: 2px;
+    line-height: 42px;
+    &:hover {
+      text-decoration: none;
+    }
   }
   & > .tooltip {
     margin-left: 15px;

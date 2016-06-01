@@ -7,6 +7,7 @@ body {
   color: #4f4f4f;
   padding-bottom: 560px;
   position: relative;
+  line-height: 1.5em;
 }
 
 h1 {
@@ -15,6 +16,7 @@ h1 {
   color: #1f4b60;
   letter-spacing: 0.5px;
   margin-bottom: 0.5em;
+  line-height: 1.2em;
 }
 
 h2 {
@@ -27,7 +29,20 @@ h3 {
   letter-spacing: 3px;
 }
 
-.btn-primary {
+.btn-default {
+  background: transparent!important;
+  border: none;
+  box-shadow: none;
+  text-shadow: none;
+  color: #1f4b60;
+  &:focus,
+  &:hover {
+    box-shadow: none;
+  }
+}
+
+.btn-primary,
+.booking-close {
   background: #ffffff;
   border: 2px solid #db493e;
   color: #db493e;
@@ -46,6 +61,20 @@ h3 {
     border: 2px solid #db493e;
     outline: none;
     transition: all .35s;
+  }
+}
+
+.booking-close {
+  border-color: #cccccc;
+  color: #cccccc;
+  display: inline-block;
+  line-height: 30px;
+  &:hover,
+  &:focus {
+    background-color: #cccccc;
+    text-decoration: none;
+    border-color: #cccccc;
+    color: #333333;
   }
 }
 
@@ -105,6 +134,15 @@ footer {
   }
 }
 
+a:focus {
+  outline: none!important;
+}
+
+.container-fluid {
+  padding-left: 35px;
+  padding-right: 35px;
+}
+
 .box-sessions {
   margin-top: 40px;
   margin-bottom: 40px;
@@ -114,7 +152,7 @@ footer {
   margin-bottom: 24px;
 }
 
-.form-control {
+.form-control, input, select {
   height: 42px;
   border: 1px solid #cccccc;
   background-color: #fafafa;
