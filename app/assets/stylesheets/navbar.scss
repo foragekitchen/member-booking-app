@@ -1,0 +1,135 @@
+nav {
+  .navbar-brand  {
+    height: auto;
+    padding: 20px 15px;
+    img {
+      height: 64px;
+    }
+  }
+
+  .navbar-nav li a {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .navbar-text {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  &.navbar-default {
+    background-color: rgba(255,255,255,0.7);
+    border: 0px;
+    border-radius: 0px;
+    box-shadow: none;
+    background-image: none;
+    .navbar-toggle {
+      border-color: transparent;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      .icon-bar {
+        background-color: #1f4b60;
+      }
+    }
+  }
+
+  .navbar-nav {
+    & > li {
+      & > a {
+        font-size: 13px;
+        text-transform: uppercase;
+        color: #1f4b60!important;
+        padding-top: 42px;
+        padding-bottom: 42px;
+        letter-spacing: 3px;
+        &:hover {
+          color: #9c9999!important;
+        }
+      }
+      &.active {
+        & > a {
+          background: none!important;
+          box-shadow: none!important;
+          color: #9c9999!important;
+        }
+      }
+      &.dropdown {
+        &.open {
+          .dropdown-toggle {
+            background: none!important;
+            box-shadow: none!important;
+            color: #9c9999!important;
+          }
+        }
+        .dropdown-menu {
+          left: 0px!important;
+          right: auto;
+          top: 65px;
+          border: 0px;
+          box-shadow: none;
+          border-radius: 0px;
+          text-transform: uppercase;
+          font-size: 13px;
+          letter-spacing: 3px;
+        }
+        li a {
+          background: none!important;
+          padding: 10px 15px;
+        }
+      }
+    }
+  }
+}
+
+
+.accounts-nav .dropdown-menu li {
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  nav .navbar-nav > li.dropdown:hover {
+    .dropdown-menu {
+      display: block;
+      margin-top: 0;
+    }
+    .dropdown-toggle {
+      color: #9c9999!important;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .navbar-collapse {
+    border-top: 0px;
+    border-bottom: 1px solid transparent;
+  }
+  nav {
+    .navbar-brand {
+        padding-top: 10px;
+        padding-bottom: 10px;
+      img {
+        height: 54px;
+      }
+    }
+    .navbar-nav {
+      & > li {
+        & > a {
+          padding-top: 10px;
+          padding-bottom: 10px;
+          text-align: center;
+        }
+      }
+      .open {
+        .dropdown-menu {
+          & >li a {
+            color: #1f4b60 !important;
+            padding-left: 15px;
+          }
+        }
+      }
+      .dropdown-menu {
+        text-align: center;
+      }
+    }
+  }
+}

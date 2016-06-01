@@ -22,12 +22,26 @@
             %span.icon-bar
             %span.icon-bar
           / logo
-          = link_to image_tag("logo-forage-kitchen-small.png", alt: "Forage Kitchen"), root_path, class: 'navbar-brand'
+          = link_to image_tag("fk-logo.png", alt: "Forage Kitchen"), root_path, class: 'navbar-brand'
           = render "layouts/nav_main" if user_signed_in?
-        = render "layouts/nav_secondary" if user_signed_in?
+        = render "layouts/nav_secondary"
     .container-fluid
       = yield
     %footer
       .container-fluid
-        %h5 This is a footer!
-        %p It should contain helpful links and contact information.
+        =image_tag "fk-fire.png", width: 130
+        =link_to 'Work for the kitchen', '#', class: 'work-for-kitchen-link'
+        .contact-info
+          %span 478 25TH ST, OAKLAND, CA
+          %span|
+          =mail_to "HELLO@FORAGEKITCHEN.COM"
+        %ul.social-links
+          %li
+            = link_to 'https://twitter.com/forageSF', target: "_blank" do
+              =fa_icon 'twitter'
+          %li
+            = link_to 'https://www.instagram.com/foragesf/', target: "_blank" do
+              =fa_icon 'instagram'
+          %li
+            = link_to 'https://www.facebook.com/isorabins', target: "_blank" do
+              =fa_icon 'facebook'
