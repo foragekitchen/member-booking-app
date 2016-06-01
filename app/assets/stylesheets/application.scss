@@ -6,38 +6,13 @@
 @import "jquery-ui/theme";
 @import "jquery-ui/datepicker";
 
+@import "layout";
+@import "navbar";
 @import "resources";
 @import "time_slider_range";
+@import "font-awesome";
 
 
-nav {
-  a.navbar-brand  {
-    height: auto;
-    padding: 5px 15px;
-    img {
-      height: 50px;
-    }
-  }
-  .navbar-nav li a {
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
-  .navbar-text {
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-}
-
-.accounts-nav .dropdown-menu li {
-  text-align: center;
-}
-
-footer {
-  background-color: #eee;
-  margin-top: 50px;
-  padding-top: 20px;
-  padding-bottom: 50px;
-}
 
 .popover {
   max-width: 100%;
