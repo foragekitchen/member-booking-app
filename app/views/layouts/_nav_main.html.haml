@@ -4,3 +4,28 @@
     = link_to 'My Reservations', bookings_path
   %li.resources-nav
     = link_to 'Book Kitchen Time', resources_path
+  %li.accounts-nav
+    %a{"data-toggle" => "popover", "data-trigger" => "focus", role: "button", tabindex: "0", title: "My Account"}
+      =fa_icon "user"
+      #{@coworker.salutation || "you"}
+  #my_account_popover.hidden
+    .col-md-12
+      .col-md-6
+        %small
+          You have
+          %br/
+        %span#my-account-remaining-hours= pluralize(@coworker.remaining_hours_in_plan.to_i, "hour")
+        %br/
+        %small remaining this month
+      %div
+        %small
+          Your Plan:
+          %br/
+        = @coworker.billing_plan
+        %br/
+        %small
+          (#{@coworker.total_hours_in_plan.to_i} hrs, #{number_to_currency(@coworker.extra_service_cost_per_hour)}/hr add'l)
+      %hr/
+      = link_to "Logout", logout_path, class: "btn btn-default", method: "delete"
+      %br/
+      %br/

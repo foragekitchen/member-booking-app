@@ -16,15 +16,16 @@
       .container-fluid
         .navbar-header
           / toggle nav button on responsive layout
-          %button.navbar-toggle.collapsed{"aria-expanded" => "false", "data-target" => "#subnav-collapse-1", "data-toggle" => "collapse", type: "button"}
-            %span.sr-only Toggle navigation
-            %span.icon-bar
-            %span.icon-bar
-            %span.icon-bar
+          -if !user_signed_in?
+            %button.navbar-toggle.collapsed{"aria-expanded" => "false", "data-target" => "#subnav-collapse-1", "data-toggle" => "collapse", type: "button"}
+              %span.sr-only Toggle navigation
+              %span.icon-bar
+              %span.icon-bar
+              %span.icon-bar
           / logo
           = link_to image_tag("fk-logo.png", alt: "Forage Kitchen"), root_path, class: 'navbar-brand'
           = render "layouts/nav_main" if user_signed_in?
-        = render "layouts/nav_secondary"
+        = render "layouts/nav_secondary" if !user_signed_in?
     .container-fluid
       = yield
     %footer
