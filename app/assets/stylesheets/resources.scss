@@ -1,12 +1,13 @@
-$map-height: 407px;
+$map-height: 415px;
 $map-width: 1276px;
 
 #map-container {
-  border: 3px solid #666;
+  border: 3px solid #cccccc;
   height: $map-height;
   overflow: scroll;
   position: relative;
-  width: 80%;
+  width: 100%;
+  margin-bottom:40px;
 
   #map {
     background: url(asset_path("map-kitchen-background.png")) no-repeat;
@@ -33,7 +34,7 @@ $map-width: 1276px;
 
   div.resource {
     background-color: #eee;
-    border: 2px solid #444;
+    border: 2px solid #a0a0a0;
     height: 30px;
     width: 50px;
     position: absolute;
@@ -60,5 +61,103 @@ $map-width: 1276px;
   .alert {
     margin-bottom: -10px;
     margin-top: 10px;
+  }
+}
+
+#bookingRecurringForm {
+  max-width: 400px;
+
+  .form-group {
+    margin-right: 0px;
+    margin-left: 0px;
+    margin-bottom: 15px;
+  }
+
+  #recur-booking {
+    height: 42px;
+    background: #fafafa;
+    line-height: 42px;
+    border: 1px solid #cccccc;
+    border-radius: 2px;
+    padding: 0px 8px;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  label {
+    padding-bottom: 5px;
+  }
+
+  .booking-close {
+    margin-bottom: 20px;
+    margin-top: 5px;
+  }
+
+}
+
+#filters {
+  padding-top: 10px;
+  padding-bottom: 20px;
+  h2 {
+    margin-bottom: 24px;
+  }
+
+  .booking-label {
+    padding-bottom: 15px;
+  }
+
+  .booking-date {
+    margin-right: 40px;
+  }
+
+  .booking-time {
+    width: 240px;
+  }
+}
+
+.ui-slider-horizontal {
+  background: #fafafa!important;
+  border-color: #ccc!important;
+  box-shadow: none!important;
+}
+
+.ui-slider {
+  .ui-slider-range {
+    background: #1f4b60!important;
+    border: 0px!important;
+    box-shadow: none!important;
+  }
+
+  .ui-slider-handle:after {
+    background: #326E8A!important;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  #map-container {
+    .popover {
+      display: none!important;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  #booking-filter {
+    max-width: 300px;
+  }
+
+  #filters {
+    .booking-date {
+      margin-right: 0px;
+    }
+    .booking-time {
+      width: 100%;
+    }
+  }
+
+  #bookingRecurringForm {
+    max-width: 300px;
   }
 }
