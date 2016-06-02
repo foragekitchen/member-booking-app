@@ -34,7 +34,7 @@ nav {
     }
     .accounts-nav {
       position: absolute;
-      right: 0px;
+      right: 35px;
     }
   }
 
@@ -123,6 +123,7 @@ nav {
     &.navbar-default {
       .accounts-nav {
         position: relative;
+        right: auto;
       }
     }
     .navbar-nav {

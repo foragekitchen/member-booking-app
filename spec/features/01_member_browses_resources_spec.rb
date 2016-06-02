@@ -21,7 +21,7 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
 
       scenario 'should see filters for date and time, with "closed" times omitted and friendly hint', js: true do
         visit '/resources'
-        should have_content('When do you want to come in?')
+        should have_content('WHEN DO YOU WANT TO COME IN?')
         should have_content('closed 2AM-8AM')
         expect(find('#filters', visible: false)).to_not have_content(' 3:00 AM')
       end
@@ -68,8 +68,8 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
 
         scenario 'should see a warning if selecting a date/time that is already passed', js: true do
           visit '/resources'
-          fill_in('When do you want to come in?', with: (Time.zone.now - 1.day).to_s(:booking_day))
-          page.execute_script('$("#bookingRequestDate").trigger("change");')
+          fill_in('bookingRequestDate', with: (Time.zone.now - 1.day).to_s(:booking_day))
+          page.evaluate_script("$('#filter-time-slider').trigger('slide', true)")
           should have_text('Booking cannot be in the past.')
         end
       end
@@ -83,7 +83,7 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
 
         scenario 'should see a warning if the requested time exceeds the available hours, with notice about extra billing', js: true do
           visit '/resources'
-          fill_in('When do you want to come in?', with: (Time.current + 1.day).to_s(:booking_day))
+          fill_in('bookingRequestDate', with: (Time.current + 1.day).to_s(:booking_day))
           set_time_range('#filter-time-slider', '8:00 AM', '2:00 PM')
           page.execute_script('$("div.available:first").trigger("click")') # Since we're using "fake" stubbed resources, they're all going to be displayed on top of one another. Trigger the click directly to avoid click conflicts.
           should have_text('1 hour (you will be invoiced any extras)')
@@ -96,7 +96,7 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
 
       scenario 'should be able to book up to 12 hours, but no more than 12 hours', js: true do
         visit '/resources'
-        fill_in('When do you want to come in?', with: (Time.zone.now + 1.day).to_s(:booking_day))
+        fill_in('bookingRequestDate', with: (Time.zone.now + 1.day).to_s(:booking_day))
         set_time_range('#filter-time-slider', '10:00 AM', '10:00 PM')
         should_not have_content('Booking cannot be more than 12 hours.')
         set_time_range('#filter-time-slider', '10:00 AM', '10:30 PM')

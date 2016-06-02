@@ -4,85 +4,95 @@
       %span{"aria-hidden" => "true"} ×
     %strong Oh no!
     = flash[:alert]
-%h1 Book a table in the kitchen:
-%p Prep tables are the basic unit of the kitchen. Everything happens around a prep table! Book however many you need for your team. Minimum 4 hours. We suggest limiting 2-3 crew members at each table. Please note that we are closed 2AM-8AM nightly for cleaning.
-#bookingModal.modal.fade
-  .modal-dialog
-    .modal-content
-      = form_tag("/bookings", method: "post", id: "bookingForm") do
-        = hidden_field_tag("bookingResourceId")
-        = hidden_field_tag("bookingDate")
-        = hidden_field_tag("bookingFrom")
-        = hidden_field_tag("bookingTo")
-        .modal-header
-          %button.close{"aria-label" => "Close", "data-dismiss" => "modal", type: "button"}
-            %span{"aria-hidden" => "true"} ×
-          %h4.modal-title
-            You're booking:
-            %span
-        .modal-body
-          %h5.text-left
-            %a.btn-change.pull-right{"data-dismiss" => "modal", href: "#"}> Change
-            For:
-            %span
-          %p.my-plan
-            Hours requested in this booking:
-            %strong
-              %span.hoursBooking
-            %br/
-            Hours remaining in your plan:
-            %strong
-              %span#hours-remaining= pluralize(@coworker.remaining_hours_in_plan.to_i, "hour")
-            %span.text-warning (you will be invoiced any extras)
-            %span.glyphicon.glyphicon-ok.text-success{"aria-hidden" => "true"}
-        .modal-footer
-          %button.btn.btn-default{"data-dismiss" => "modal", type: "button"} Cancel
-          %button.btn.btn-primary{type: "submit"} Save your booking
-    / /.modal-content
-  / /.modal-dialog
-/ /.modal
-#filters
-  = form_tag(resources_path, method: "get", remote: true, id: "booking-filter", class: "form-inline") do
-    = hidden_field_tag 'bookingRequestFromTime', params[:bookingRequestFromTime]
-    = hidden_field_tag 'bookingRequestToTime', params[:bookingRequestToTime]
-    .form-group.time-range
-      %label{for: "booking-filter-date"} When do you want to come in?
-      %input#booking-filter-date.form-control.datepicker{name: "bookingRequestDate", type: "text", value: params[:bookingRequestDate]}
-      .dropdown.dropdown-time-range
-        = link_to 'javascript:void(0);', id: 'time-slider-range-holder', 'data-toggle' => 'dropdown' do
+.col-md-3
+  %h1 Book a table in the kitchen
+  %p Prep tables are the basic unit of the kitchen. Everything happens around a prep table! Book however many you need for your team. Minimum 4 hours. We suggest limiting 2-3 crew members at each table. Please note that we are closed 2AM-8AM nightly for cleaning.
+.col-md-9
+  #bookingModal.modal.fade
+    .modal-dialog
+      .modal-content
+        = form_tag("/bookings", method: "post", id: "bookingForm") do
+          = hidden_field_tag("bookingResourceId")
+          = hidden_field_tag("bookingDate")
+          = hidden_field_tag("bookingFrom")
+          = hidden_field_tag("bookingTo")
+          .modal-header
+            %button.close{"aria-label" => "Close", "data-dismiss" => "modal", type: "button"}
+              %span{"aria-hidden" => "true"} ×
+            %h4.modal-title
+              You're booking:
+              %span
+          .modal-body
+            %h5.text-left
+              %a.btn-change.pull-right{"data-dismiss" => "modal", href: "#"}> Change
+              For:
+              %span
+            %p.my-plan
+              Hours requested in this booking:
+              %strong
+                %span.hoursBooking
+              %br/
+              Hours remaining in your plan:
+              %strong
+                %span#hours-remaining= pluralize(@coworker.remaining_hours_in_plan.to_i, "hour")
+              %span.text-warning (you will be invoiced any extras)
+              %span.glyphicon.glyphicon-ok.text-success{"aria-hidden" => "true"}
+          .modal-footer
+            %button.btn.btn-default{"data-dismiss" => "modal", type: "button"} Cancel
+            %button.btn.btn-primary{type: "submit"} Save your booking
+      / /.modal-content
+    / /.modal-dialog
+  / /.modal
+  #filters
+    = form_tag(resources_path, method: "get", remote: true, id: "booking-filter", class: "form-inline") do
+      = hidden_field_tag 'bookingRequestFromTime', params[:bookingRequestFromTime]
+      = hidden_field_tag 'bookingRequestToTime', params[:bookingRequestToTime]
+      %h2
+        =fa_icon 'calendar-check-o'
+        When do you want to come in?
+      .form-group.booking-date
+        .booking-label Choose date:
+        %input#booking-filter-date.form-control.datepicker{name: "bookingRequestDate", type: "text", value: params[:bookingRequestDate]}
+      .form-group.booking-time
+        .booking-label Choose time range:
+        #time-slider-range-holder
           %span
-        %ul.dropdown-menu
-          %li
-            #filter-time-slider.time-slider-range{data: {target: '#time-slider-range-holder', from_target: '#bookingRequestFromTime', to_target: '#bookingRequestToTime', from: params[:bookingRequestFromTime], to: params[:bookingRequestToTime]}}
-      -#%input.btn.btn-default{type: "submit", value: "Refresh"}
-#map-container
-  #disable-map
-  #map
-    #overlay
-#recurring-container
-  .hide.alert.alert-success.alert-dismissible{role: "alert"}
-    %button.close{"aria-label" => "Close", "data-dismiss" => "alert", type: "button"}
-      %span{"aria-hidden" => "true"} ×
-    %strong Success!
-    Your booking has been saved!
-  %h2 Make it recurring?
-  %p Got your favorite table? Put a hold on it now by telling us when you plan to come in regularly! Note that you can only book 3 weeks in advance. Make a mistake? You may cancel up to 2 days a month, with at least 24 hours notice.
-  = form_tag("/bookings/#{flash[:booking_id]}", method: "put", id: "bookingRecurringForm", class: "form-horizontal") do
-    .form-group
-      %label.col-sm-2.control-label{for: "booking_resources"} Your table:
-      #recur-booking.col-sm-3
-        = flash[:notice]
-    .form-group
-      %label.col-sm-2.control-label{for: "booking_repeats"} This booking should repeat:
-      .col-sm-3
+        #filter-time-slider.time-slider-range{data: {target: '#time-slider-range-holder', from_target: '#bookingRequestFromTime', to_target: '#bookingRequestToTime', from: params[:bookingRequestFromTime], to: params[:bookingRequestToTime]}}
+        -#.dropdown.dropdown-time-range
+        -#  = link_to 'javascript:void(0);', id: 'time-slider-range-holder', 'data-toggle' => 'dropdown' do
+        -#    %span
+        -#  %ul.dropdown-menu
+        -#    %li
+        -#      #filter-time-slider.time-slider-range{data: {target: '#time-slider-range-holder', from_target: '#bookingRequestFromTime', to_target: '#bookingRequestToTime', from: params[:bookingRequestFromTime], to: params[:bookingRequestToTime]}}
+        -#%input.btn.btn-default{type: "submit", value: "Refresh"}
+  %h2 Choose a table
+  %p Click on a table you like on the map below to book. Note that available tables are green colored, and the grey ones are reserved alredy.
+  #map-container
+    #disable-map
+    #map
+      #overlay
+  #recurring-container
+    .hide.alert.alert-success.alert-dismissible{role: "alert"}
+      %button.close{"aria-label" => "Close", "data-dismiss" => "alert", type: "button"}
+        %span{"aria-hidden" => "true"} ×
+      %strong Success!
+      Your booking has been saved!
+    %h2 Make it recurring?
+    %p Got your favorite table? Put a hold on it now by telling us when you plan to come in regularly! Note that you can only book 3 weeks in advance. Make a mistake? You may cancel up to 2 days a month, with at least 24 hours notice.
+    = form_tag("/bookings/#{flash[:booking_id]}", method: "put", id: "bookingRecurringForm", class: "form-horizontal") do
+      .form-group
+        %label.control-label{for: "booking_resources"} Your table:
+        #recur-booking
+          = flash[:notice]
+      .form-group
+        %label.control-label{for: "booking_repeats"} This booking should repeat:
         = select_tag("booking_repeats", options_for_select([["Daily, for consecutive days", 1]]), class: "form-control")
-    .form-group
-      %label.col-sm-2.control-label{for: "booking_numdays"} How many days?
-      .col-sm-1
+      .form-group
+        %label.control-label{for: "booking_numdays"} How many days?
         = text_field_tag("booking_numdays", "", class: "form-control")
-    .form-group.text-center.col-sm-5
-      %input.btn.btn-default{type: "submit", value: "Check availability"}/
-      %p
-        No thanks, let me #{link_to "create another booking from scratch", resources_path},
-        %br/
-        or take me to #{link_to "My Bookings", bookings_path}
+      .form-group.text-center
+        %input.btn.btn-default.booking-close{type: "submit", value: "Check availability"}/
+        %p
+          No thanks, let me #{link_to "create another booking from scratch", resources_path},
+          %br/
+          or take me to #{link_to "My Bookings", bookings_path}

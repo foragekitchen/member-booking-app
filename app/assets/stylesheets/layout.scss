@@ -1,5 +1,16 @@
 @import url(https://fonts.googleapis.com/css?family=Droid+Serif);
 
+@font-face {
+  font-family: "PFDinCondensedRegular";
+  src: font-url("PFDinCondensedRegular.eot");
+  src: font-url("PFDinCondensedRegular.eot?#iefix")format("embedded-opentype"),
+  font-url("PFDinCondensedRegular.woff") format("woff"),
+  font-url("PFDinCondensedRegular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+
+
 body {
   font-family: 'Droid Serif', serif;
   font-size: 13px;
@@ -12,6 +23,7 @@ body {
 
 h1 {
   font-size: 31px;
+  font-family: "PFDinCondensedRegular";
   text-transform: uppercase;
   color: #1f4b60;
   letter-spacing: 0.5px;
@@ -21,6 +33,8 @@ h1 {
 
 h2 {
   font-size: 18px;
+  font-family: "PFDinCondensedRegular";
+  text-transform: uppercase;
   letter-spacing: 3px;
 }
 
@@ -173,4 +187,10 @@ a:focus {
 
 .alert-dismissible .close {
   right: 0px;
+}
+@media screen and (max-width: 480px) {
+  .container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
 }
