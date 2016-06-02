@@ -21,7 +21,7 @@
     Make quick changes to your existing bookings, or remove your booking to replace it with a different date/time/resource. All bookings must be at least 4 hours.
     %strong You can edit your booking up to 24 hours before you’re expected in the kitchen.
     You can always extend your booking if there’s availability.
-.col-md-9
+.col-md-9.reservations-tables
   %h2 Upcoming
   %table#upcoming-bookings.table.table-striped
     %thead
@@ -37,4 +37,10 @@
     My Past Bookings
   #past-bookings
     %table.table.table-striped
-      = render partial: 'bookings/past_booking', collection: @past, as: :booking
+      %thead
+        %tr
+          %th{width: '35%'} Resource(s)
+          %th{width: '35%'} Date(s)
+          %th{width: '30%'} In/Out Time
+      %tbody
+        = render partial: 'bookings/past_booking', collection: @past, as: :booking
