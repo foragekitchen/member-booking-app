@@ -1,5 +1,10 @@
 %tr
-  %td{width: '25%'}= booking.resource.name
-  %td{width: '25%'}= booking.friendly_dates
-  %td{width: '25%'}= booking.friendly_times
-  %td{width: '25%', colspan: 2}
+  %td{width: '35%'}
+    .td-label Resource(s):
+    = booking.resource.name
+  %td{width: '35%'}
+    .td-label Date(s):
+    = booking.friendly_dates
+  %td{width: '30%'}
+    .td-label In/Out Time:
+    = booking.friendly_times

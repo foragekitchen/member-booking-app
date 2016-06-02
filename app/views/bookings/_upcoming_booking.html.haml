@@ -1,9 +1,14 @@
 %tr{id: booking.id}
   %td
+    .td-label Resource(s):
     = booking.resource.name
     = booking.resource.resource_type_name
-  %td= booking.friendly_dates
-  %td= booking.friendly_times
+  %td
+    .td-label Date(s):
+    = booking.friendly_dates
+  %td
+    .td-label In/Out Time:
+    = booking.friendly_times
   %td
     = link_to '#', class: 'btn btn-default btn-sm btn-edit booking-edit', data: { id: booking.id } do
       %span.glyphicon.glyphicon-pencil{'aria-hidden' => true}
@@ -19,39 +24,42 @@
         %span.glyphicon.glyphicon-remove{'aria-hidden' => true}
         Remove
 %tr.hidden.edit-booking{id: "edit-booking-#{booking.id}", data: { booking: booking.to_json, resource: booking.resource.to_json }}
-  %td.row{colspan: "5"}
+  %td{colspan: "5"}
     = form_for :booking, url: booking_path(id: booking.id), method: :put do |f|
       = f.hidden_field :id, value: booking.id, name: :id
       = f.hidden_field :id, value: booking.id, name: :bookingId
       = f.hidden_field :date, value: booking.friendly_date, name: :bookingDate
       %h3 Quick edit
-      .col-md-3
+      .col-sm-3
         .edit-label Resource(s):
         .edit-small Change your spot
         .form-group.form-inline
           = select_tag :bookingResource, options_from_collection_for_select(@resources, :id, :name, booking.resource_id), class: "chosen-select form-control col-sm-5"
-      .col-md-3
-        .edit-label In Date:
-        %div= booking.friendly_dates
-        %br/
-      .col-md-3
+      .col-sm-3
         .edit-label Time of day:
         .edit-small Extend your hours
         = hidden_field_tag 'bookingFrom', booking.formatted_from_time, id: "bookingFrom-#{booking.id}"
         = hidden_field_tag 'bookingTo', booking.formatted_to_time, id: "bookingTo-#{booking.id}"
         .form-group.time-range
-          .dropdown.dropdown-time-range
-            = link_to 'javascript:void(0);', id: "time-slider-range-holder-#{booking.id}", 'data-toggle' => 'dropdown' do
-              = fa_icon 'pencil'
-              %span
-            %ul.dropdown-menu
-              %li
-                .time-slider-range{id: "filter-time-slider-#{booking.id}", data: {target: "#time-slider-range-holder-#{booking.id}", from_target: "#bookingFrom-#{booking.id}", to_target: "#bookingTo-#{booking.id}", from: booking.formatted_from_time, to: booking.formatted_to_time, edit: 'true'}}
-      .col-md-3
+          %div{id: "time-slider-range-holder-#{booking.id}"}
+            %span
+          .time-slider-range{id: "filter-time-slider-#{booking.id}", data: {target: "#time-slider-range-holder-#{booking.id}", from_target: "#bookingFrom-#{booking.id}", to_target: "#bookingTo-#{booking.id}", from: booking.formatted_from_time, to: booking.formatted_to_time, edit: 'true'}}
+          -#.dropdown.dropdown-time-range
+          -#  = link_to 'javascript:void(0);', id: "time-slider-range-holder-#{booking.id}", 'data-toggle' => 'dropdown' do
+          -#    = fa_icon 'pencil'
+          -#    %span
+          -#  %ul.dropdown-menu
+          -#    %li
+          -#      .time-slider-range{id: "filter-time-slider-#{booking.id}", data: {target: "#time-slider-range-holder-#{booking.id}", from_target: "#bookingFrom-#{booking.id}", to_target: "#bookingTo-#{booking.id}", from: booking.formatted_from_time, to: booking.formatted_to_time, edit: 'true'}}
+      .col-sm-4.booking-info
+        %label In Date:
+        %span= booking.friendly_dates
+        %br/
         %label Booked for:
         %span= booking.coworker_full_name
         %br/
         %label Booked by:
         %span= booking.updated_by
+      .col-sm-2.text-right
         = f.submit 'Update', class: 'btn btn-primary'
         %a.booking-close{href: "#", data: { id: booking.id }} Close
