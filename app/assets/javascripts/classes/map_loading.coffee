@@ -1,19 +1,19 @@
 class window.MapLoading
   constructor: ->
     @map = $('#disable-map')
-    @dropdown = $('.dropdown.dropdown-time-range')
+    @holder = $('#filter-time-slider')
 
     $(document).on 'map:loading:change', (e, state, message) =>
       @map[if !state then 'hide' else 'show'].apply(@map, [])
       if message && state
-        return if @dropdown.next('.tooltip').is(':visible') && @dropdown.attr('title') == message
-        @dropdown.attr({
+        return if @holder.next('.tooltip').is(':visible') && @holder.attr('title') == message
+        @holder.attr({
           'data-toggle': 'tooltip',
           'data-placement': 'right',
           'title': message,
           'data-original-title': message
           'data-trigger': 'manual'
         })
-        @dropdown.tooltip('show')
+        @holder.tooltip('show')
       else
-        @dropdown.tooltip('destroy')
+        @holder.tooltip('destroy')
