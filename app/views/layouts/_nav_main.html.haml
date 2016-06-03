@@ -9,23 +9,16 @@
       =fa_icon "user"
       #{@coworker.salutation || "you"}
   #my_account_popover.hidden
-    .col-md-12
-      .col-md-6
-        %small
-          You have
-          %br/
-        %span#my-account-remaining-hours= pluralize(@coworker.remaining_hours_in_plan.to_i, "hour")
-        %br/
+    .row
+      .col-sm-6
+        %small You have
+        %strong.text_blue.display-block#my-account-remaining-hours= pluralize(@coworker.remaining_hours_in_plan.to_i, "hour")
         %small remaining this month
-      %div
-        %small
-          Your Plan:
-          %br/
-        = @coworker.billing_plan
-        %br/
+      .col-sm-6
+        %small Your Plan:
+        %strong.text_blue.display-block= @coworker.billing_plan
         %small
           (#{@coworker.total_hours_in_plan.to_i} hrs, #{number_to_currency(@coworker.extra_service_cost_per_hour)}/hr add'l)
-      %hr/
-      = link_to "Logout", logout_path, class: "btn btn-default", method: "delete"
-      %br/
-      %br/
+    .row
+      .col-sm-12
+        = link_to "Logout", logout_path, class: "btn btn-grey user-logout", method: "delete"
