@@ -22,11 +22,11 @@
       border: 0px;
       background: #CCCCCC;
     }
-    &.ui-state-highlight,
-    &.ui-state-highlight.ui-state-active {
+    &.ui-state-highlight {
       background: #CCCCCC;
     }
-    &.ui-state-active {
+    &.ui-state-active,
+    &.ui-state-highlight.ui-state-active {
       background: #1f4b60;
       color: #ffffff;
     }
