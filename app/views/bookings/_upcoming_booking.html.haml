@@ -41,7 +41,7 @@
         = hidden_field_tag 'bookingFrom', booking.formatted_from_time, id: "bookingFrom-#{booking.id}"
         = hidden_field_tag 'bookingTo', booking.formatted_to_time, id: "bookingTo-#{booking.id}"
         .form-group.time-range
-          %div{id: "time-slider-range-holder-#{booking.id}"}
+          .time-slider-range-holder{id: "time-slider-range-holder-#{booking.id}"}
             %span
           .time-slider-range{id: "filter-time-slider-#{booking.id}", data: {target: "#time-slider-range-holder-#{booking.id}", from_target: "#bookingFrom-#{booking.id}", to_target: "#bookingTo-#{booking.id}", from: booking.formatted_from_time, to: booking.formatted_to_time, edit: 'true'}}
           -#.dropdown.dropdown-time-range

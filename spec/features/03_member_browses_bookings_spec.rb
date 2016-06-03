@@ -15,7 +15,7 @@ RSpec.feature 'My Bookings:', type: :feature do
   def expand_edit_form_for_booking(booking_element, time_interval)
     booking_element.find(:xpath, '..').first('.btn-edit').click
     within('.edit-booking', visible: true) do
-      expect(find('.dropdown-time-range a', text: time_interval, wait: 10)).not_to be_nil
+      expect(find('.time-slider-range-holder span', text: time_interval, wait: 10)).not_to be_nil
     end
   end
 
@@ -71,7 +71,7 @@ RSpec.feature 'My Bookings:', type: :feature do
       scenario 'should not be able to reduce hours within 24 hours of the original start-time', js: true do
         set_time_range("#filter-time-slider-#{@booking_id}", '8:00 PM', '12:00 AM')
         within('.edit-booking', visible: true) do
-          expect(find('.dropdown-time-range a', text: '9:00 AM - 1:00 PM', wait: 10)).not_to be_nil
+          expect(find('.time-slider-range-holder span', text: '9:00 AM - 1:00 PM', wait: 10)).not_to be_nil
         end
       end
 
