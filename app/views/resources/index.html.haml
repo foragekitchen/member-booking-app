@@ -21,24 +21,24 @@
               %span{"aria-hidden" => "true"} ×
             %h4.modal-title
               You're booking:
-              %span
+              %span.text_blue
           .modal-body
             %h5.text-left
-              %a.btn-change.pull-right{"data-dismiss" => "modal", href: "#"}> Change
               For:
-              %span
+              %span.text_blue
+              %a.btn-change{"data-dismiss" => "modal", href: "#"}> (Change)
             %p.my-plan
               Hours requested in this booking:
               %strong
-                %span.hoursBooking
+                %span.hoursBooking.text_blue
               %br/
               Hours remaining in your plan:
               %strong
-                %span#hours-remaining= pluralize(@coworker.remaining_hours_in_plan.to_i, "hour")
+                %span.text_blue#hours-remaining= pluralize(@coworker.remaining_hours_in_plan.to_i, "hour")
               %span.text-warning (you will be invoiced any extras)
               %span.glyphicon.glyphicon-ok.text-success{"aria-hidden" => "true"}
           .modal-footer
-            %button.btn.btn-default{"data-dismiss" => "modal", type: "button"} Cancel
+            %button.btn.btn-grey{"data-dismiss" => "modal", type: "button"} Cancel
             %button.btn.btn-primary{type: "submit"} Save your booking
       / /.modal-content
     / /.modal-dialog

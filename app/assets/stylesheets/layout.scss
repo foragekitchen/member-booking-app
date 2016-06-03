@@ -41,6 +41,12 @@ h2 {
 h3 {
   font-size: 13px;
   letter-spacing: 3px;
+  font-family: "PFDinCondensedRegular";
+  text-transform: uppercase;
+}
+
+.text_blue {
+  color: #1f4b60;
 }
 
 .btn-default {
@@ -56,7 +62,8 @@ h3 {
 }
 
 .btn-primary,
-.booking-close {
+.booking-close,
+.btn-grey {
   background: #ffffff;
   border: 2px solid #db493e;
   color: #db493e;
@@ -78,7 +85,8 @@ h3 {
   }
 }
 
-.booking-close {
+.booking-close,
+.btn-grey {
   border-color: #cccccc;
   color: #cccccc;
   display: inline-block;
@@ -90,6 +98,10 @@ h3 {
     border-color: #cccccc;
     color: #333333;
   }
+}
+
+.btn-change {
+  padding-left: 10px;
 }
 
 footer {
@@ -181,6 +193,10 @@ a:focus {
   padding: 20px;
 }
 
+.alert-info {
+  background: #d9edf7!important;
+}
+
 .alert-success {
   background: #dff0d8!important;
 }
@@ -188,6 +204,39 @@ a:focus {
 .alert-dismissible .close {
   right: 0px;
 }
+
+.popover {
+  border-radius: 2px;
+  font-family: "Droid Serif";
+  h3 {
+    background-color: #ffffff;
+  }
+}
+
+.user-logout {
+  margin-top: 10px;
+}
+
+.display-block {
+  display: block;
+}
+
+.modal {
+  color: #777777;
+}
+
+.modal-content {
+  border-radius: 2px;
+}
+
+@media screen and (max-width: 767px) {
+  .popover {
+    .col-sm-6:first-child {
+      margin-bottom: 10px;
+    }
+  }
+}
+
 @media screen and (max-width: 480px) {
   .container-fluid {
     padding-left: 15px;
