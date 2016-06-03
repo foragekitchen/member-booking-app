@@ -23,6 +23,9 @@
       background: #CCCCCC;
     }
     &.ui-state-highlight,
+    &.ui-state-highlight.ui-state-active {
+      background: #CCCCCC;
+    }
     &.ui-state-active {
       background: #1f4b60;
       color: #ffffff;
