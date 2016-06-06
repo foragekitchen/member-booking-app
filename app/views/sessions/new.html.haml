@@ -1,28 +1,28 @@
 - if flash[:info]
-  .alert.alert-info.alert-dismissible{role: "alert"}
-    %button.close{"aria-label" => "Close", "data-dismiss" => "alert", type: "button"}
-      %span{"aria-hidden" => "true"} ×
+  .alert.alert-info.alert-dismissible{role: 'alert'}
+    %button.close{'aria-label': 'Close', 'data-dismiss': 'alert', type: 'button'}
+      %span{'aria-hidden': 'true'} ×
     = flash[:info]
 - if flash[:notice]
-  .alert.alert-success.alert-dismissible{role: "alert"}
-    %button.close{"aria-label" => "Close", "data-dismiss" => "alert", type: "button"}
-      %span{"aria-hidden" => "true"} ×
+  .alert.alert-success.alert-dismissible{role: 'alert'}
+    %button.close{'aria-label': 'Close', 'data-dismiss': 'alert', type: 'button'}
+      %span{'aria-hidden': 'true'} ×
     %strong Success!
     = flash[:notice]
 .row
   .col-md-4.col-md-offset-4.col-sm-6.col-sm-offset-3.box-sessions
     %h1 Log in:
-    = form_for(:session, url: login_path) do |f|
+    = form_for(:session, url: login_path, html: {class: 'disable-on-submit'}) do |f|
       - if flash[:alert]
-        .alert.alert-danger.alert-dismissible{role: "alert"}
-          %button.close{"aria-label" => "Close", "data-dismiss" => "alert", type: "button"}
-            %span{"aria-hidden" => "true"} ×
+        .alert.alert-danger.alert-dismissible{role: 'alert'}
+          %button.close{'aria-label': 'Close', 'data-dismiss': 'alert', type: 'button'}
+            %span{'aria-hidden': 'true'} ×
           %strong Oh no!
           = flash[:alert]
       .form-group
         = f.label :email
-        = f.email_field :email, class: 'form-control'
+        = f.email_field :email, class: 'form-control', value: @email.to_s
       .form-group
         = f.label :password
         = f.password_field :password, class: 'form-control'
-      = f.submit "Log in", class: "btn btn-primary"
+      = f.submit 'Log in', class: 'btn btn-primary'
