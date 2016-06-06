@@ -6,13 +6,14 @@ class SessionsController < ApplicationController
 
   def create
     reset_session
+    return render :new unless params[:session][:email].present?
     result = User.authenticate(params[:session][:email].downcase, params[:session][:password])
     if result.is_a?(User)
       session[:user_id] = result.id
       redirect_to resources_path
     else
       flash[:alert] = result['Message']
-      render 'new'
+      render :new
     end
   end
 
