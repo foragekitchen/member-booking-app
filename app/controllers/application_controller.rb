@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
 
     if session[:expiry_time] < (ENV['EXPIRED_PERIOD'] || 15).to_i.minutes.ago
       redirect_to_login("Looks like you might've stepped away for a bit. Log in again to continue!")
-    elsif (@coworker = Coworker.find_by_user(session[:user_id]))
+    elsif set_coworker
       session[:expiry_time] = Time.zone.now
     else
       redirect_to_login('You cannot login into the system. Please contact administrator for further instructions')
