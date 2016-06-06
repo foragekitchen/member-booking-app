@@ -2,20 +2,19 @@
 #subnav-collapse-1.collapse.navbar-collapse.navbar-right
   %ul.nav.navbar-nav
     %li.dropdown
-      =link_to '#', class: "dropdown-toggle", role: "button", "aria-haspopup": "true", "aria-expanded": "false", data: {toggle:"dropdown"} do
-        Kitchen
+      = link_to 'Kitchen', '#', class: 'dropdown-toggle', role: 'button', 'aria-haspopup': 'true', 'aria-expanded': 'false', data: {toggle: 'dropdown'}
       %ul.dropdown-menu
         %li
-          =link_to 'Facilities', '#'
+          = link_to 'Facilities', '#'
         %li
-          =link_to 'Join our kitchen', '#'
+          = link_to 'Join our kitchen', '#'
     %li
-      =link_to 'Cafe', '#'
+      = link_to 'Cafe', '#'
     %li
-      =link_to 'About', '#'
+      = link_to 'About', '#'
     %li
-      =link_to 'Classes', '#'
+      = link_to 'Classes', '#'
     %li
-      =link_to 'Events', '#'
-    %li.active
-      =link_to 'Log In', '#'
+      = link_to 'Events', '#'
+    %li.sessions-nav
+      = link_to 'Log In', login_path

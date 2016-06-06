@@ -5,14 +5,14 @@
   %li.resources-nav
     = link_to 'Book Kitchen Time', resources_path
   %li.accounts-nav
-    %a{"data-toggle" => "popover", "data-trigger" => "focus", role: "button", tabindex: "0", title: "My Account"}
-      =fa_icon "user"
-      #{@coworker.salutation || "you"}
+    %a{'data-toggle': 'popover', 'data-trigger': 'focus', role: 'button', tabindex: '0', title: 'My Account'}
+      =fa_icon 'user'
+      #{@coworker.salutation || 'you'}
   #my_account_popover.hidden
     .row
       .col-sm-6
         %small You have
-        %strong.text_blue.display-block#my-account-remaining-hours= pluralize(@coworker.remaining_hours_in_plan.to_i, "hour")
+        %strong.text_blue.display-block#my-account-remaining-hours= pluralize(@coworker.remaining_hours_in_plan.to_i, 'hour')
         %small remaining this month
       .col-sm-6
         %small Your Plan:
@@ -21,4 +21,4 @@
           (#{@coworker.total_hours_in_plan.to_i} hrs, #{number_to_currency(@coworker.extra_service_cost_per_hour)}/hr add'l)
     .row
       .col-sm-12
-        = link_to "Logout", logout_path, class: "btn btn-grey user-logout", method: "delete"
+        = link_to 'Logout', logout_path, class: 'btn btn-grey user-logout', method: 'delete'

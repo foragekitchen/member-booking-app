@@ -26,7 +26,7 @@
           / logo
           = link_to image_tag("fk-logo.png", alt: "Forage Kitchen"), root_path, class: 'navbar-brand'
           = render "layouts/nav_main" if user_signed_in?
-        = render "layouts/nav_secondary" if !user_signed_in?
+        = render "layouts/nav_secondary" unless user_signed_in?
     .container-fluid
       = yield
     %footer
