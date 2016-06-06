@@ -1,12 +1,12 @@
 class ApplicationController < ActionController::Base
-  ERROR_ACTIONS = [:not_found, :changes_rejected, :internal_server_error]
-
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  before_action :check_session, except: ERROR_ACTIONS
-  before_action :set_coworker, only: ERROR_ACTIONS
+  rescue_from Exception, with: :error
+
+  before_action :check_session, except: [:error]
+  before_action :set_coworker, only: [:error]
 
   def check_session
     return redirect_to_login('Please log in.') unless session[:user_id]
@@ -21,16 +21,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def not_found
-    render(status: 404)
-  end
-
-  def changes_rejected
-    render(status: 422)
-  end
-
-  def internal_server_error
-    render(status: 500)
+  def error
+    respond_to do |format|
+      format.html { render status_code.to_s, status: status_code }
+      format.all { render nothing: true, status: status_code }
+    end
   end
 
   private
@@ -46,5 +41,9 @@ class ApplicationController < ActionController::Base
       format.html { redirect_to login_path }
       format.js { render 'shared/unauthorized' }
     end
+  end
+
+  def status_code
+    params[:code] || 500
   end
 end

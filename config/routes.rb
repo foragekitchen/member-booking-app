@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   delete 'logout' => 'sessions#destroy'
 
   # Error pages
-  match '/404', to: 'application#not_found', via: :all
-  match '/500', to: 'application#internal_server_error', via: :all
-  match '/422', to: 'application#changes_rejected', via: :all
+  %w( 404 422 500 ).each do |code|
+    get code, to: 'application#error', code: code
+  end
 end
