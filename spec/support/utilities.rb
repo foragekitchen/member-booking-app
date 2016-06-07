@@ -12,7 +12,7 @@ class RSpec::Core::ExampleGroup
   def wait_for_selector(selector, params = {})
     50.times do
       sleep 0.1
-      break if find(selector, params)
+      break if first(selector, params)
     end
   end
 
