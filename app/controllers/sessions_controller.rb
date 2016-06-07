@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
     result = User.authenticate(params[:session][:email].downcase, params[:session][:password])
     if result.is_a?(User)
       session[:user_id] = result.id
-      redirect_to resources_path
+      redirect_to resources_url
     else
       @email = params[:session][:email]
       flash[:alert] = result['Message']
