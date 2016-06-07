@@ -21,10 +21,10 @@ class BookingsController < ApplicationController
     if (@response = JSON.parse(response.body)) && @response['WasSuccessful']
       flash[:notice] = @response['Message']
       flash[:booking_id] = @response['Value']['Id']
-      redirect_to resources_path(anchor: 'recurring-container')
+      redirect_to resources_url(anchor: 'recurring-container')
     else
       flash[:alert] = 'An error occurred while saving your booking. Please refresh the page and try again.'
-      redirect_to resources_path
+      redirect_to resources_url
     end
   end
 
@@ -51,7 +51,7 @@ class BookingsController < ApplicationController
     else
       flash[:alert] = 'An error occurred while updating your booking. Please refresh the page and try again.'
     end
-    redirect_to bookings_path
+    redirect_to bookings_url
   end
 
   def destroy
@@ -61,7 +61,7 @@ class BookingsController < ApplicationController
     else
       flash[:alert] = 'An error occurred while canceling your booking. Please contact us.'
     end
-    redirect_to bookings_path
+    redirect_to bookings_url
   end
 
   private

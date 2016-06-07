@@ -6,12 +6,13 @@ class SessionsController < ApplicationController
 
   def create
     reset_session
-    return render :new unless params[:session][:email].present?
+    params[:session][:email] ||= ''
     result = User.authenticate(params[:session][:email].downcase, params[:session][:password])
     if result.is_a?(User)
       session[:user_id] = result.id
-      redirect_to resources_path
+      redirect_to resources_url
     else
+      @email = params[:session][:email]
       flash[:alert] = result['Message']
       render :new
     end
@@ -20,6 +21,6 @@ class SessionsController < ApplicationController
   def destroy
     reset_session
     flash[:notice] = 'Thanks for logging out.'
-    redirect_to login_path
+    redirect_to login_url
   end
 end

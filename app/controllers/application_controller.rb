@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
     reset_session
     flash[:info] = message
     respond_to do |format|
-      format.html { redirect_to login_path }
+      format.html { redirect_to login_url }
       format.js { render 'shared/unauthorized' }
     end
   end

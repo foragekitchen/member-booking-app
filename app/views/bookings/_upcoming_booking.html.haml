@@ -11,20 +11,20 @@
     = booking.friendly_times
   %td
     = link_to '#', class: 'btn btn-default btn-sm btn-edit booking-edit', data: { id: booking.id } do
-      %span.glyphicon.glyphicon-pencil{'aria-hidden' => true}
+      %span.glyphicon.glyphicon-pencil{'aria-hidden': true}
       Edit
   - if ((Time.parse(booking.from_time) - Time.now)/1.minute) <= booking.resource.late_cancellation_limit
     %td{data: {placement: 'left', toggle: 'tooltip'}, title: 'Locked. This booking starts in less than 24 hours.'}
-      = link_to '#', class: "btn btn-default btn-sm disabled" do
-        %span.glyphicon.glyphicon-remove{'aria-hidden' => true}
+      = link_to '#', class: 'btn btn-default btn-sm disabled' do
+        %span.glyphicon.glyphicon-remove{'aria-hidden': true}
         Remove
   - else
     %td
       = link_to booking_path(id: booking.id), method: :delete, data: {confirm: "Are you sure you want to cancel this booking for #{Date.parse(booking.from_time)}?"}, class: 'btn btn-default btn-sm' do
-        %span.glyphicon.glyphicon-remove{'aria-hidden' => true}
+        %span.glyphicon.glyphicon-remove{'aria-hidden': true}
         Remove
 %tr.hidden.edit-booking{id: "edit-booking-#{booking.id}", data: { booking: booking.to_json, resource: booking.resource.to_json }}
-  %td{colspan: "5"}
+  %td{colspan: '5'}
     = form_for :booking, url: booking_path(id: booking.id), method: :put do |f|
       = f.hidden_field :id, value: booking.id, name: :id
       = f.hidden_field :id, value: booking.id, name: :bookingId
@@ -34,7 +34,7 @@
         .edit-label Resource(s):
         .edit-small Change your spot
         .form-group.form-inline
-          = select_tag :bookingResource, options_from_collection_for_select(@resources, :id, :name, booking.resource_id), class: "chosen-select form-control col-sm-5"
+          = select_tag :bookingResource, options_from_collection_for_select(@resources, :id, :name, booking.resource_id), class: 'chosen-select form-control col-sm-5'
       .col-sm-3
         .edit-label Time of day:
         .edit-small Extend your hours
@@ -61,5 +61,5 @@
         %label Booked by:
         %span= booking.updated_by
       .col-sm-2.text-right
-        = f.submit 'Update', class: 'btn btn-primary'
-        %a.booking-close{href: "#", data: { id: booking.id }} Close
+        = f.submit 'Update', class: 'btn btn-primary', data: { disable_with: 'Saving...' }
+        %a.booking-close{href: '#', data: { id: booking.id }} Close
