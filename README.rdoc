@@ -1,4 +1,4 @@
-== Member booking app [![CircleCI](https://circleci.com/gh/foragekitchen/member-booking-app.svg?style=svg)](https://circleci.com/gh/foragekitchen/member-booking-app)
+== Member booking app {<img src="https://circleci.com/gh/foragekitchen/member-booking-app.svg?style=svg" alt="CircleCI" />}[https://circleci.com/gh/foragekitchen/member-booking-app]
 
 This Member Booking App allows members to book resources like "prep tables" in a shared space. It provides a friendlier interface, more tailored to the kitchen environment, than default out-of-box Nexudus. The App requires:
 
