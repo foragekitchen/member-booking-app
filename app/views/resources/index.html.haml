@@ -1,7 +1,7 @@
 - if flash[:alert]
-  .alert.alert-danger.alert-dismissible{role: "alert"}
-    %button.close{"aria-label" => "Close", "data-dismiss" => "alert", type: "button"}
-      %span{"aria-hidden" => "true"} ×
+  .alert.alert-danger.alert-dismissible{role: 'alert'}
+    %button.close{'aria-label': 'Close', 'data-dismiss': 'alert', type: 'button'}
+      %span{'aria-hidden': 'true'} ×
     %strong Oh no!
     = flash[:alert]
 .col-md-3
@@ -11,14 +11,14 @@
   #bookingModal.modal.fade
     .modal-dialog
       .modal-content
-        = form_tag("/bookings", method: "post", id: "bookingForm") do
-          = hidden_field_tag("bookingResourceId")
-          = hidden_field_tag("bookingDate")
-          = hidden_field_tag("bookingFrom")
-          = hidden_field_tag("bookingTo")
+        = form_tag('/bookings', method: 'post', id: 'bookingForm') do
+          = hidden_field_tag('bookingResourceId')
+          = hidden_field_tag('bookingDate')
+          = hidden_field_tag('bookingFrom')
+          = hidden_field_tag('bookingTo')
           .modal-header
-            %button.close{"aria-label" => "Close", "data-dismiss" => "modal", type: "button"}
-              %span{"aria-hidden" => "true"} ×
+            %button.close{'aria-label': 'Close', 'data-dismiss': 'modal', type: 'button'}
+              %span{'aria-hidden': 'true'} ×
             %h4.modal-title
               You're booking:
               %span.text_blue
@@ -26,7 +26,7 @@
             %h5.text-left
               For:
               %span.text_blue
-              %a.btn-change{"data-dismiss" => "modal", href: "#"}> (Change)
+              %a.btn-change{'data-dismiss': 'modal', href: '#'}> (Change)
             %p.my-plan
               Hours requested in this booking:
               %strong
@@ -34,17 +34,17 @@
               %br/
               Hours remaining in your plan:
               %strong
-                %span.text_blue#hours-remaining= pluralize(@coworker.remaining_hours_in_plan.to_i, "hour")
+                %span.text_blue#hours-remaining= pluralize(@coworker.remaining_hours_in_plan.to_i, 'hour')
               %span.text-warning (you will be invoiced any extras)
-              %span.glyphicon.glyphicon-ok.text-success{"aria-hidden" => "true"}
+              %span.glyphicon.glyphicon-ok.text-success{'aria-hidden': 'true'}
           .modal-footer
-            %button.btn.btn-grey{"data-dismiss" => "modal", type: "button"} Cancel
-            %button.btn.btn-primary{type: "submit"} Save your booking
+            %button.btn.btn-grey{'data-dismiss': 'modal', type: 'button'} Cancel
+            = submit_tag 'Save your booking', class: 'btn btn-primary', data: { disable_with: 'Saving...' }
       / /.modal-content
     / /.modal-dialog
   / /.modal
   #filters
-    = form_tag(resources_path, method: "get", remote: true, id: "booking-filter", class: "form-inline") do
+    = form_tag(resources_path, method: 'get', remote: true, id: 'booking-filter', class: 'form-inline') do
       = hidden_field_tag 'bookingRequestFromTime', params[:bookingRequestFromTime]
       = hidden_field_tag 'bookingRequestToTime', params[:bookingRequestToTime]
       %h2
@@ -52,7 +52,7 @@
         When do you want to come in?
       .form-group.booking-date
         .booking-label Choose date:
-        %input#booking-filter-date.form-control.datepicker{name: "bookingRequestDate", type: "text", value: params[:bookingRequestDate]}
+        %input#booking-filter-date.form-control.datepicker{name: 'bookingRequestDate', type: 'text', value: params[:bookingRequestDate]}
       .form-group.booking-time
         .booking-label Choose time range:
         #time-slider-range-holder
@@ -72,27 +72,27 @@
     #map
       #overlay
   #recurring-container
-    .hide.alert.alert-success.alert-dismissible{role: "alert"}
-      %button.close{"aria-label" => "Close", "data-dismiss" => "alert", type: "button"}
-        %span{"aria-hidden" => "true"} ×
+    .hide.alert.alert-success.alert-dismissible{role: 'alert'}
+      %button.close{'aria-label': 'Close', 'data-dismiss': 'alert', type: 'button'}
+        %span{'aria-hidden': 'true'} ×
       %strong Success!
       Your booking has been saved!
     %h2 Make it recurring?
     %p Got your favorite table? Put a hold on it now by telling us when you plan to come in regularly! Note that you can only book 3 weeks in advance. Make a mistake? You may cancel up to 2 days a month, with at least 24 hours notice.
-    = form_tag("/bookings/#{flash[:booking_id]}", method: "put", id: "bookingRecurringForm", class: "form-horizontal") do
+    = form_tag("/bookings/#{flash[:booking_id]}", method: 'put', id: 'bookingRecurringForm', class: 'form-horizontal') do
       .form-group
-        %label.control-label{for: "booking_resources"} Your table:
+        %label.control-label{for: 'booking_resources'} Your table:
         #recur-booking
           = flash[:notice]
       .form-group
-        %label.control-label{for: "booking_repeats"} This booking should repeat:
-        = select_tag("booking_repeats", options_for_select([["Daily, for consecutive days", 1]]), class: "form-control")
+        %label.control-label{for: 'booking_repeats'} This booking should repeat:
+        = select_tag('booking_repeats', options_for_select([['Daily, for consecutive days', 1]]), class: 'form-control')
       .form-group
-        %label.control-label{for: "booking_numdays"} How many days?
-        = text_field_tag("booking_numdays", "", class: "form-control")
+        %label.control-label{for: 'booking_numdays'} How many days?
+        = text_field_tag('booking_numdays', '', class: 'form-control')
       .form-group.text-center
-        %input.btn.btn-default.booking-close{type: "submit", value: "Check availability"}/
+        = submit_tag 'Check availability', class: 'btn btn-default booking-close', data: { disable_with: 'Checking...' }
         %p
-          No thanks, let me #{link_to "create another booking from scratch", resources_path},
+          No thanks, let me #{link_to 'create another booking from scratch', resources_path},
           %br/
-          or take me to #{link_to "My Bookings", bookings_path}
+          or take me to #{link_to 'My Bookings', bookings_path}
