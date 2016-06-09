@@ -23,7 +23,7 @@ body {
 
 h1 {
   font-size: 31px;
-  font-family: "PFDinCondensedRegular";
+  font-family: "PFDinCondensedRegular", sans-serif;
   text-transform: uppercase;
   color: #1f4b60;
   letter-spacing: 0.5px;
@@ -33,7 +33,7 @@ h1 {
 
 h2 {
   font-size: 18px;
-  font-family: "PFDinCondensedRegular";
+  font-family: "PFDinCondensedRegular", sans-serif;
   text-transform: uppercase;
   letter-spacing: 3px;
 }
@@ -41,7 +41,7 @@ h2 {
 h3 {
   font-size: 13px;
   letter-spacing: 3px;
-  font-family: "PFDinCondensedRegular";
+  font-family: "purista-web", sans-serif;
   text-transform: uppercase;
 }
 
@@ -69,7 +69,7 @@ h3 {
   color: #db493e;
   text-transform: uppercase;
   height: 46px;
-  border-radius: 0px;
+  border-radius: 0;
   text-shadow: none;
   box-shadow: none;
   padding: 6px 25px;
@@ -132,7 +132,7 @@ footer {
     }
   }
   .contact-info {
-    margin: 10px 0px;
+    margin: 10px 0;
     a {
       color: #ffffff;
       &:hover,
@@ -144,8 +144,8 @@ footer {
   }
 
   .social-links {
-    margin: 40px 0px;
-    padding: 0px;
+    margin: 40px 0;
+    padding: 0;
     li {
       display: inline-block;
       margin-right: 27px;
@@ -154,7 +154,7 @@ footer {
         color: #ffffff;
       }
       &:last-child {
-        margin-right: 0px;
+        margin-right: 0;
       }
     }
   }
@@ -188,8 +188,8 @@ a:focus {
 .alert {
   text-shadow: none;
   box-shadow: none;
-  border: 0px;
-  border-radius: 0px;
+  border: 0;
+  border-radius: 0;
   padding: 20px;
 }
 
@@ -202,12 +202,12 @@ a:focus {
 }
 
 .alert-dismissible .close {
-  right: 0px;
+  right: 0;
 }
 
 .popover {
   border-radius: 2px;
-  font-family: "Droid Serif";
+  font-family: "Droid Serif", sans-serif;
   h3 {
     background-color: #ffffff;
   }

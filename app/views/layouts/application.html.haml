@@ -4,11 +4,14 @@
     %title NexudusApp
     %meta{content: "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}
     %meta{name: :viewport, content: "width=device-width, initial-scale=1.0"}
+    = javascript_include_tag 'https://use.typekit.net/zxi1ibh.js'
+    :javascript
+      try{Typekit.load({ async: true });}catch(e){}
     = stylesheet_link_tag    'application', media: 'all'
     = javascript_include_tag 'application'
     - if defined?(Timecop) && Timecop.top_stack_item
       - unix_millis = (Time.now.to_f * 1000.0).to_i
-      = javascript_include_tag "/assets/sinon.js"
+      = javascript_include_tag '/assets/sinon.js'
       :javascript
         sinon.useFakeTimers(#{unix_millis});
     = csrf_meta_tags
@@ -18,32 +21,26 @@
         .navbar-header
           / toggle nav button on responsive layout
           -if !user_signed_in?
-            %button.navbar-toggle.collapsed{"aria-expanded" => "false", "data-target" => "#subnav-collapse-1", "data-toggle" => "collapse", type: "button"}
+            %button.navbar-toggle.collapsed{'aria-expanded': 'false', 'data-target': '#subnav-collapse-1', 'data-toggle': 'collapse', type: 'button'}
               %span.sr-only Toggle navigation
               %span.icon-bar
               %span.icon-bar
               %span.icon-bar
           / logo
-          = link_to image_tag("fk-logo.png", alt: "Forage Kitchen"), root_path, class: 'navbar-brand'
-          = render "layouts/nav_main" if user_signed_in?
-        = render "layouts/nav_secondary" unless user_signed_in?
+          = link_to image_tag('fk-logo.png', alt: 'Forage Kitchen'), root_path, class: 'navbar-brand'
+          = render 'layouts/nav_main' if user_signed_in?
+        = render 'layouts/nav_secondary' unless user_signed_in?
     .container-fluid
       = yield
     %footer
       .container-fluid
-        =image_tag "fk-fire.png", width: 130
-        =link_to 'Work for the kitchen', '#', class: 'work-for-kitchen-link'
+        = image_tag 'fk-fire.png', width: 130
+        = link_to 'Work for the kitchen', '#', class: 'work-for-kitchen-link'
         .contact-info
           %span 478 25TH ST, OAKLAND, CA
           %span|
-          =mail_to "HELLO@FORAGEKITCHEN.COM"
+          = mail_to 'HELLO@FORAGEKITCHEN.COM'
         %ul.social-links
-          %li
-            = link_to 'https://twitter.com/forageSF', target: "_blank" do
-              =fa_icon 'twitter'
-          %li
-            = link_to 'https://www.instagram.com/foragesf/', target: "_blank" do
-              =fa_icon 'instagram'
-          %li
-            = link_to 'https://www.facebook.com/isorabins', target: "_blank" do
-              =fa_icon 'facebook'
+          %li= link_to fa_icon('twitter'), 'https://twitter.com/forageSF', target: '_blank'
+          %li= link_to fa_icon('instagram'), 'https://www.instagram.com/foragesf/', target: '_blank'
+          %li= link_to fa_icon('facebook'), 'https://www.facebook.com/isorabins', target: '_blank'
