@@ -4,9 +4,10 @@
     %title NexudusApp
     %meta{content: "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}
     %meta{name: :viewport, content: "width=device-width, initial-scale=1.0"}
-    = javascript_include_tag 'https://use.typekit.net/zxi1ibh.js'
-    :javascript
-      try{Typekit.load({ async: true });}catch(e){}
+    - unless Rails.env.test?
+      = javascript_include_tag 'https://use.typekit.net/zxi1ibh.js'
+      :javascript
+        try{Typekit.load({ async: true });}catch(e){}
     = stylesheet_link_tag    'application', media: 'all'
     = javascript_include_tag 'application'
     - if defined?(Timecop) && Timecop.top_stack_item
