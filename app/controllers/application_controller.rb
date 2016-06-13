@@ -32,6 +32,7 @@ class ApplicationController < ActionController::Base
 
   def set_coworker
     @coworker = Coworker.find_by_user(session[:user_id]) if session[:user_id].present?
+    cookies[:user] = @coworker
   end
 
   def redirect_to_login(message = nil)

@@ -14,6 +14,8 @@ gem 'ruby-units'
 gem 'momentjs-rails'
 gem 'moment_timezone-rails'
 
+gem 'jquery-cookie-rails'
+
 group :development, :test do
   gem 'dotenv-rails'
   gem 'rubocop', require: false

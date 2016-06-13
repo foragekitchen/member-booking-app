@@ -4,9 +4,11 @@ class window.BookingFilter
     @holder = $('#booking-filter')
 
     @holder.on 'ajax:beforeSend', (e, jqXHR, options) ->
+      $('#map-container').addClass('loading')
       xhrPool.push(jqXHR)
 
     @holder.on 'ajax:complete', (e, jqXHR, options) ->
+      $('#map-container').removeClass('loading')
       xhrPool = $.grep xhrPool, (x) ->
         x != jqXHR
 
@@ -27,7 +29,10 @@ class window.BookingFilter
     timesState = @.timesState()
     dateFrom = @.datetimeFrom()
     dateFrom = dateFrom.add(1, 'day') if timesState.plus_day
-    !(dateFrom.isBefore(currentTime()) || timesState.total < 4 || timesState.total > 12)
+    user = getCurrentUser()
+    !(dateFrom.isBefore(currentTime()) || timesState.total < 4 || timesState.total > 12 ||
+      (!user.maker && dateFrom.isoWeekday() == 7 && dateFrom.hours() < 20) ||
+      (user.maker && (dateFrom.isoWeekday() != 7 || dateFrom.hours > 16)))
 
   timesState: ->
     date = @holder.find('#booking-filter-date').val()
