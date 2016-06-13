@@ -68,7 +68,10 @@
   %h2 Choose a table
   %p Click on a table you like on the map below to book. Note that available tables are green colored, and the grey ones are reserved alredy.
   #map-container
+    #loader
+      %i.fa.fa-refresh.throbber{'aria-hidden': true}
     #disable-map
+      %i.fa.fa-ban{'aria-hidden': true}
     #map
       #overlay
   #recurring-container

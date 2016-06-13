@@ -1,5 +1,6 @@
 $map-height: 415px;
 $map-width: 1276px;
+$throbber-size: 132px;
 
 #map-container {
   border: 3px solid #cccccc;
@@ -25,12 +26,37 @@ $map-width: 1276px;
   }
 
   #disable-map {
+    display: none;
     background-color: #000;
     height: $map-height;
     opacity: 0.3;
     position: absolute;
-    width: $map-width;
+    width: 100%;
     z-index: 100;
+    font-size: $throbber-size;
+  }
+
+  #loader {
+    position: absolute;
+    display: none;
+    width: 100%;
+    z-index: 101;
+    height: $map-height;
+    font-size: $throbber-size;
+    text-align: center;
+  }
+
+  #loader i, #disable-map i {
+    color: white;
+    display: block;
+    position: absolute;
+    height: $throbber-size;
+    width: $throbber-size;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
   }
 
   div.resource {
@@ -56,6 +82,25 @@ $map-width: 1276px;
     }
   }
 
+  &.loading {
+    overflow: hidden;
+
+    #loader {
+      display: block;
+    }
+    #disable-map {
+      i {
+        display: none;
+      }
+    }
+  }
+  &.disabled {
+    overflow: hidden;
+
+    #disable-map {
+      display: block;
+    }
+  }
 }
 
 #recurring-container {

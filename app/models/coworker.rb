@@ -68,12 +68,16 @@ class Coworker < NexudusBase
   end
 
   def maker?
-    tag.strip == 'maker'
+    tag&.strip == 'maker'
   end
 
   def can_book?(from, to)
-    return true unless maker?
-    # Makers can only book on sunday from 8:00 AM to 6:00 PM
-    from.sunday? && to.sunday? && to.hour <= 18
+    # Only makers can book on sunday from 8:00 AM to 8:00 PM
+    return maker? if from.sunday? && to.sunday? && to.hour <= 20
+    !maker?
+  end
+
+  def to_s
+    {name: full_name, maker: maker?, active: active}.to_json
   end
 end

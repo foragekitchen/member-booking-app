@@ -1,10 +1,10 @@
 class window.MapLoading
   constructor: ->
-    @map = $('#disable-map')
+    @map = $('#map-container')
     @holder = $('#filter-time-slider')
 
     $(document).on 'map:loading:change', (e, state, message) =>
-      @map[if !state then 'hide' else 'show'].apply(@map, [])
+      @map[if !state then 'removeClass' else 'addClass'].apply(@map, ['disabled'])
       if message && state
         return if @holder.next('.tooltip').is(':visible') && @holder.attr('title') == message
         @holder.attr({
