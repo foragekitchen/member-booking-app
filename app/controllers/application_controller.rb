@@ -28,6 +28,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def current_user
+    @coworker
+  end
+
   private
 
   def set_coworker

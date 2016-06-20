@@ -3,6 +3,7 @@ ruby '2.3.1'
 gem 'rails', '~> 4.2'
 
 gem 'bootstrap-sass'
+gem 'bootstrap-datepicker-rails'
 gem 'sass-rails'
 gem 'coffee-rails'
 gem 'jquery-rails'

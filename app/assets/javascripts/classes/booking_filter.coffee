@@ -4,18 +4,18 @@ class window.BookingFilter
     @holder = $('#booking-filter')
 
     @holder.on 'ajax:beforeSend', (e, jqXHR, options) ->
-      $('#map-container').addClass('loading')
       xhrPool.push(jqXHR)
 
     @holder.on 'ajax:complete', (e, jqXHR, options) ->
-      $('#map-container').removeClass('loading')
       xhrPool = $.grep xhrPool, (x) ->
         x != jqXHR
 
     @holder.on 'ajax:success', ->
+      $('#map-container').removeClass('loading')
       $(document).trigger('map:loading:change', off)
 
     @holder.on 'ajax:send', ->
+      $('#map-container').addClass('loading')
       $(document).trigger('map:loading:change', on)
 
   submit: ->

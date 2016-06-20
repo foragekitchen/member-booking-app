@@ -1,6 +1,9 @@
 class RSpec::Core::ExampleGroup
-  def available_start_time(time)
-    time.change(hour: 11).utc + Time.now.utc_offset
+  def available_start_time(time, maker: false)
+    res = time.change(hour: 11).utc + Time.now.utc_offset
+    puts res.inspect
+    res += 1.day if !maker && res.sunday?
+    res
   end
 
   def wait_for_ajax

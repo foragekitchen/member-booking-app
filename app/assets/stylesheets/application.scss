@@ -2,6 +2,7 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import "bootstrap/theme";
+@import "bootstrap-datepicker";
 @import "jquery-ui/core";
 @import "jquery-ui/theme";
 @import "jquery-ui/datepicker";
@@ -55,4 +56,9 @@ input.btn[disabled] {
     -webkit-transform: rotate(359deg);
     transform: rotate(359deg);
   }
+}
+
+// Datepicker z-index issue
+.datepicker.datepicker-dropdown {
+  z-index: 102 !important;
 }
