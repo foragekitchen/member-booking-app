@@ -1,6 +1,6 @@
 class RSpec::Core::ExampleGroup
   def available_start_time(time)
-    time.change(hour: 11).utc + Time.now.utc_offset
+    time.end_of_week(:tuesday).change(hour: 11).utc + Time.now.utc_offset
   end
 
   def wait_for_ajax
