@@ -6,7 +6,10 @@
     = flash[:alert]
 .col-md-3
   %h1 Book a table in the kitchen
-  %p Prep tables are the basic unit of the kitchen. Everything happens around a prep table! Book however many you need for your team. Minimum 4 hours. We suggest limiting 2-3 crew members at each table. Please note that we are closed 2AM-8AM nightly for cleaning.
+  %ol
+    %li Choose your date and time
+    %li Choose your favorite table
+    %li Cook!
 .col-md-9
   #bookingModal.modal.fade
     .modal-dialog
@@ -66,7 +69,7 @@
         -#      #filter-time-slider.time-slider-range{data: {target: '#time-slider-range-holder', from_target: '#bookingRequestFromTime', to_target: '#bookingRequestToTime', from: params[:bookingRequestFromTime], to: params[:bookingRequestToTime]}}
         -#%input.btn.btn-default{type: "submit", value: "Refresh"}
   %h2 Choose a table
-  %p Click on a table you like on the map below to book. Note that available tables are green colored, and the grey ones are reserved alredy.
+  %p Click on your table below
   #map-container
     #loader
       %i.fa.fa-refresh.throbber{'aria-hidden': true}
@@ -80,8 +83,8 @@
         %span{'aria-hidden': 'true'} ×
       %strong Success!
       Your booking has been saved!
-    %h2 Make it recurring?
-    %p Got your favorite table? Put a hold on it now by telling us when you plan to come in regularly! Note that you can only book 3 weeks in advance. Make a mistake? You may cancel up to 2 days a month, with at least 24 hours notice.
+    %h2 Have a favorite table?
+    %p Reserve it now for the future. Please note you can only reserve up to three weeks in advance.
     = form_tag("/bookings/#{flash[:booking_id]}", method: 'put', id: 'bookingRecurringForm', class: 'form-horizontal') do
       .form-group
         %label.control-label{for: 'booking_resources'} Your table:
