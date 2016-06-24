@@ -16,8 +16,8 @@ class BookingsController < ApplicationController
     new_booking = {
       coworker_id: @coworker.id,
       resource_id: params['bookingResourceId'],
-      from_time: date_times[:fromTime],
-      to_time: date_times[:toTime],
+      from_time: date_times[:fromTime].to_s(:nexudus),
+      to_time: date_times[:toTime].to_s(:nexudus),
       online: true
     }
     booking = Booking.new(new_booking)
@@ -46,8 +46,8 @@ class BookingsController < ApplicationController
         id: params['bookingId'],
         coworker_id: @coworker.id,
         resource_id: params['bookingResource'],
-        from_time: date_times[:fromTime],
-        to_time: date_times[:toTime],
+        from_time: date_times[:fromTime].to_s(:nexudus),
+        to_time: date_times[:toTime].to_s(:nexudus),
         online: true
       }
       booking = Booking.new(booking_update)
