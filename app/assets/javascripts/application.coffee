@@ -5,4 +5,5 @@
 #= require moment
 #= require moment-timezone-with-data-2010-2020
 #= require bootstrap
+#= require bootstrap-datepicker
 #= require_tree .

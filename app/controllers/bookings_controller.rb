@@ -9,11 +9,15 @@ class BookingsController < ApplicationController
 
   def create
     date_times = process_date_times(params['bookingDate'], params['bookingFrom'], params['bookingTo'])
+    unless current_user.can_book?(date_times[:fromTime], date_times[:toTime])
+      flash[:alert] = "You don't have an ability to book tables on this date"
+      return redirect_to resources_url
+    end
     new_booking = {
       coworker_id: @coworker.id,
       resource_id: params['bookingResourceId'],
-      from_time: date_times[:fromTime],
-      to_time: date_times[:toTime],
+      from_time: date_times[:fromTime].to_s(:nexudus),
+      to_time: date_times[:toTime].to_s(:nexudus),
       online: true
     }
     booking = Booking.new(new_booking)
@@ -34,12 +38,16 @@ class BookingsController < ApplicationController
       response = booking.create
     else
       date_times = process_date_times(params['bookingDate'], params['bookingFrom'], params['bookingTo'])
+      unless current_user.can_book?(date_times[:fromTime], date_times[:toTime])
+        flash[:alert] = "You don't have an ability to book tables on this date"
+        return redirect_to resources_url
+      end
       booking_update = {
         id: params['bookingId'],
         coworker_id: @coworker.id,
         resource_id: params['bookingResource'],
-        from_time: date_times[:fromTime],
-        to_time: date_times[:toTime],
+        from_time: date_times[:fromTime].to_s(:nexudus),
+        to_time: date_times[:toTime].to_s(:nexudus),
         online: true
       }
       booking = Booking.new(booking_update)
@@ -94,8 +102,8 @@ class BookingsController < ApplicationController
     to_time = convert_to_universal_time(day, to)
     to_time = adjust_for_next_day(from_time, to_time)
     {
-      fromTime: from_time.to_s(:nexudus),
-      toTime: to_time.to_s(:nexudus)
+      fromTime: from_time,
+      toTime: to_time
     }
   end
 

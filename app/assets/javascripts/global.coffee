@@ -1,8 +1,11 @@
 jQuery ->
   $('.collapse').collapse()
+  user = getCurrentUser()
   $('.datepicker').datepicker({
-    minDate: currentTime().startOf('day').toDate()
-    onSelect: ->
-      window.booking_filter.submit() if window.booking_filter
-  })
+    startDate: currentTime().startOf('day').toDate()
+    daysOfWeekDisabled: if user && user.maker then [1, 2, 3, 4, 5, 6] else []
+  }).on('changeDate', ->
+    $(@).datepicker('hide')
+    window.booking_filter.submit() if window.booking_filter
+  )
   $('[data-toggle="tooltip"]').tooltip()

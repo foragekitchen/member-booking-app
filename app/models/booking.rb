@@ -12,7 +12,7 @@ class Booking < NexudusBase
   include ActionView::Helpers::DateHelper
 
   def initialize(params)
-    super(params)
+    super
     if from_time.present? # protect against the times we're just quick-instantiating for a destroy
       load_friendly_dates
       load_friendly_times

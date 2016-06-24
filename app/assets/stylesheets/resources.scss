@@ -2,6 +2,14 @@ $map-height: 415px;
 $map-width: 1276px;
 $throbber-size: 132px;
 
+.datepicker table tr td.active.active,
+.datepicker table tr td.active {
+  background: #1f4b60;
+  &:hover {
+    background: #1f4b60;
+  }
+}
+
 ol {
   padding-left: 15px;
   li {
