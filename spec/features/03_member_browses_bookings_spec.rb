@@ -92,7 +92,7 @@ RSpec.feature 'My Bookings:', type: :feature do
     end
 
     scenario 'should be able to successfully complete a valid cancellation', js: true do
-      create_booking(available_start_time(Time.current + 2.days))
+      create_booking(available_start_time(Time.current + 3.weeks))
 
       visit '/bookings'
       count = all('#upcoming-bookings tbody tr', visible: true).count
@@ -108,10 +108,10 @@ RSpec.feature 'My Bookings:', type: :feature do
       WebMock.allow_net_connect!
       execute_valid_login
     end
-    after(:each) { Rake::Task['data:bookings:delete_upcoming'].invoke }
+    after(:all) { Rake::Task['data:bookings:delete_upcoming'].invoke }
 
     scenario 'should see a warning if changing the booking-time conflicts with another booking', js: true do
-      date = available_start_time(Time.current + 4.days)
+      date = available_start_time(Time.current + 5.weeks)
       sooner_booking = create_booking(date)
       create_booking(date + 4.hours)
       visit '/bookings'
@@ -129,7 +129,7 @@ RSpec.feature 'My Bookings:', type: :feature do
     end
 
     scenario 'should be able to successfully complete an update', js: true do
-      start_time = available_start_time(Time.current + 3.days)
+      start_time = available_start_time(Time.current + 4.weeks)
       booking = create_booking(start_time)
 
       visit '/bookings'

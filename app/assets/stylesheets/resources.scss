@@ -2,6 +2,13 @@ $map-height: 415px;
 $map-width: 1276px;
 $throbber-size: 132px;
 
+ol {
+  padding-left: 15px;
+  li {
+    padding-left: 10px;
+  }
+}
+
 #map-container {
   border: 3px solid #cccccc;
   height: $map-height;
@@ -72,8 +79,8 @@ $throbber-size: 132px;
     }
 
     &.available {
-      background-color: #d6e9c6;
-      border-color: #3c763d;
+      background-color: #bce2f5;
+      border-color: #1f4b60;
       cursor: pointer;
 
       div.button {

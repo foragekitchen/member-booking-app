@@ -22,7 +22,9 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
       scenario 'should see filters for date and time, with "closed" times omitted and friendly hint', js: true do
         visit '/resources'
         should have_content('WHEN DO YOU WANT TO COME IN?')
-        should have_content('closed 2AM-8AM')
+        should have_content('Choose your date and time')
+        should have_content('Choose your favorite table')
+        should have_content('Cook!')
         expect(find('#filters', visible: false)).to_not have_content(' 3:00 AM')
       end
 

@@ -1,5 +1,6 @@
 class RSpec::Core::ExampleGroup
-  def available_start_time(time)
+  def available_start_time(time, maker = false)
+    time += 1.day if time.sunday? && !maker
     time.change(hour: 11).utc + Time.now.utc_offset
   end
 
