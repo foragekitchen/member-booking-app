@@ -228,6 +228,18 @@ a:focus {
   border-radius: 2px;
 }
 
+.fk-error-page {
+  text-align: center;
+  h1 {
+    font-size: 90px;
+    line-height: 72px;
+    margin-bottom: 10px;
+  }
+  h2{
+    font-size: 24px;
+  }
+}
+
 @media screen and (max-width: 767px) {
   .popover {
     .col-sm-6:first-child {

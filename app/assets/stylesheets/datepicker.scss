@@ -1,49 +1,49 @@
-.ui-widget {
-  font-family: "Droid Serif";
-}
-
-#ui-datepicker-div {
-  border-radius: 0px!important;
-  border-color: #CCCCCC!important;
-  .ui-widget-header {
-    border-radius: 0px!important;
-    background: #1f4b60;
-    border: 0px!important;
-    color: #ffffff;
-  }
-  .ui-datepicker-title {
-    font-family: PFDinCondensedRegular;
-  }
-
-  .ui-state-default {
-    background: #fafafa;
-    border: 0px;
-    &.ui-state-hover {
-      border: 0px;
-      background: #CCCCCC;
-    }
-    &.ui-state-highlight {
-      background: #CCCCCC;
-    }
-    &.ui-state-active,
-    &.ui-state-highlight.ui-state-active {
-      background: #1f4b60;
-      color: #ffffff;
-    }
-  }
-
-  .ui-datepicker-prev,
-  .ui-datepicker-next {
-    &.ui-state-hover {
-      background: transparent!important;
-      border: 0px;
-      cursor: pointer;
-    }
-  }
-
-  .ui-widget-header .ui-icon {
-    background-image: image-url('ui-icons_ffffff.png');
-  }
-
-
-}
+//.ui-widget {
+//  font-family: "Droid Serif";
+//}
+//
+//#ui-datepicker-div {
+//  border-radius: 0px!important;
+//  border-color: #CCCCCC!important;
+//  .ui-widget-header {
+//    border-radius: 0px!important;
+//    background: #1f4b60;
+//    border: 0px!important;
+//    color: #ffffff;
+//  }
+//  .ui-datepicker-title {
+//    font-family: PFDinCondensedRegular;
+//  }
+//
+//  .ui-state-default {
+//    background: #fafafa;
+//    border: 0px;
+//    &.ui-state-hover {
+//      border: 0px;
+//      background: #CCCCCC;
+//    }
+//    &.ui-state-highlight {
+//      background: #CCCCCC;
+//    }
+//    &.ui-state-active,
+//    &.ui-state-highlight.ui-state-active {
+//      background: #1f4b60;
+//      color: #ffffff;
+//    }
+//  }
+//
+//  .ui-datepicker-prev,
+//  .ui-datepicker-next {
+//    &.ui-state-hover {
+//      background: transparent!important;
+//      border: 0px;
+//      cursor: pointer;
+//    }
+//  }
+//
+//  .ui-widget-header .ui-icon {
+//    background-image: image-url('ui-icons_ffffff.png');
+//  }
+//
+//
+//}
