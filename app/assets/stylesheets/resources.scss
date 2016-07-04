@@ -10,6 +10,21 @@ $throbber-size: 132px;
   }
 }
 
+// Datepicker z-index issue
+.datepicker.datepicker-dropdown {
+  z-index: 102 !important;
+}
+
+// Do now show old and new dys as disabled
+.datepicker table tr td.old:not(.active):not(.disabled),
+.datepicker table tr td.new:not(.active):not(.disabled) {
+  color: #4f4f4f;
+}
+.datepicker table tr td.disabled,
+.datepicker table tr td.disabled:hover {
+  color: #d4d4d4;
+}
+
 ol {
   padding-left: 15px;
   li {

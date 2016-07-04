@@ -72,8 +72,8 @@ class Coworker < NexudusBase
   end
 
   def can_book?(from, to)
-    # Only makers can book on sunday from 8:00 AM to 8:00 PM
-    return maker? if from.sunday? && to.sunday? && to.hour <= 20
+    # Only makers can book on sunday from 8:00 AM to 6:00 PM
+    return maker? if from.sunday? && to.sunday? && to.hour <= 18
     !maker?
   end
 

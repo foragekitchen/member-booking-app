@@ -28,11 +28,14 @@ class window.BookingFilter
     return true unless $('#booking-filter-date').length
     timesState = @.timesState()
     dateFrom = @.datetimeFrom()
-    dateFrom = dateFrom.add(1, 'day') if timesState.plus_day
+    dateTo = @.datetimeTo()
+    if timesState.plus_day
+      dateFrom = dateFrom.add(1, 'day')
+      dateTo = dateTo.add(1, 'day')
     user = getCurrentUser()
     !(dateFrom.isBefore(currentTime()) || timesState.total < 4 || timesState.total > 12 ||
       (!user.maker && dateFrom.isoWeekday() == 7 && dateFrom.hours() < 20) ||
-      (user.maker && (dateFrom.isoWeekday() != 7 || dateFrom.hours > 16)))
+      (user.maker && (dateFrom.isoWeekday() != 7 || dateTo.hours() > 18 || (dateTo.hours() == 18 && dateTo.minutes() > 0))))
 
   timesState: ->
     date = @holder.find('#booking-filter-date').val()
@@ -47,3 +50,6 @@ class window.BookingFilter
 
   datetimeFrom: ->
     formatFullDate(@holder.find('#bookingRequestFromTime').val(), @holder.find('#booking-filter-date').val())
+
+  datetimeTo: ->
+    formatFullDate(@holder.find('#bookingRequestToTime').val(), @holder.find('#booking-filter-date').val())
