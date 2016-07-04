@@ -24,8 +24,13 @@ class ResourcesController < ApplicationController
         params[:bookingRequestToTime] = '12:00 PM'
         params[:bookingRequestDate] = to.to_s(:booking_day) if to.hour < 8 || to.hour > 2
       end
+      # Format new `from` date
+      from = DateTime.strptime("#{params[:bookingRequestDate]} #{params[:bookingRequestFromTime]}", "#{Time::DATE_FORMATS[:booking_day]} #{Time::DATE_FORMATS[:booking_time]}")
       if current_user.maker? && !from.sunday?
-        params[:bookingRequestDate] = Time.current.end_of_week(:monday).to_s(:booking_day)
+        params[:bookingRequestDate] = from.end_of_week(:monday).to_s(:booking_day)
+      elsif !current_user.maker? && from.sunday? && from.hour < 18
+        params[:bookingRequestFromTime] = '6:00 PM'
+        params[:bookingRequestToTime] = '10:00 PM'
       end
     end
   end
