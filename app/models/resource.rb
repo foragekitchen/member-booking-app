@@ -4,7 +4,7 @@ class Resource < NexudusBase
   REQUEST_URI = '/spaces/resources'.freeze
 
   def initialize(params)
-    super(params)
+    super
     load_available
     load_location
   end
