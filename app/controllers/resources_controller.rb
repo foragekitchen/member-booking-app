@@ -10,8 +10,8 @@ class ResourcesController < ApplicationController
 
   def load_date_intervals
     if params[:bookingRequestFromTime] && params[:bookingRequestToTime]
-      @from_date = Time.strptime("#{params[:bookingRequestDate]}T#{params[:bookingRequestFromTime]} #{Time.current.zone}", '%m/%d/%YT%l:%M %p %z')
-      @to_date = Time.strptime("#{params[:bookingRequestDate]}T#{params[:bookingRequestToTime]} #{Time.current.zone}", '%m/%d/%YT%l:%M %p %z')
+      @from_date = Time.strptime("#{params[:bookingRequestDate]}T#{params[:bookingRequestFromTime]} #{Time.current.zone}", Time::DATE_FORMATS[:universal_date])
+      @to_date = Time.strptime("#{params[:bookingRequestDate]}T#{params[:bookingRequestToTime]} #{Time.current.zone}", Time::DATE_FORMATS[:universal_date])
       @to_date += 1.day if @to_date < @from_date
     else
       from = Time.current + 2.hours

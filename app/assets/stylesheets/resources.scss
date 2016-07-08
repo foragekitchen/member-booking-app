@@ -134,9 +134,31 @@ ol {
 }
 
 #recurring-container {
+  opacity: 1;
+  transition-property: opacity;
+  transition-duration: 1s;
+
+  &.disabled {
+    position: relative;
+    opacity: 0.5;
+
+    &:after {
+      content: ' ';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
+  }
+
   .alert {
     margin-bottom: -10px;
     margin-top: 10px;
+  }
+
+  .datepicker-inline {
+    border: 1px solid #ddd;
   }
 }
 

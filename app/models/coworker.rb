@@ -12,7 +12,7 @@ class Coworker < NexudusBase
         get(REQUEST_URI, query: query_params)['Records']
       end
       # Now query for single Coworker using Coworker.Id because it gives more info
-      return nil if results.nil? || results.first.nil?
+      return nil unless results.try(:first)
       url = "#{REQUEST_URI}/#{results.first['Id']}"
       result = Rails.cache.fetch([url], expires: 12.hours) do
         get(url).parsed_response
@@ -73,7 +73,7 @@ class Coworker < NexudusBase
 
   def can_book?(from, to)
     # Only makers can book on sunday from 8:00 AM to 6:00 PM
-    return maker? if from.sunday? && to.sunday? && to.hour <= 18
+    return maker? if from.in_time_zone.sunday? && to.in_time_zone.sunday? && to.in_time_zone.hour <= 18
     !maker?
   end
 
