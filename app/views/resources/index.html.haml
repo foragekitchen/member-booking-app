@@ -30,6 +30,10 @@
               For:
               %span.text_blue
               %a.btn-change{'data-dismiss': 'modal', href: '#'}> (Change)
+            %p.invite-friend-js.hide
+              %input{type: 'checkbox', id: 'inviteFriend', name: 'invite_friend'}
+              - # @todo: get price from product price
+              %label{for: 'inviteFriend'} Invite a friend ($25 more)
             %p.my-plan
               Hours requested in this booking:
               %strong

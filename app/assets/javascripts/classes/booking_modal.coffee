@@ -4,6 +4,7 @@ class window.BookingModal
     @fillModalForm(table)
     $('.popover').popover('hide')
     $('#bookingModal').modal()
+    @holder.find('.invite-friend-js').removeClass('hide') if getCurrentUser().maker
 
   fillModalForm: (table) ->
     timesState = window.booking_filter.timesState()

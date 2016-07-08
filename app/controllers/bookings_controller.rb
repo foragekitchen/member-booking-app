@@ -23,6 +23,17 @@ class BookingsController < ApplicationController
     booking = Booking.new(new_booking)
     response = booking.create
     if (@response = JSON.parse(response.body)) && @response['WasSuccessful']
+      # @todo: we should not allow to invite frined if some maker booked this table already
+      if params[:invite_friend] && params[:invite_friend] == 'on' && current_user.maker?
+        # Create BookingProduct
+        new_booking_product = {
+            booking_id: @response['Value']['Id'],
+            product_id: BookingProduct.find_invite_friend_plan['Id'],
+            quantity: 'False'
+        }
+        booking_product = BookingProduct.new(new_booking_product)
+        booking_product.create
+      end
       flash[:notice] = @response['Message']
       flash[:booking_id] = @response['Value']['Id']
       redirect_to resources_url(anchor: 'recurring-container')

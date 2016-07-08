@@ -52,6 +52,14 @@
   }
 }
 
+#bookingForm {
+  .invite-friend-js {
+    input {
+      height: initial;
+    }
+  }
+}
+
 .reservations-tables {
   padding-top: 13px;
 }
@@ -139,6 +147,3 @@
     color: #9e9e9e;
   }
 }
-
-
-

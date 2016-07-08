@@ -63,6 +63,10 @@ class Booking < NexudusBase
     Resource.find(resource_id)
   end
 
+  def has_invited_friend?
+    !!BookingProduct.find_by_booking_id(id)
+  end
+
   def formatted_from_time
     Time.zone.parse(from_time).to_s(:booking_time)
   end
