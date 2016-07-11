@@ -29,10 +29,13 @@ class Booking < NexudusBase
       booking
     end
 
-    def all(coworker_id: nil, resource_ids: [], include_passed: nil)
+    def all(coworker_id: nil, resource_ids: [], include_passed: nil, options: {})
       params = []
       params << "Booking_Coworker=#{coworker_id}" if coworker_id.present?
       params << 'Booking_Invoiced=false' unless include_passed # Relies on 'Booking_Invoiced' to guess at whether it's passed or future; maybe there is/will be a better way from Nexudus API
+      # Expand booking time search boundaries a little bit if we have them
+      params << "From_Booking_FromTime=#{options[:from_time].ago(1.hour).utc.to_s(:nexudus)}" if options[:from_time]
+      params << "To_Booking_FromTime=#{options[:to_time].in(1.hour).utc.to_s(:nexudus)}" if options[:to_time]
 
       bookings = []
       resource_ids.uniq.each do |id|
