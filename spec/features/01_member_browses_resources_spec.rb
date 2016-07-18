@@ -1,8 +1,8 @@
 require 'rails_helper'
 require 'rake'
+
 NexudusApp::Application.load_tasks
 include ActionView::Helpers::DateHelper
-
 RSpec.feature 'Browsing Available Resources:', type: :feature do
   subject { page }
 
@@ -60,7 +60,7 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
           should have_css('#map-container .resource', count: 3, wait: 10)
           # Change to time that conflicts with booking for ID:100
           set_time_range('#filter-time-slider', '13:00 PM', '19:00 PM')
-          wait_for_ajax
+          # wait_for_ajax
           should have_css('#map-container .resource.available', count: 2, wait: 10)
         end
 

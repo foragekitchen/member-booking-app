@@ -61,12 +61,6 @@ class RSpec::Core::ExampleGroup
   private
 
   def finished_all_ajax_requests?
-    # Timeout.timeout(Capybara.default_max_wait_time) do
-    #   loop do
-    #     active = page.evaluate_script('jQuery.active')
-    #     break if active == 0
-    #   end
-    # end
     # page.evaluate_script('jQuery.active').zero?
     page.evaluate_script('$.active > 0')
   end
