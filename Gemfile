@@ -31,6 +31,7 @@ group :test do
   gem 'poltergeist'
   gem 'guard-rspec', require: false
   gem 'webmock', require: false
+  gem 'rack-timeout'
 end
 
 gem 'responders'
