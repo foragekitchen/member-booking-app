@@ -6,5 +6,5 @@ $.fn.bookingRecurring = ->
   $input = $container.find('input')
   @each ->
     if $(@).text().trim().length
-      $container.find('.alert').removeClass('hide')
+      $container.find('.alert').removeClass('hide').autoClose()
       $container.removeClass('disabled')
