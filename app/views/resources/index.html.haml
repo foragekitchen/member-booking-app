@@ -73,7 +73,7 @@
         %span{'aria-hidden': 'true'} ×
       %strong Success!
       Your booking has been saved!
-    %h2 Want to create a reminder?
+    %h2 Want a reminder?
     %p
       You can
       = google_calendar_link 'create google calendar event.', text: "Booking #{@booking[:resource]}", date_from: @booking[:from_time], date_to: @booking[:to_time]
