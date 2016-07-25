@@ -4,6 +4,8 @@ class ResourcesController < ApplicationController
 
   def index
     @resources = (@from_date && @to_date) ? Resource.all_with_available(from_time: @from_date, to_time: @to_date) : Resource.all
+    @booking = session[:last_booking].try(:symbolize_keys) || {}
+    session[:last_booking] = nil
   end
 
   private

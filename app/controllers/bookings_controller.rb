@@ -23,8 +23,12 @@ class BookingsController < ApplicationController
     booking = Booking.new(new_booking)
     response = booking.create
     if (response = JSON.parse(response.body)) && response['WasSuccessful']
-      flash[:notice] = response['Message']
-      flash[:booking_id] = response['Value']['Id']
+      session[:last_booking] = {
+          id: response['Value']['Id'],
+          from_time: date_times[:fromTime].to_s(:google_calendar),
+          to_time: date_times[:toTime].to_s(:google_calendar),
+          resource: Resource.find(new_booking[:resource_id]).try(:name)
+      }
       redirect_to resources_url(anchor: 'recurring-container')
     else
       flash[:alert] = 'An error occurred while saving your booking. Please refresh the page and try again.'
