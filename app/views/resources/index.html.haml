@@ -73,16 +73,20 @@
         %span{'aria-hidden': 'true'} ×
       %strong Success!
       Your booking has been saved!
+    %h2 Want a reminder?
+    %p
+      You can
+      = google_calendar_link 'create google calendar event.', text: "Booking #{@booking[:resource]}", date_from: @booking[:from_time], date_to: @booking[:to_time]
     %h2 Have a favorite table?
     %p Reserve it now for the future. Please note you can only reserve up to three weeks in advance.
-    = form_tag("/bookings/#{flash[:booking_id]}", method: 'put', id: 'bookingRecurringForm', class: 'form-horizontal') do
+    = form_tag("/bookings/#{@booking[:id]}", method: 'put', id: 'bookingRecurringForm', class: 'form-horizontal') do
       = hidden_field_tag('booking_dates')
       .form-group
-        %label.control-label{for: 'booking_resources'} Your table:
+        %label.control-label{for: :booking_resources} Your table:
         #recur-booking
-          = flash[:notice]
+          = @booking[:resource]
       .form-group
-        %div#booking-filter-dates.multi-datepicker{for: 'booking_dates'}
+        %div#booking-filter-dates.multi-datepicker{for: :booking_dates}
       .form-group.text-center
         = submit_tag 'Check availability', class: 'btn btn-default btn-grey', data: { disable_with: 'Checking...' }
         %p
