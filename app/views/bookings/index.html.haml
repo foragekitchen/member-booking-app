@@ -23,8 +23,8 @@
     %li Bookings need to be at least 4 hours
     %li We need 24 hours notice to edit/cancel a booking
 .col-md-9.reservations-tables
+  %h2 Upcoming
   - if @upcoming.any?
-    %h2 Upcoming
     %table#upcoming-bookings.table.table-striped
       %thead
         %tr
@@ -34,15 +34,17 @@
           %th{width: '25%', colspan: 2}
       %tbody
         = render partial: 'bookings/upcoming_booking', collection: @upcoming, as: :booking
-    %br/
-  %h2
-    My Past Bookings
-  #past-bookings
-    %table.table.table-striped
-      %thead
-        %tr
-          %th{width: '35%'} Resource(s)
-          %th{width: '35%'} Date(s)
-          %th{width: '30%'} In/Out Time
-      %tbody
-        = render partial: 'bookings/past_booking', collection: @past, as: :booking
+  - else
+    You don't have any upcoming bookings
+  %br/
+  - if @past.any?
+    %h2 My Past Bookings
+    #past-bookings
+      %table.table.table-striped
+        %thead
+          %tr
+            %th{width: '35%'} Resource(s)
+            %th{width: '35%'} Date(s)
+            %th{width: '30%'} In/Out Time
+        %tbody
+          = render partial: 'bookings/past_booking', collection: @past, as: :booking
