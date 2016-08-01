@@ -1,8 +1,10 @@
 jQuery ->
   $('.collapse').collapse()
   user = getCurrentUser()
+  # User can book up to 3 weeks
   datepickerOpts = {
     startDate: currentTime().startOf('day').toDate()
+    endDate: moment(new Date).add(20, 'days').startOf('day').toDate()
     daysOfWeekDisabled: if user && user.maker then [1, 2, 3, 4, 5, 6] else [0]
   }
   $('.datepicker').datepicker($.extend({autoclose: true}, datepickerOpts)).on('changeDate', ->
