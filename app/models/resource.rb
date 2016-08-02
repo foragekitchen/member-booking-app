@@ -56,9 +56,10 @@ class Resource < NexudusBase
       to_time = Time.parse(to_time) if to_time.is_a?(String)
 
       resources = all
-      available = available_ids(from_time: from_time, to_time: to_time)
+      time_boundaries = {from_time: from_time, to_time: to_time}
+      available = available_ids(time_boundaries)
 
-      bookings = Booking.all(resource_ids: available)
+      bookings = Booking.all(resource_ids: available, options: time_boundaries)
 
       resources.each { |resource| resource.available = true if available.include?(resource.id) }
 

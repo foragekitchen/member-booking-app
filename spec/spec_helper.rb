@@ -60,7 +60,8 @@ RSpec.configure do |config|
   end
 
   config.after(:suite) do
-    `rake tmp:cache:clear`
+    Rails.cache.clear
+    clear_bookings
   end
 
 # The settings below are suggested to provide a good initial experience

@@ -1,6 +1,8 @@
 require 'rails_helper'
-include ActionView::Helpers::DateHelper
+require 'rake'
 
+NexudusApp::Application.load_tasks
+include ActionView::Helpers::DateHelper
 RSpec.feature 'Browsing Available Resources:', type: :feature do
   subject { page }
 
@@ -12,7 +14,7 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
       end
       after(:all) { Timecop.return }
 
-      before(:each) { execute_valid_login }
+      before { execute_valid_login }
 
       scenario 'should see ALL offered resources (i.e. prep tables) plotted on a map of the space, with unavailable resources grayed out', js: true do
         visit '/resources'
@@ -58,7 +60,7 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
           should have_css('#map-container .resource', count: 3, wait: 10)
           # Change to time that conflicts with booking for ID:100
           set_time_range('#filter-time-slider', '13:00 PM', '19:00 PM')
-          wait_for_ajax
+          # wait_for_ajax
           should have_css('#map-container .resource.available', count: 2, wait: 10)
         end
 
@@ -94,7 +96,7 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
     end
 
     context 'when selecting a resource, date, and times for booking' do
-      before(:each) { execute_valid_login }
+      before { execute_valid_login }
 
       scenario 'should be able to book up to 12 hours, but no more than 12 hours', js: true do
         visit '/resources'
@@ -109,6 +111,30 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
       pending 'should see a warning if booking more than a month in advance'
       pending 'should see when it is next available if it is not currently available'
       pending 'should see who booked it if it is currently unavailable'
+    end
+  end
+
+  context '(Real Time) when sending bookings request to Nexudus' do
+    before do
+      WebMock.reset!
+      WebMock.allow_net_connect!
+      execute_valid_login
+      clear_bookings
+    end
+    after(:all) { clear_bookings }
+
+    scenario 'should be able to request all bookings (with and without params)', js: true do
+      expect(Booking.all).to be_empty
+      # Set far away valid time for bookings
+      far_away_time = Time.current.in(1.year).change(hour: 9, minutes: 0, seconds: 0)
+      far_away_time += 1.day if far_away_time.sunday?
+      # Create 3 new bookings and check count of created bookings
+      [far_away_time, far_away_time - 1.week, far_away_time + 1.week].each do |start_time|
+        # Somehow default amount of time is not enough for ajax request here, so we'll wait for 10 times longer amount of time
+        create_booking(start_time)
+      end
+      expect(Booking.all.count).to eq 3
+      expect(Booking.all(options: {from_time: far_away_time + 1.hour, to_time: far_away_time + 5.hours}).count).to eq 1
     end
   end
 end

@@ -58,9 +58,14 @@ class RSpec::Core::ExampleGroup
     page.evaluate_script("$('#{selector}').trigger('slide', true)")
   end
 
+  def clear_bookings
+    `rake data:bookings:delete_all`
+  end
+
   private
 
   def finished_all_ajax_requests?
-    page.evaluate_script('jQuery.active').zero?
+    # page.evaluate_script('jQuery.active').zero?
+    page.evaluate_script('$.active > 0')
   end
 end
