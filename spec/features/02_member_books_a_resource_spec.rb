@@ -10,8 +10,9 @@ RSpec.feature 'Booking Kitchen Time:', type: :feature do
       WebMock.reset!
       WebMock.allow_net_connect!
       execute_valid_login
+      clear_bookings
     end
-    after(:all) { Rake::Task['data:bookings:delete_all'].invoke }
+    after(:all) { clear_bookings }
 
     scenario 'should be able to change date, and/or start and end time(s), and see if it\'s still available', js: true do
       date = available_start_time(Time.current + 1.week)

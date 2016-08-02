@@ -107,8 +107,9 @@ RSpec.feature 'My Bookings:', type: :feature do
       WebMock.reset!
       WebMock.allow_net_connect!
       execute_valid_login
+      clear_bookings
     end
-    after(:all) { Rake::Task['data:bookings:delete_all'].invoke }
+    after(:all) { clear_bookings }
 
     scenario 'should see a warning if changing the booking-time conflicts with another booking', js: true do
       date = available_start_time(Time.current + 5.weeks)

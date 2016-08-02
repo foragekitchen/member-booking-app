@@ -115,15 +115,16 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
   end
 
   context '(Real Time) when sending bookings request to Nexudus' do
-    before(:all) { Rake::Task['tmp:clear'].invoke }
     before do
       WebMock.reset!
       WebMock.allow_net_connect!
       execute_valid_login
+      clear_bookings
     end
-    after(:all) { Rake::Task['data:bookings:delete_all'].invoke }
+    after(:all) { clear_bookings }
 
     scenario 'should be able to request all bookings (with and without params)', js: true do
+      expect(Booking.all).to be_empty
       # Set far away valid time for bookings
       far_away_time = Time.current.in(1.year).change(hour: 9, minutes: 0, seconds: 0)
       far_away_time += 1.day if far_away_time.sunday?

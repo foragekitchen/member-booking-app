@@ -61,7 +61,7 @@ RSpec.configure do |config|
 
   config.after(:suite) do
     Rails.cache.clear
-    Rake::Task['data:bookings:delete_all'].invoke
+    clear_bookings
   end
 
 # The settings below are suggested to provide a good initial experience
