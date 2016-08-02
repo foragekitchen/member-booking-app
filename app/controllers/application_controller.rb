@@ -3,10 +3,10 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :null_session
 
-  rescue_from Exception, with: :error
+  rescue_from Exception, with: :log_exception
 
-  before_action :check_session, except: [:error]
-  before_action :set_coworker, only: [:error]
+  before_action :check_session
+  before_action :set_coworker
 
   def check_session
     return redirect_to_login('Please log in.') unless session[:user_id]
@@ -18,13 +18,6 @@ class ApplicationController < ActionController::Base
       session[:expiry_time] = Time.zone.now
     else
       redirect_to_login('You cannot login into the system. Please contact administrator for further instructions')
-    end
-  end
-
-  def error
-    respond_to do |format|
-      format.html { render status_code.to_s, status: status_code }
-      format.all { render nothing: true, status: status_code }
     end
   end
 
@@ -45,6 +38,18 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.html { redirect_to login_url }
       format.js { render 'shared/unauthorized' }
+    end
+  end
+
+  def log_exception(exception)
+    Rails.logger.info '*' * 100
+    Rails.logger.info "Error: #{$!.class.name} -- #{exception.message.inspect}"
+    Rails.logger.info "Backtrace: #{exception.backtrace.join("\n")}"
+    Rails.logger.info '*' * 100
+
+    respond_to do |format|
+      format.html { render status_code.to_s, status: status_code }
+      format.all { render nothing: true, status: status_code }
     end
   end
 
