@@ -25,13 +25,12 @@ RSpec.feature 'Booking Kitchen Time:', type: :feature do
 
     scenario 'should be able to save a valid booking and see it appear on My Reservations', js: true do
       visit '/bookings'
-      bookings = page.find('table#upcoming-bookings tbody').all('tr')
-      count = bookings.size
+      should_not have_css('table#upcoming-bookings')
 
       create_booking(available_start_time(Time.current + 2.days))
 
       visit '/bookings'
-      should have_css('table#upcoming-bookings tbody tr', count: count + 1, wait: 10)
+      should have_css('table#upcoming-bookings tbody tr', count: 1, wait: 10)
     end
   end
 end
