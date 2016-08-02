@@ -5,15 +5,13 @@ RSpec.feature 'Booking Kitchen Time:', type: :feature do
   subject { page }
 
   context '(Real time) when booking a table for a chosen date/time' do
-    before(:each) do
+    before do
       # Let's test against the live server for this one
       WebMock.reset!
       WebMock.allow_net_connect!
       execute_valid_login
     end
-    after(:all) do
-      Rake::Task['data:bookings:delete_upcoming'].invoke
-    end
+    after(:all) { Rake::Task['data:bookings:delete_all'].invoke }
 
     scenario 'should be able to change date, and/or start and end time(s), and see if it\'s still available', js: true do
       date = available_start_time(Time.current + 1.week)

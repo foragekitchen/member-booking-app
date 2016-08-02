@@ -25,7 +25,7 @@ RSpec.feature 'My Bookings:', type: :feature do
       Timecop.travel(Time.zone.parse('2015-09-02T08:30:00Z').to_time)
     end
     after(:all) { Timecop.return }
-    before(:each) { execute_valid_login }
+    before { execute_valid_login }
 
     pending 'should see a list of booking(s) currently in-progress, including a marker for whether they\'ve checked in yet'
 
@@ -54,9 +54,9 @@ RSpec.feature 'My Bookings:', type: :feature do
       Timecop.travel(Time.zone.parse('2015-09-02T08:30:00Z').to_time)
     end
     after(:all) { Timecop.return }
-    before(:each) { execute_valid_login }
+    before { execute_valid_login }
 
-    describe do
+    describe 'warnings' do
       before do
         visit '/bookings'
         node = find_booking_on_page('A. Hedgehog Prep Table')
@@ -84,7 +84,7 @@ RSpec.feature 'My Bookings:', type: :feature do
   end
 
   context '(Real time) when canceling an existing booking' do
-    before(:each) do
+    before do
       # Let's test against the live server for this one
       WebMock.reset!
       WebMock.allow_net_connect!
@@ -102,13 +102,13 @@ RSpec.feature 'My Bookings:', type: :feature do
   end
 
   context '(Real time) when saving changes to an existing booking' do
-    before(:each) do
+    before do
       # Let's test against the live server for this one
       WebMock.reset!
       WebMock.allow_net_connect!
       execute_valid_login
     end
-    after(:all) { Rake::Task['data:bookings:delete_upcoming'].invoke }
+    after(:all) { Rake::Task['data:bookings:delete_all'].invoke }
 
     scenario 'should see a warning if changing the booking-time conflicts with another booking', js: true do
       date = available_start_time(Time.current + 5.weeks)

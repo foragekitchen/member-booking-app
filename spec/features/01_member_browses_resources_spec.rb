@@ -14,7 +14,7 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
       end
       after(:all) { Timecop.return }
 
-      before(:each) { execute_valid_login }
+      before { execute_valid_login }
 
       scenario 'should see ALL offered resources (i.e. prep tables) plotted on a map of the space, with unavailable resources grayed out', js: true do
         visit '/resources'
@@ -96,7 +96,7 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
     end
 
     context 'when selecting a resource, date, and times for booking' do
-      before(:each) { execute_valid_login }
+      before { execute_valid_login }
 
       scenario 'should be able to book up to 12 hours, but no more than 12 hours', js: true do
         visit '/resources'
@@ -121,9 +121,7 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
       WebMock.allow_net_connect!
       execute_valid_login
     end
-    after(:all) do
-      Rake::Task['data:bookings:delete_upcoming'].invoke
-    end
+    after(:all) { Rake::Task['data:bookings:delete_all'].invoke }
 
     scenario 'should be able to request all bookings (with and without params)', js: true do
       # Set far away valid time for bookings

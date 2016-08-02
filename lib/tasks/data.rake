@@ -46,5 +46,11 @@ namespace :data do
       bookings = Booking.all
       bookings.reject { |b| b.from_time.to_time < Time.now.utc }.each(&:destroy)
     end
+
+    desc 'Delete all bookings - USE WITH CAUTION AND ONLY WHEN TESTING'
+    task delete_all: :environment do
+      bookings = Booking.all
+      bookings.each(&:destroy)
+    end
   end
 end
