@@ -115,10 +115,10 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
   end
 
   context '(Real Time) when sending bookings request to Nexudus' do
-    before(:each) do
+    before(:all) { Rake::Task['tmp:clear'].invoke }
+    before do
       WebMock.reset!
       WebMock.allow_net_connect!
-      Rake::Task['tmp:clear'].invoke
       execute_valid_login
     end
     after(:all) do
