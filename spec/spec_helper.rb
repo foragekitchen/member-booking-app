@@ -20,6 +20,8 @@
 require 'capybara/rspec'
 require 'webmock/rspec'
 require 'capybara/poltergeist'
+require 'rake'
+require 'rails/tasks'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -58,7 +60,8 @@ RSpec.configure do |config|
   end
 
   config.after(:suite) do
-    `rake tmp:cache:clear`
+    Rails.cache.clear
+    clear_bookings
   end
 
 # The settings below are suggested to provide a good initial experience

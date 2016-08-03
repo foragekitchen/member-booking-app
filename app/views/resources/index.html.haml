@@ -47,9 +47,6 @@
           .modal-footer
             %button.btn.btn-grey{'data-dismiss': 'modal', type: 'button'} Cancel
             = submit_tag 'Save your booking', class: 'btn btn-primary', data: { disable_with: 'Saving...' }
-      / /.modal-content
-    / /.modal-dialog
-  / /.modal
   #filters
     = form_tag(resources_path, method: 'get', remote: true, id: 'booking-filter', class: 'form-inline') do
       = hidden_field_tag 'bookingRequestFromTime', params[:bookingRequestFromTime]
@@ -65,13 +62,6 @@
         #time-slider-range-holder
           %span
         #filter-time-slider.time-slider-range{data: {target: '#time-slider-range-holder', from_target: '#bookingRequestFromTime', to_target: '#bookingRequestToTime', from: params[:bookingRequestFromTime], to: params[:bookingRequestToTime]}}
-        -#.dropdown.dropdown-time-range
-        -#  = link_to 'javascript:void(0);', id: 'time-slider-range-holder', 'data-toggle' => 'dropdown' do
-        -#    %span
-        -#  %ul.dropdown-menu
-        -#    %li
-        -#      #filter-time-slider.time-slider-range{data: {target: '#time-slider-range-holder', from_target: '#bookingRequestFromTime', to_target: '#bookingRequestToTime', from: params[:bookingRequestFromTime], to: params[:bookingRequestToTime]}}
-        -#%input.btn.btn-default{type: "submit", value: "Refresh"}
   %h2 Choose a table
   %p Click on your table below
   #map-container
@@ -81,27 +71,27 @@
       %i.fa.fa-ban{'aria-hidden': true}
     #map
       #overlay
-  #recurring-container
+  #recurring-container.disabled
     .hide.alert.alert-success.alert-dismissible{role: 'alert'}
       %button.close{'aria-label': 'Close', 'data-dismiss': 'alert', type: 'button'}
         %span{'aria-hidden': 'true'} ×
       %strong Success!
       Your booking has been saved!
+    %h2 Want a reminder?
+    %p
+      = google_calendar_link 'Add it to your Google Calendar', text: "Booking #{@booking[:resource]}", date_from: @booking[:from_time], date_to: @booking[:to_time]
     %h2 Have a favorite table?
     %p Reserve it now for the future. Please note you can only reserve up to three weeks in advance.
-    = form_tag("/bookings/#{flash[:booking_id]}", method: 'put', id: 'bookingRecurringForm', class: 'form-horizontal') do
+    = form_tag("/bookings/#{@booking[:id]}", method: 'put', id: 'bookingRecurringForm', class: 'form-horizontal') do
+      = hidden_field_tag('booking_dates')
       .form-group
-        %label.control-label{for: 'booking_resources'} Your table:
+        %label.control-label{for: :booking_resources} Your table:
         #recur-booking
-          = flash[:notice]
+          = @booking[:resource]
       .form-group
-        %label.control-label{for: 'booking_repeats'} This booking should repeat:
-        = select_tag('booking_repeats', options_for_select([['Daily, for consecutive days', 1]]), class: 'form-control')
-      .form-group
-        %label.control-label{for: 'booking_numdays'} How many days?
-        = text_field_tag('booking_numdays', '', class: 'form-control')
+        %div#booking-filter-dates.multi-datepicker{for: :booking_dates}
       .form-group.text-center
-        = submit_tag 'Check availability', class: 'btn btn-default booking-close', data: { disable_with: 'Checking...' }
+        = submit_tag 'Save bookings', class: 'btn btn-default btn-grey', data: { disable_with: 'Checking...' }
         %p
           No thanks, let me #{link_to 'create another booking from scratch', resources_path},
           %br/
