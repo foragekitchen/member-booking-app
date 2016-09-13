@@ -21,7 +21,7 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
         should have_css('#map-container div.resource', count: 3, wait: 10)
       end
 
-      scenario 'should see filters for date and time, with "closed" times omitted and friendly hint', js: true do
+      scenario 'should see filters for date and time and friendly hint', js: true do
         visit '/resources'
         should have_content('WHEN DO YOU WANT TO COME IN?')
         should have_content('Choose your date and time')

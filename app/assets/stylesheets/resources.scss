@@ -92,8 +92,8 @@ ol {
   div.resource {
     background-color: #eee;
     border: 2px solid #a0a0a0;
-    height: 30px;
-    width: 50px;
+    height: 60px;
+    width: 70px;
     position: absolute;
 
     div.button {
@@ -109,6 +109,21 @@ ol {
       div.button {
         cursor: pointer;
       }
+
+      &:after {
+        background-color: #1f4b60;
+      }
+    }
+
+    &:after {
+      width: 4px;
+      height: 58px;
+      content: ' ';
+      position: absolute;
+      display: block;
+      top: 0;
+      left: 31px;
+      background-color: #a0a0a0;
     }
   }
 
