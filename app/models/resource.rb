@@ -9,12 +9,8 @@ class Resource < NexudusBase
     load_location
   end
 
-  def prep_table?
-    resource_type_name == 'Prep Table'
-  end
-
-  def location?
-    resource_type_name == 'Resource Location'
+  def prep_resource?
+    ['Prep Table', 'Prep Station'].include? resource_type_name
   end
 
   private
@@ -24,18 +20,19 @@ class Resource < NexudusBase
   end
 
   def load_location
-    if !(prep_table? && linked_resources.first && linked_resources.first != id &&
-        (linked_resource = Resource.find(linked_resources.first)))
-      self.location ||= [0, 0]
-    else
+    if prep_resource? && linked_resources.first && linked_resources.first != id &&
+        (linked_resource = Resource.find(linked_resources.first))
       loc = linked_resource.description.include?('@') ? linked_resource.description.split('@').last.split(',') : nil
       self.location ||= loc ? loc.map! { |ft| ResourceLocation.new.convert_from_feet_to_inches(ft) } : [0, 0]
+    else
+      self.location ||= [0, 0]
     end
   end
 
   class << self
-    def all(query = {})
-      query_params = query.merge(Resource_ResourceType_Name: 'Prep Table', Resource_Visible: true)
+    def all(query = {}, maker: false)
+      resource_name = maker ? 'Prep Table' : 'Prep Station'
+      query_params = query.merge(Resource_ResourceType_Name: resource_name, Resource_Visible: true)
       results = Rails.cache.fetch([REQUEST_URI, query_params], expires: 12.hours) do
         get(REQUEST_URI, query: query_params)['Records']
       end
@@ -51,11 +48,11 @@ class Resource < NexudusBase
       new(result.merge(options.merge(id: id)))
     end
 
-    def all_with_available(from_time: Time.current + 2.hours, to_time: Time.current + 6.hours)
+    def all_with_available(from_time: Time.current + 2.hours, to_time: Time.current + 6.hours, maker: false)
       from_time = Time.parse(from_time) if from_time.is_a?(String)
       to_time = Time.parse(to_time) if to_time.is_a?(String)
 
-      resources = all
+      resources = all(maker: maker)
       time_boundaries = {from_time: from_time, to_time: to_time}
       available = available_ids(time_boundaries)
 

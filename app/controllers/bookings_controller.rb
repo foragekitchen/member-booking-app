@@ -90,7 +90,7 @@ class BookingsController < ApplicationController
   private
 
   def load_resources
-    @resources = Resource.all
+    @resources = Resource.all(maker: current_user.maker?)
   end
 
   def update_recurring(old_booking, date_string)

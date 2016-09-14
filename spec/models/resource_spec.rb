@@ -9,8 +9,8 @@ RSpec.describe Resource, type: :model do
       expect(@resources.is_a?(Array)).to eq true
     end
 
-    it 'includes only the type(s) of resources we want to be bookable, which is \'Prep Table\'' do
-      expect(@resources.collect(&:resource_type_name).uniq).to eq ['Prep Table']
+    it 'includes only the type(s) of resources we want to be bookable, which is \'Prep Station\'' do
+      expect(@resources.collect(&:resource_type_name).uniq).to eq ['Prep Station']
     end
 
     it 'returns id, name, type, description, and location for each resource' do
@@ -64,7 +64,7 @@ RSpec.describe Resource, type: :model do
     it 'should be turned on for fetching all Resources' do
       rails_caching = double.as_null_object
       allow(Rails).to receive(:cache).and_return(rails_caching)
-      expect(rails_caching).to receive(:fetch).with(['/spaces/resources', { Resource_ResourceType_Name: 'Prep Table',
+      expect(rails_caching).to receive(:fetch).with(['/spaces/resources', { Resource_ResourceType_Name: 'Prep Station',
                                                                             Resource_Visible: true }], expires: 12.hours)
       Resource.all
     end

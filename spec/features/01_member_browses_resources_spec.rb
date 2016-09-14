@@ -50,7 +50,7 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
 
       scenario 'should see basic description details when hovering on a resource (ex. dimensions, suggestions for how many people can fit - whatever is entered into the backend Nexudus system in the "description" field)', js: true do
         visit '/resources'
-        expect(find('div#resource-100')['data-original-title']).to eq 'A. Hedgehog Prep Table'
+        expect(find('div#resource-100')['data-original-title']).to eq 'A. Hedgehog Prep Station'
         expect(find('div#resource-100')['data-content']).to match(/Work Table/)
       end
 
@@ -107,10 +107,6 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
         should have_content('Booking cannot be more than 12 hours.')
         should have_selector('#disable-map', visible: true)
       end
-
-      pending 'should see a warning if booking more than a month in advance'
-      pending 'should see when it is next available if it is not currently available'
-      pending 'should see who booked it if it is currently unavailable'
     end
   end
 

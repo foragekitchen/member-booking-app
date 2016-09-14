@@ -1,5 +1,5 @@
 class Coworker < NexudusBase
-  attr_accessor :id, :user_id, :email, :full_name, :salutation, :active, :next_tariff_id, :tag
+  attr_accessor :id, :user_id, :email, :full_name, :salutation, :active, :next_tariff_id
   REQUEST_URI = '/spaces/coworkers'.freeze
   BILLING_URI = '/billing/coworkerextraservices'.freeze
   BILLING_PLANS_URI = '/billing/tariffs'.freeze
@@ -22,13 +22,7 @@ class Coworker < NexudusBase
   end
 
   def total_hours_in_plan
-    query_params = { CoworkerExtraService_Coworker: id,
-                     CoworkerExtraService_ExtraService_Name: 'Prep Table',
-                     CoworkerExtraService_IsFromTariff: true }
-    results = Rails.cache.fetch([BILLING_URI, query_params], expires: 12.hours) do
-      self.class.get(BILLING_URI, query: query_params)['Records']
-    end
-    results.first['TotalUses'] / 60
+    extra_service['TotalUses'] / 60
   end
 
   def billing_plan
@@ -40,20 +34,14 @@ class Coworker < NexudusBase
   end
 
   def extra_service_cost_per_hour
-    query_params = { CoworkerExtraService_Coworker: id,
-                     CoworkerExtraService_ExtraService_Name: 'Prep Table',
-                     CoworkerExtraService_IsFromTariff: true }
-    results = Rails.cache.fetch([BILLING_URI, query_params], expires: 12.hours) do
-      self.class.get(BILLING_URI, query: query_params)['Records']
-    end
-    results.first['Price'] / total_hours_in_plan
+    extra_service['Price'] / total_hours_in_plan
   end
 
   def remaining_plan_hours
     # Unfortunately, this only counts the bookings that have been charged, i.e. bookings already passed
     # See 'remaining_hours_in_plan' for actual total remaining hours
     query_params = { CoworkerExtraService_Coworker: id,
-                     CoworkerExtraService_ExtraService_Name: 'Prep Table',
+                     CoworkerExtraService_ExtraService_Name: 'Prep',
                      CoworkerExtraService_IsFromTariff: true }
     results = self.class.get(BILLING_URI, query: query_params)['Records']
     results.first['RemainingUses'] / 60
@@ -67,8 +55,18 @@ class Coworker < NexudusBase
     remaining_plan_hours - upcoming_booking_hours
   end
 
+  def extra_service
+    query_params = { CoworkerExtraService_Coworker: id,
+                     CoworkerExtraService_ExtraService_Name: 'Prep',
+                     CoworkerExtraService_IsFromTariff: true }
+    @_extra_service ||= Rails.cache.fetch([BILLING_URI, query_params], expires: 12.hours) do
+      self.class.get(BILLING_URI, query: query_params)['Records']
+    end.first
+  end
+
   def maker?
-    tag&.strip == 'maker'
+    # Makers operate with Prep Tables and other users operate with Prep Stations
+    extra_service['ExtraServiceName'] == 'Prep Table'
   end
 
   def can_book?(from, to)
