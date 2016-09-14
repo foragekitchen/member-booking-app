@@ -9,8 +9,8 @@ class Resource < NexudusBase
     load_location
   end
 
-  def location?
-    resource_type_name == 'Resource Location'
+  def prep_resource?
+    ['Prep Table', 'Prep Station'].include? resource_type_name
   end
 
   private
@@ -20,7 +20,7 @@ class Resource < NexudusBase
   end
 
   def load_location
-    if !location? && linked_resources.first && linked_resources.first != id &&
+    if prep_resource? && linked_resources.first && linked_resources.first != id &&
         (linked_resource = Resource.find(linked_resources.first))
       loc = linked_resource.description.include?('@') ? linked_resource.description.split('@').last.split(',') : nil
       self.location ||= loc ? loc.map! { |ft| ResourceLocation.new.convert_from_feet_to_inches(ft) } : [0, 0]

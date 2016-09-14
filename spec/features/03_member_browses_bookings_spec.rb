@@ -27,8 +27,6 @@ RSpec.feature 'My Bookings:', type: :feature do
     after(:all) { Timecop.return }
     before { execute_valid_login }
 
-    pending 'should see a list of booking(s) currently in-progress, including a marker for whether they\'ve checked in yet'
-
     scenario 'should see a list of upcoming bookings, ordered by soonest at the top' do
       visit '/bookings'
       should have_css('table#upcoming-bookings tbody tr', count: 2 * 2) # account for the hidden edit forms
@@ -59,7 +57,7 @@ RSpec.feature 'My Bookings:', type: :feature do
     describe 'warnings' do
       before do
         visit '/bookings'
-        node = find_booking_on_page('A. Hedgehog Prep Table')
+        node = find_booking_on_page('A. Hedgehog Prep Station')
         @booking_id = node.find(:xpath, '..')['id']
         expand_edit_form_for_booking(node, "#{from_time} - #{to_time}")
       end
