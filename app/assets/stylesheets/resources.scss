@@ -43,10 +43,11 @@ ol {
   margin-bottom:40px;
 
   #map {
-    background: url(asset_path("map-kitchen-background.png")) no-repeat $map-offset 0;
+    background: url(asset_path("map-kitchen-background.png")) no-repeat;
     height: $map-height;
     opacity: 0.6;
     width: $map-width;
+    background-size: auto $map-height;
     #overlay {
       background-color: white;
       height: $map-height;
@@ -95,25 +96,30 @@ ol {
     border: 2px solid #a0a0a0;
     position: absolute;
 
-    &.prep-station {
-      height: 60px;
-      width: 70px;
+    &.prep-station:not(.long) {
+      height: 90px;
+      width: 92px;
 
       &:after {
         width: 4px;
-        height: 58px;
+        height: 86px;
         content: ' ';
         position: absolute;
         display: block;
         top: 0;
-        left: 31px;
+        left: 42px;
         background-color: #a0a0a0;
       }
     }
 
-    &.prep-table {
-      height: 60px;
-      width: 35px;
+    &.prep-table:not(.long) {
+      height: 90px;
+      width: 46px;
+    }
+
+    &.long {
+      height: 55px;
+      width: 118px;
     }
 
     div.button {

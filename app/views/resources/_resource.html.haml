@@ -1,3 +1,5 @@
-- position = resource_position(resource)
-.resource{style: "top: #{position[:top]}px; left: #{position[:left]}px", class: [resource.resource_type_name.parameterize, ('available' if resource.available)], id: "resource-#{resource.id}", data: { toggle: :popover, content: resource.description }, title: "#{resource.name} #{resource.resource_type_name}" }
+.resource{style: "top: #{resource.location.try(:first) || 0}px; left: #{resource.location.try(:last) || 0}px",
+    class: [resource.resource_type_name.parameterize, ('long' if resource.description.to_s.match /long/), ('available' if resource.available)],
+    id: "resource-#{resource.id}", data: { toggle: :popover, content: resource.description },
+    title: "#{resource.name} #{resource.resource_type_name}", 'data-placement': (resource.description.to_s.match(/long/) ? 'left' : 'right')}
   .button

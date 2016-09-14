@@ -22,8 +22,7 @@ class Resource < NexudusBase
   def load_location
     if prep_resource? && linked_resources.first && linked_resources.first != id &&
         (linked_resource = Resource.find(linked_resources.first))
-      loc = linked_resource.description.include?('@') ? linked_resource.description.split('@').last.split(',') : nil
-      self.location ||= loc ? loc.map! { |ft| ResourceLocation.new.convert_from_feet_to_inches(ft) } : [0, 0]
+      self.location = linked_resource.description.match(/(\d+):(\d+)/) ? [$1, $2] : [0, 0]
     else
       self.location ||= [0, 0]
     end
