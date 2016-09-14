@@ -1,5 +1,6 @@
 $map-height: 415px;
-$map-width: 1276px;
+$map-offset: -260px;
+$map-width: 1276px + $map-offset;
 $throbber-size: 132px;
 
 .datepicker table tr td.active.active,
@@ -42,7 +43,7 @@ ol {
   margin-bottom:40px;
 
   #map {
-    background: url(asset_path("map-kitchen-background.png")) no-repeat;
+    background: url(asset_path("map-kitchen-background.png")) no-repeat $map-offset 0;
     height: $map-height;
     opacity: 0.6;
     width: $map-width;
