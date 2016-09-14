@@ -93,9 +93,28 @@ ol {
   div.resource {
     background-color: #eee;
     border: 2px solid #a0a0a0;
-    height: 60px;
-    width: 70px;
     position: absolute;
+
+    &.prep-station {
+      height: 60px;
+      width: 70px;
+
+      &:after {
+        width: 4px;
+        height: 58px;
+        content: ' ';
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 31px;
+        background-color: #a0a0a0;
+      }
+    }
+
+    &.prep-table {
+      height: 60px;
+      width: 35px;
+    }
 
     div.button {
       height: 100%;
@@ -111,20 +130,9 @@ ol {
         cursor: pointer;
       }
 
-      &:after {
+      &.prep-station:after {
         background-color: #1f4b60;
       }
-    }
-
-    &:after {
-      width: 4px;
-      height: 58px;
-      content: ' ';
-      position: absolute;
-      display: block;
-      top: 0;
-      left: 31px;
-      background-color: #a0a0a0;
     }
   }
 
