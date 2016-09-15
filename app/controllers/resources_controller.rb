@@ -28,11 +28,14 @@ class ResourcesController < ApplicationController
       end
       # Format new `from` date
       from = DateTime.strptime("#{params[:bookingRequestDate]} #{params[:bookingRequestFromTime]}", "#{Time::DATE_FORMATS[:booking_day]} #{Time::DATE_FORMATS[:booking_time]}")
-      if current_user.maker? && !from.sunday?
-        params[:bookingRequestDate] = from.end_of_week(:monday).to_s(:booking_day)
-      elsif !current_user.maker? && from.sunday? && from.hour < 18
-        params[:bookingRequestFromTime] = '6:00 PM'
-        params[:bookingRequestToTime] = '10:00 PM'
+      if current_user.maker? && (!from.sunday? || from.hours > 14)
+        params[:bookingRequestDate] = (from.sunday? ? from + 1.day : from.end_of_week(:monday)).to_s(:booking_day)
+        params[:bookingRequestFromTime] = '8:00 AM'
+        params[:bookingRequestToTime] = '12:00 PM'
+      elsif !current_user.maker? && from.sunday?
+        params[:bookingRequestDate] = (from + 1.day).to_s(:booking_day)
+        params[:bookingRequestFromTime] = '8:00 AM'
+        params[:bookingRequestToTime] = '12:00 PM'
       end
     end
   end

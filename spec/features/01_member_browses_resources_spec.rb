@@ -50,7 +50,7 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
 
       scenario 'should see basic description details when hovering on a resource (ex. dimensions, suggestions for how many people can fit - whatever is entered into the backend Nexudus system in the "description" field)', js: true do
         visit '/resources'
-        expect(find('div#resource-100')['data-original-title']).to eq 'A. Hedgehog Prep Station'
+        expect(find('div#resource-100')['data-original-title']).to eq 'A. Hedgehog'
         expect(find('div#resource-100')['data-content']).to match(/Work Table/)
       end
 

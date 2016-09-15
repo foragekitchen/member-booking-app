@@ -57,7 +57,7 @@ RSpec.feature 'My Bookings:', type: :feature do
     describe 'warnings' do
       before do
         visit '/bookings'
-        node = find_booking_on_page('A. Hedgehog Prep Station')
+        node = find_booking_on_page('A. Hedgehog')
         @booking_id = node.find(:xpath, '..')['id']
         expand_edit_form_for_booking(node, "#{from_time} - #{to_time}")
       end

@@ -1,7 +1,8 @@
 $map-height: 415px;
-$map-offset: -260px;
-$map-width: 1276px + $map-offset;
+$map-width: 1014px;
 $throbber-size: 132px;
+$table-width: 46px;
+$table-height: 86px;
 
 .datepicker table tr td.active.active,
 .datepicker table tr td.active {
@@ -44,13 +45,13 @@ ol {
 
   #map {
     background: url(asset_path("map-kitchen-background.png")) no-repeat;
-    height: $map-height;
+    height: $map-height - 6px;
     opacity: 0.6;
     width: $map-width;
-    background-size: auto $map-height;
+    background-size: auto $map-height - 6px;
     #overlay {
       background-color: white;
-      height: $map-height;
+      height: $map-height - 6px;
       opacity: 0.6;
       position: absolute;
       width: $map-width;
@@ -95,26 +96,25 @@ ol {
     background-color: #eee;
     border: 2px solid #a0a0a0;
     position: absolute;
+    height: $table-height;
 
     &.prep-station:not(.long) {
-      height: 90px;
-      width: 92px;
+      width: $table-width * 2;
 
       &:after {
         width: 4px;
-        height: 86px;
+        height: $table-height - 6px;
         content: ' ';
         position: absolute;
         display: block;
         top: 0;
-        left: 42px;
+        left: $table-width - 4px;
         background-color: #a0a0a0;
       }
     }
 
     &.prep-table:not(.long) {
-      height: 90px;
-      width: 46px;
+      width: $table-width;
     }
 
     &.long {
