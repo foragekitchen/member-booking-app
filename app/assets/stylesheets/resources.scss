@@ -41,7 +41,8 @@ ol {
   overflow-y: hidden;
   position: relative;
   width: 100%;
-  margin-bottom:40px;
+  margin-bottom: 40px;
+  max-width: 1020px;
 
   #map {
     background: url(asset_path("map-kitchen-background.png")) no-repeat;
@@ -103,7 +104,7 @@ ol {
 
       &:after {
         width: 4px;
-        height: $table-height - 6px;
+        height: $table-height - 4px;
         content: ' ';
         position: absolute;
         display: block;
