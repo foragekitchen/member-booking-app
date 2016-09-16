@@ -1,5 +1,6 @@
 $map-height: 415px;
 $map-width: 1014px;
+$map-max-width: 940px;
 $throbber-size: 132px;
 $table-width: 46px;
 $table-height: 86px;
@@ -42,20 +43,20 @@ ol {
   position: relative;
   width: 100%;
   margin-bottom: 40px;
-  max-width: 1020px;
+  max-width: $map-max-width;
 
   #map {
     background: url(asset_path("map-kitchen-background.png")) no-repeat;
     height: $map-height - 6px;
     opacity: 0.6;
-    width: $map-width;
+    width: $map-max-width;
     background-size: auto $map-height - 6px;
     #overlay {
       background-color: white;
       height: $map-height - 6px;
       opacity: 0.6;
       position: absolute;
-      width: $map-width;
+      width: $map-max-width;
     }
   }
 
@@ -288,5 +289,11 @@ ol {
 
   #bookingRecurringForm {
     max-width: 300px;
+  }
+}
+
+@media screen and (min-width: 1334px) {
+  #map-container {
+    overflow-x: hidden;
   }
 }

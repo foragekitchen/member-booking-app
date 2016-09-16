@@ -87,7 +87,7 @@
       .form-group
         %div#booking-filter-dates.multi-datepicker{for: :booking_dates}
       .form-group.text-center
-        = submit_tag 'Save bookings', class: 'btn btn-default btn-grey', data: { disable_with: 'Checking...' }
+        = submit_tag 'Save bookings', class: 'btn btn-primary', data: { disable_with: 'Checking...' }
         %p
           No thanks, let me #{link_to 'create another booking from scratch', resources_path},
           %br/
