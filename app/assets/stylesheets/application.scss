@@ -17,7 +17,12 @@
   max-width: 100%;
 }
 .popover-content {
-  width: 400px;
+  max-width: 400px;
+  min-width: 100px;
+  &:empty {
+    padding: 0 !important;
+    margin-top: -1px;
+  }
 }
 #ui-datepicker-div {
   // workaround. #disable-map should not be above of datepicker.
