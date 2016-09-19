@@ -66,8 +66,10 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
 
         scenario 'should see a warning if selecting a timespan of more than 12 hours', js: true do
           visit '/resources'
-          set_time_range('#filter-time-slider', '8:00 AM', '9:00 PM')
-          should have_text('Booking cannot be more than 12 hours.')
+          set_time_range('#filter-time-slider', '8:00 AM', '8:00 PM')
+          should have_text('8:00 AM - 8:00 PM')
+          set_time_range('#filter-time-slider', '8:00 AM', '8:30 PM')
+          should_not have_text('8:00 AM - 8:30 PM')
         end
 
         scenario 'should see a warning if selecting a date/time that is already passed', js: true do
@@ -92,20 +94,6 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
           page.execute_script('$("div.available:first").trigger("click")') # Since we're using "fake" stubbed resources, they're all going to be displayed on top of one another. Trigger the click directly to avoid click conflicts.
           should have_text('1 hour (you will be invoiced any extras)')
         end
-      end
-    end
-
-    context 'when selecting a resource, date, and times for booking' do
-      before { execute_valid_login }
-
-      scenario 'should be able to book up to 12 hours, but no more than 12 hours', js: true do
-        visit '/resources'
-        fill_in('bookingRequestDate', with: (Time.zone.now + 1.day).to_s(:booking_day))
-        set_time_range('#filter-time-slider', '10:00 AM', '10:00 PM')
-        should_not have_content('Booking cannot be more than 12 hours.')
-        set_time_range('#filter-time-slider', '10:00 AM', '10:30 PM')
-        should have_content('Booking cannot be more than 12 hours.')
-        should have_selector('#disable-map', visible: true)
       end
     end
   end

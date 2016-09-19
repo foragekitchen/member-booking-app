@@ -51,7 +51,7 @@ class BookingsController < ApplicationController
       else
         flash[:alert] = "Some of your bookings may not be saved because one of the #{current_user.maker? ? 'tables' : 'stations'} has already been booked"
       end
-    else
+    elsif params['bookingResource'].present?
       date_times = process_date_times(params['bookingDate'], params['bookingFrom'], params['bookingTo'])
       unless current_user.can_book?(date_times[:fromTime], date_times[:toTime])
         flash[:alert] = "You don't have an ability to book tables on this date"

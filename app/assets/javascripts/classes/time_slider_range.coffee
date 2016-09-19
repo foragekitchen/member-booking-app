@@ -1,7 +1,8 @@
 class window.TimeSliderRange
   constructor: (holder) ->
     @offset = 8 * 60
-    @limit = 4 * 60
+    @min = 4 * 60
+    @max = 12 * 60
     @holder = holder
     @from_target = $(@holder.data('from-target'))
     @to_target = $(@holder.data('to-target'))
@@ -23,7 +24,8 @@ class window.TimeSliderRange
 
     @holder.on 'slide', (e, ui) =>
       values = if ui && ui.values then ui.values else @holder.slider('option', 'values')
-      return false if values[1] - values[0] < @limit
+      return false if values[1] - values[0] < @min
+      return false if values[1] - values[0] > @max
       return false if ui && !@isTimeIfImminent(values)
       return false if ui && !@isReductionIfImminent(values)
       @enableCheckRemainingHours(values) if ui
