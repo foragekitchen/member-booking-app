@@ -49,7 +49,7 @@ class BookingsController < ApplicationController
       if result
         flash[:notice] = "Your #{'booking'.pluralize(dates.count)} #{'was'.pluralize(dates.count)} successfully saved!"
       else
-        flash[:alert] = "Some of your bookings may not be saved because one of the #{current_user.maker? ? 'tables' : 'stations'} has already been booked"
+        flash[:alert] = "Some of your bookings were not saved because one of the #{current_user.maker? ? 'tables' : 'stations'} has already been booked"
       end
     elsif params['bookingResource'].present?
       date_times = process_date_times(params['bookingDate'], params['bookingFrom'], params['bookingTo'])
