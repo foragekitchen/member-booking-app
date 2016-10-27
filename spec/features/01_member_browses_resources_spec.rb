@@ -30,10 +30,10 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
         expect(find('#filters', visible: false)).to_not have_content(' 3:00 AM')
       end
 
-      scenario 'should be able to filter by date and time they want to come in; defaulted to today, 2 hours from now, minimum of 4 hours' do
+      scenario 'should be able to filter by date and time they want to come in; defaulted to today, 2 hours from now, minimum of 2 hours' do
         visit '/resources'
         from = (Time.current + 2.hours).beginning_of_hour
-        to = (Time.current + 6.hours).beginning_of_hour
+        to = (Time.current + 4.hours).beginning_of_hour
         date = Time.current.to_s(:booking_day)
         if (from.hour < 8 && from.hour > 2) || (to.hour < 8 && to.hour > 2)
           date = to.to_s(:booking_day) if to.hour < 8 || to.hour > 2

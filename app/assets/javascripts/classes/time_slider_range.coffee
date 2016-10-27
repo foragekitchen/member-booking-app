@@ -1,7 +1,7 @@
 class window.TimeSliderRange
   constructor: (holder) ->
     @offset = 8 * 60
-    @min = 4 * 60
+    @min = 2 * 60
     @max = 12 * 60
     @holder = holder
     @from_target = $(@holder.data('from-target'))
