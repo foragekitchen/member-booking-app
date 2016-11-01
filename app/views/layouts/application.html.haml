@@ -4,6 +4,14 @@
     %title NexudusApp
     %meta{content: "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}
     %meta{name: :viewport, content: "width=device-width, initial-scale=1.0"}
+
+    = tag('link', rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png')
+    = tag('link', rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png')
+    = tag('link', rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png')
+    = tag('link', rel: 'manifest', href: '/manifest.json')
+    = tag('link', rel: 'mask-icon', color: '#5bbad5', href: '/safari-pinned-tab.svg')
+    = tag('meta', name: 'theme-color', content: '#ffffff')
+
     - unless Rails.env.test?
       = javascript_include_tag 'https://use.typekit.net/zxi1ibh.js'
       :javascript
