@@ -117,7 +117,9 @@ class BookingsController < ApplicationController
   def convert_to_universal_time(date, time)
     # Expects both date and time as strings, likely from params
     # Returns time object for further manipulation
-    Time.strptime("#{date}T#{time} #{Time.current.zone}", Time::DATE_FORMATS[:universal_date]).utc
+    day = Time.strptime(date, Time::DATE_FORMATS[:booking_day])
+    day = Time.zone.parse(day.to_date.to_s).end_of_day
+    Time.strptime("#{date}T#{time} #{day.zone}", Time::DATE_FORMATS[:universal_date]).utc
   end
 
   def adjust_for_next_day(from_time, to_time)
