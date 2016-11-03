@@ -13,21 +13,17 @@ class Timeslot < NexudusBase
     def available(from_time: Time.current + 2.hours, to_time: Time.current + 6.hours)
       from_time = Time.parse(from_time) if from_time.is_a?(String) # just in case; this should already be in correct Time format
       to_time = Time.parse(to_time) if to_time.is_a?(String) # just in case; this should already be in correct Time format
-      from_time_from_day_beginning = from_time.to_f - from_time.change(hour: 0, min: 0).to_f
-      to_time_from_day_beginning = to_time.to_f - from_time.change(hour: 0, min: 0).to_f
 
       slots = all_by_day(from_time.wday)
       available = []
 
       normalize_slots(slots).flatten.each do |time_slot|
-        slot_date = Date.parse(time_slot['FromTime'])
-
         slot_start = Time.zone.parse(time_slot['FromTime'])
         slot_end = Time.zone.parse(time_slot['ToTime'])
-        start_from_beginning = slot_start.to_f - slot_start.change(hour: 0, min: 0).to_f
-        end_from_beginning = slot_end.to_f - slot_start.change(hour: 0, min: 0).to_f
-
-        available << time_slot if from_time_from_day_beginning >= start_from_beginning && to_time_from_day_beginning <= end_from_beginning
+        delta = (from_time.to_date - slot_start.to_date).days - (from_time == from_time.midnight ? 1 : 0).day
+        slot_start += delta
+        slot_end += delta + (from_time.day < to_time.day ? 1 : 0).day
+        available << time_slot if slot_start <= from_time && slot_end >= to_time
       end
       available
     end

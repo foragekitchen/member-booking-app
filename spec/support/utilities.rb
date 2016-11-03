@@ -26,8 +26,8 @@ class RSpec::Core::ExampleGroup
     to = (from + 4.hours).to_s(:booking_time)
     from = from.to_s(:booking_time)
     # update the filters form
-    fill_in('bookingRequestDate', with: day)
     set_time_range('#filter-time-slider', from, to)
+    fill_in('bookingRequestDate', with: day)
 
     wait_for_ajax
     page.first('.resource.available', wait: 10).click

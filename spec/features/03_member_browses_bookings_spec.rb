@@ -110,7 +110,7 @@ RSpec.feature 'My Bookings:', type: :feature do
     after(:all) { clear_bookings }
 
     scenario 'should see a warning if changing the booking-time conflicts with another booking', js: true do
-      date = available_start_time(Time.current + 5.days)
+      date = available_start_time(Time.current + 5.days).change(hour: 11)
       sooner_booking = create_booking(date)
       create_booking(date + 4.hours)
       visit '/bookings'

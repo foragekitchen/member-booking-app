@@ -117,10 +117,12 @@ end
 
 Capybara.configure do |config|
   config.wait_on_first_by_default = true
-end
-
-Capybara.register_driver :selenium do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
+  config.default_max_wait_time = 10
 end
 
 Capybara.javascript_driver = :poltergeist
+
+# Capybara.register_driver :chrome do |app|
+#   Capybara::Selenium::Driver.new(app, browser: :chrome)
+# end
+# Capybara.javascript_driver = :chrome
