@@ -22,7 +22,7 @@ class Timeslot < NexudusBase
         slot_end = Time.zone.parse(time_slot['ToTime'])
         delta = (from_time.to_date - slot_start.to_date).days - (from_time == from_time.midnight ? 1 : 0).day
         slot_start += delta
-        slot_end += delta
+        slot_end += delta + (from_time.day < to_time.day ? 1 : 0).day
         available << time_slot if slot_start <= from_time && slot_end >= to_time
       end
       available
