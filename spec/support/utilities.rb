@@ -26,13 +26,10 @@ class RSpec::Core::ExampleGroup
     to = (from + 4.hours).to_s(:booking_time)
     from = from.to_s(:booking_time)
     # update the filters form
-    fill_in('bookingRequestDate', with: day)
     set_time_range('#filter-time-slider', from, to)
+    fill_in('bookingRequestDate', with: day)
 
-    puts "ZZZ1 #{from.inspect} --- #{to.inspect}"
-    sleep 10
     wait_for_ajax
-    sleep 10
     page.first('.resource.available', wait: 10).click
     # Remember some stuff so we can find this booking later
     booking = {
@@ -57,7 +54,6 @@ class RSpec::Core::ExampleGroup
     from = Time.parse("1970-01-01 #{from}")
     to = Time.parse("1970-01-01 #{to}")
     values = [(from.hour - 8) * 60 + from.min, (to.hour + (to < from ? 24 : 0) - 8) * 60 + to.min]
-    puts "ZZZ2 #{from.inspect} --- #{to.inspect} --- #{values.inspect}"
     page.evaluate_script("$('#{selector}').slider('option', 'values', #{values.inspect})")
     page.evaluate_script("$('#{selector}').trigger('slide', true)")
   end

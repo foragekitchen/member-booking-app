@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
     # Returns time object for further manipulation
     day = Time.strptime(date, Time::DATE_FORMATS[:booking_day])
     day = Time.zone.parse(day.to_date.to_s).end_of_day
-    Time.strptime("#{date}T#{time} #{day.zone}", Time::DATE_FORMATS[:universal_date]).utc
+    Time.strptime("#{date}T#{time} #{day.zone}", Time::DATE_FORMATS[:universal_date])
   end
 
   private

@@ -105,8 +105,8 @@ class BookingsController < ApplicationController
   end
 
   def process_date_times(day, from, to)
-    from_time = convert_to_universal_time(day, from)
-    to_time = convert_to_universal_time(day, to)
+    from_time = convert_to_universal_time(day, from).utc
+    to_time = convert_to_universal_time(day, to).utc
     from_time, to_time = adjust_for_next_day(from_time, to_time)
     {
       fromTime: from_time,

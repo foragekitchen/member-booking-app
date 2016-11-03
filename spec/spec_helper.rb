@@ -117,6 +117,7 @@ end
 
 Capybara.configure do |config|
   config.wait_on_first_by_default = true
+  config.default_max_wait_time = 10
 end
 
 Capybara.javascript_driver = :poltergeist

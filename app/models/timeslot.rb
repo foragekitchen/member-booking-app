@@ -23,7 +23,6 @@ class Timeslot < NexudusBase
         delta = (from_time.to_date - slot_start.to_date).days - (from_time == from_time.midnight ? 1 : 0).day
         slot_start += delta
         slot_end += delta
-
         available << time_slot if slot_start <= from_time && slot_end >= to_time
       end
       available
