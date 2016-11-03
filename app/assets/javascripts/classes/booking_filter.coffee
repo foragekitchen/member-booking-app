@@ -34,7 +34,7 @@ class window.BookingFilter
       dateTo = dateTo.add(1, 'day')
     user = getCurrentUser()
     !(dateFrom.isBefore(currentTime()) || timesState.total < 2 || timesState.total > 12 ||
-      (!user.maker && dateFrom.isoWeekday() == 7 && dateFrom.hours() < 20) ||
+      (!user.maker && dateFrom.isoWeekday() == 7 && dateFrom.hours() < 20 && dateTo.hours() > 2) ||
       (user.maker && (dateFrom.isoWeekday() != 7 || dateTo.hours() > 18 || (dateTo.hours() == 18 && dateTo.minutes() > 0))))
 
   timesState: ->
