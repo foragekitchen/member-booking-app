@@ -107,7 +107,7 @@ class BookingsController < ApplicationController
   def process_date_times(day, from, to)
     from_time = convert_to_universal_time(day, from)
     to_time = convert_to_universal_time(day, to)
-    to_time = adjust_for_next_day(from_time, to_time)
+    from_time, to_time = adjust_for_next_day(from_time, to_time)
     {
       fromTime: from_time,
       toTime: to_time
@@ -124,7 +124,8 @@ class BookingsController < ApplicationController
 
   def adjust_for_next_day(from_time, to_time)
     # Add one day to toTime if the ending hour is "less" than the starting hour
+    from_time += 1.day if from_time == from_time.to_date.beginning_of_day
     to_time += 1.day if to_time < from_time
-    to_time
+    [from_time, to_time]
   end
 end

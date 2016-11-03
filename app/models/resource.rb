@@ -47,12 +47,12 @@ class Resource < NexudusBase
       new(result.merge(options.merge(id: id)))
     end
 
-    def all_with_available(from_time: Time.current + 2.hours, to_time: Time.current + 6.hours, maker: false)
+    def all_with_available(from_time: Time.current + 2.hours, to_time: Time.current + 4.hours, maker: false)
       from_time = Time.parse(from_time) if from_time.is_a?(String)
       to_time = Time.parse(to_time) if to_time.is_a?(String)
 
       resources = all(maker: maker)
-      time_boundaries = {from_time: from_time, to_time: to_time}
+      time_boundaries = {from_time: from_time - 1, to_time: to_time}
       available = available_ids(time_boundaries)
 
       bookings = Booking.all(resource_ids: available, options: time_boundaries)

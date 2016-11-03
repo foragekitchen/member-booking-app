@@ -49,7 +49,12 @@ class window.BookingFilter
     {date: date, from: fromTime, to: toTime, total: hours, plus_day: plusDay}
 
   datetimeFrom: ->
-    formatFullDate(@holder.find('#bookingRequestFromTime').val(), @holder.find('#booking-filter-date').val())
+    date = formatFullDate(@holder.find('#bookingRequestFromTime').val(), @holder.find('#booking-filter-date').val())
+    date = date.add(1, 'day') if date.hour() == 0 && date.minutes() == 0
+    date
 
   datetimeTo: ->
-    formatFullDate(@holder.find('#bookingRequestToTime').val(), @holder.find('#booking-filter-date').val())
+    dateFrom = @datetimeFrom()
+    date = formatFullDate(@holder.find('#bookingRequestToTime').val(), @holder.find('#booking-filter-date').val())
+    date = date.add(1, 'day') if dateFrom.hour() == 0 && dateFrom.minutes() == 0
+    date
