@@ -52,7 +52,7 @@ class Resource < NexudusBase
       to_time = Time.parse(to_time) if to_time.is_a?(String)
 
       resources = all(maker: maker)
-      time_boundaries = {from_time: from_time - 1, to_time: to_time}
+      time_boundaries = {from_time: from_time, to_time: to_time}
       available = available_ids(time_boundaries)
 
       bookings = Booking.all(resource_ids: available, options: time_boundaries)

@@ -14,15 +14,18 @@ class Timeslot < NexudusBase
       from_time = Time.parse(from_time) if from_time.is_a?(String) # just in case; this should already be in correct Time format
       to_time = Time.parse(to_time) if to_time.is_a?(String) # just in case; this should already be in correct Time format
 
+      is_from_midnight = from_time == from_time.midnight
+
       slots = all_by_day(from_time.wday)
       available = []
 
       normalize_slots(slots).flatten.each do |time_slot|
         slot_start = Time.zone.parse(time_slot['FromTime'])
         slot_end = Time.zone.parse(time_slot['ToTime'])
-        delta = (from_time.to_date - slot_start.to_date).days - (from_time == from_time.midnight ? 1 : 0).day
+        delta = (from_time.to_date - slot_start.to_date).days - (is_from_midnight ? 1 : 0).day
         slot_start += delta
-        slot_end += delta + (from_time.day < to_time.day ? 1 : 0).day
+        slot_end += delta + (from_time.day < to_time.day || is_from_midnight ? 1 : 0).day
+
         available << time_slot if slot_start <= from_time && slot_end >= to_time
       end
       available
