@@ -15,7 +15,7 @@ $.fn.bookingFilterTime = ->
       if !user.maker && dateFrom.isoWeekday() == 7 && dateFrom.hours() < 18 && dateFrom.hours() >= 8 && dateTo.hours() > 2
         # Only makers can book on sunday from 8:00 AM to 6:00 PM
         $(document).trigger('map:loading:change', [on, 'Only makers can book on Sunday 8:00 AM - 6:00 PM'])
-      else if user.maker && (dateFrom.isoWeekday() != 7 || (dateTo.hours() > 18 && dateTo.hours < 8) || (dateTo.hours() == 18 && dateTo.minutes() > 0))
+      else if user.maker && (dateFrom.isoWeekday() != 7 || (dateTo.hours() > 18 || dateTo.hours < 8) || (dateTo.hours() == 18 && dateTo.minutes() > 0))
         $(document).trigger('map:loading:change', [on, 'Makers can only book on Sunday 8:00 AM - 6:00 PM'])
       else if dateFrom.isBefore(currentTime())
         $(document).trigger('map:loading:change', [on, 'Booking cannot be in the past.'])
