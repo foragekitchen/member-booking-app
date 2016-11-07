@@ -52,7 +52,7 @@ class Resource < NexudusBase
       to_time = Time.parse(to_time) if to_time.is_a?(String)
 
       resources = all(maker: maker)
-      time_boundaries = {from_time: from_time, to_time: to_time}
+      time_boundaries = { from_time: from_time, to_time: to_time }
       available = available_ids(time_boundaries)
 
       bookings = Booking.all(resource_ids: available, options: time_boundaries)
@@ -61,9 +61,9 @@ class Resource < NexudusBase
 
       bookings.each do |booking|
         next unless available.include?(booking.resource_id) && (resource = resources.select { |r| r.id == booking.resource_id }.first)
-        if booking.from_time >= from_time && booking.to_time <= to_time || # falls exactly inside the slot
-           booking.from_time >= from_time && booking.from_time < to_time || # overlaps after requested start
-           booking.from_time <= from_time && booking.to_time > from_time # overlaps before requested start
+        if booking.from_time >= from_time && booking.to_time <= to_time ||   # falls exactly inside the slot
+            booking.from_time >= from_time && booking.from_time < to_time || # overlaps after requested start
+            booking.from_time <= from_time && booking.to_time > from_time    # overlaps before requested start
           resource.available = false
           available.delete(resource.id)
           next
