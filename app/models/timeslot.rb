@@ -10,7 +10,7 @@ class Timeslot < NexudusBase
       result
     end
 
-    def available(from_time: Time.current + 2.hours, to_time: Time.current + 6.hours)
+    def available(from_time: Time.current + 2.hours, to_time: Time.current + 4.hours)
       from_time = Time.parse(from_time) if from_time.is_a?(String) # just in case; this should already be in correct Time format
       to_time = Time.parse(to_time) if to_time.is_a?(String) # just in case; this should already be in correct Time format
 

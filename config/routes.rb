@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   root to: redirect('/resources')
 
   # Resources
-  resources :resources
+  resources :resources, only: :index
   resources :bookings, except: :edit
 
   # Custom routes
