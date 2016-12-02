@@ -74,7 +74,7 @@ class Resource < NexudusBase
 
     private
 
-    def available_ids(from_time: Time.current + 2.hours, to_time: Time.current + 6.hours)
+    def available_ids(from_time: Time.current + 2.hours, to_time: Time.current + 4.hours)
       Timeslot.available(from_time: from_time, to_time: to_time).collect { |t| t['ResourceId'] }.uniq
     end
   end

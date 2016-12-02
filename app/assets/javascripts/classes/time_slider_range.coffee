@@ -1,6 +1,8 @@
 class window.TimeSliderRange
   constructor: (holder) ->
-    @offset = 8 * 60
+    @hoursOffset = 2
+    @totalHours = 24
+    @offset = @hoursOffset * 60
     @min = 2 * 60
     @max = 12 * 60
     @holder = holder
@@ -17,7 +19,7 @@ class window.TimeSliderRange
     @holder.slider(
       range: true,
       min: 0,
-      max: 1080,
+      max: @totalHours * 60,
       step: 30,
       values: times
     ).trigger('slide')
@@ -76,7 +78,7 @@ class window.TimeSliderRange
   startTimes: ->
     from = moment("01/02/1970 #{@holder.data('from')}", 'MM/DD/YYYY h:mm a')
     to = moment("01/02/1970 #{@holder.data('to')}", 'MM/DD/YYYY h:mm a')
-    [(from.hours() - 8) * 60, (to.hours() - 8 + (if to < from then 24 else 0)) * 60]
+    [(from.hours() - @hoursOffset) * 60, (to.hours() - @hoursOffset + (if to < from then 24 else 0)) * 60]
 
   sliderValueToTime: (value) ->
     hours = Math.floor((value + @offset) / 60)

@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
-ruby '2.3.1'
+
+ruby '2.3.2'
+
 gem 'rails', '~> 4.2'
 
 gem 'bootstrap-sass'
@@ -7,7 +9,7 @@ gem 'bootstrap-datepicker-rails'
 gem 'sass-rails'
 gem 'coffee-rails'
 gem 'jquery-rails'
-gem 'jquery-ui-rails'
+gem 'jquery-ui-rails', '~> 5.0.5'
 gem 'httparty'
 
 gem 'ruby-units'
