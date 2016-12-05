@@ -19,9 +19,11 @@ class window.BookingFilter
       $(document).trigger('map:loading:change', on)
 
   submit: ->
-    return false unless @isValid()
     $.each xhrPool, (idx, jqXHR) ->
       jqXHR.abort()
+    unless @isValid()
+      $('#map-container').removeClass('loading')
+      return false
     @holder.submit()
 
   isValid: ->
@@ -29,13 +31,11 @@ class window.BookingFilter
     timesState = @.timesState()
     dateFrom = @.datetimeFrom()
     dateTo = @.datetimeTo()
-    if timesState.plus_day
-      dateFrom = dateFrom.add(1, 'day')
-      dateTo = dateTo.add(1, 'day')
+    dateTo = dateTo.add(1, 'day') if timesState.plus_day
     user = getCurrentUser()
     !(dateFrom.isBefore(currentTime()) || timesState.total < 2 || timesState.total > 12 ||
-      (!user.maker && dateFrom.isoWeekday() == 7 && dateFrom.hours() < 20 && dateTo.hours() > 2) ||
-      (user.maker && (dateFrom.isoWeekday() != 7 || dateTo.hours() > 18 || dateTo.hours() < 8 || (dateTo.hours() == 18 && dateTo.minutes() > 0))))
+      (!user.maker && ((dateFrom.isoWeekday() == 7 && dateFrom.hours() < 18 && dateFrom.hours() >= 8) || (dateTo.isoWeekday() == 7 && dateTo.hours() >= 8 && dateTo.hours() < 18))) ||
+      (user.maker && (dateFrom.isoWeekday() != 7 || dateTo.hours() > 18 || dateFrom.hours() < 8 || (dateTo.hours() == 18 && dateTo.minutes() > 0))))
 
   timesState: ->
     date = @holder.find('#booking-filter-date').val()
