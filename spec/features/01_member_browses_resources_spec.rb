@@ -109,7 +109,7 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
 
     scenario 'should be able to request all bookings (with and without params)', js: true do
       expect(Booking.all).to be_empty
-      far_away_time = Time.current.change(hour: 9, minutes: 0, seconds: 0)
+      far_away_time = Time.current.change(hour: 22, minutes: 0, seconds: 0)
       far_away_time += 1.day if far_away_time.sunday?
       # Create 3 new bookings and check count of created bookings
       [far_away_time, far_away_time + 1.day, far_away_time + 1.week].each do |start_time|
