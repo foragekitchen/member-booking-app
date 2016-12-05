@@ -16,4 +16,4 @@ class window.MapLoading
         })
         @holder.tooltip('show')
       else
-        @holder.tooltip('destroy')
+        @holder.tooltip('hide')

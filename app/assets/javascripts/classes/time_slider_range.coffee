@@ -64,7 +64,7 @@ class window.TimeSliderRange
       if hoursChange > hoursRemaining
         @showTooltip('This exceeds the hours remaining in your plan, you will be invoiced any extras.')
       else
-        @target.tooltip('destroy')
+        @target.tooltip('hide')
 
   showTooltip: (message) ->
     @target.attr({
