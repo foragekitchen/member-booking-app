@@ -44,8 +44,8 @@ RSpec.feature 'Browsing Available Resources:', type: :feature do
           to = to.to_s(:booking_time)
         end
         should have_field('bookingRequestDate', with: date)
-        expect(find('#bookingRequestFromTime').value).to eq from
-        expect(find('#bookingRequestToTime').value).to eq to
+        expect(find('#bookingRequestFromTime', visible: false).value).to eq from
+        expect(find('#bookingRequestToTime', visible: false).value).to eq to
       end
 
       scenario 'should see basic description details when hovering on a resource (ex. dimensions, suggestions for how many people can fit - whatever is entered into the backend Nexudus system in the "description" field)', js: true do
