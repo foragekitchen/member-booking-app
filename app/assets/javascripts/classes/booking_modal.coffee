@@ -7,8 +7,9 @@ class window.BookingModal
 
   fillModalForm: (table) ->
     timesState = window.booking_filter.timesState()
+    dateFrom = window.booking_filter.datetimeFrom()
     @holder.find('h4 span').text( table.attr('data-original-title') )
-    html = "#{timesState['date']} from #{timesState['from']} to #{timesState['to']}"
+    html = "#{dateFrom.format('MM/DD/YYYY')} from #{timesState['from']} to #{timesState['to']}"
     @holder.find('.modal-body h5 span').html(html)
     @holder.find('.hoursBooking').text("#{timesState['total']} hours")
     @fillValue('#bookingResourceId', table.attr('id').split('-')[1])
