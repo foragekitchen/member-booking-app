@@ -122,6 +122,7 @@ ol {
     &.prep-space {
       width: 525px;
       height: 262px;
+      opacity: 0.5;
       &:after {
         content: 'Book all tables';
         display: inline;
