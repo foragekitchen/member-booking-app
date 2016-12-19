@@ -3,6 +3,7 @@ class Coworker < NexudusBase
   REQUEST_URI = '/spaces/coworkers'.freeze
   BILLING_URI = '/billing/coworkerextraservices'.freeze
   BILLING_PLANS_URI = '/billing/tariffs'.freeze
+  RESOURCE_TYPES = { chief: 'Prep Station', maker: 'Prep Table', admin: 'Prep Space' }
 
   class << self
     def find_by_user(user_id, query = {})
@@ -18,6 +19,15 @@ class Coworker < NexudusBase
         get(url).parsed_response
       end
       new(result)
+    end
+
+    def can_book?(role, from, to)
+      from = from.in_time_zone
+      to = to.in_time_zone
+      return true if role == :admin
+      # Only makers can book on sunday from 8:00 AM to 6:00 PM
+      return from.sunday? && to.sunday? && from.hour >= 8 && (to.hour < 18 || (to.hour == 18 && to.min == 0)) if role == :maker
+      !from.sunday? || (from.sunday? && ((to.hour < 8 || (to.hour == 8 && to.min == 0)) || from.hour >= 18))
     end
   end
 
@@ -67,19 +77,23 @@ class Coworker < NexudusBase
     @_extra_service
   end
 
+  def role
+    RESOURCE_TYPES.key(extra_service['ExtraServiceName'])
+  end
+
   def maker?
-    # Makers operate with Prep Tables and other users operate with Prep Stations
-    extra_service['ExtraServiceName'] == 'Prep Table'
+    role == :maker
+  end
+
+  def admin?
+    role == :admin
   end
 
   def can_book?(from, to)
-    # Only makers can book on sunday from 8:00 AM to 6:00 PM
-    return maker? if from.in_time_zone.sunday? && to.in_time_zone.sunday? &&
-        to.in_time_zone.hour <= 18 && from.in_time_zone.hour >= 8
-    !maker?
+    Coworker.can_book?(role, from, to)
   end
 
   def to_s
-    {name: full_name, maker: maker?, active: active}.to_json
+    { name: full_name, role: role, active: active }.to_json
   end
 end

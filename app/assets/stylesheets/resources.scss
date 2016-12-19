@@ -119,6 +119,20 @@ ol {
       width: $table-width;
     }
 
+    &.prep-space {
+      width: 525px;
+      height: 262px;
+      &:after {
+        content: 'Book all tables';
+        display: inline;
+        position: absolute;
+        font-size: 20px;
+        top: 121px;
+        width: 100%;
+        text-align: center;
+      }
+    }
+
     &.long {
       height: 55px;
       width: 118px;

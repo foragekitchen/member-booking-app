@@ -34,8 +34,8 @@ class window.BookingFilter
     dateTo = dateTo.add(1, 'day') if timesState.plus_day
     user = getCurrentUser()
     !(dateFrom.isBefore(currentTime()) || timesState.total < 2 || timesState.total > 12 ||
-      (!user.maker && ((dateFrom.isoWeekday() == 7 && dateFrom.hours() < 18 && dateFrom.hours() >= 8) || (dateTo.isoWeekday() == 7 && dateTo.hours() >= 8 && dateTo.hours() < 18))) ||
-      (user.maker && (dateFrom.isoWeekday() != 7 || dateTo.hours() > 18 || dateFrom.hours() < 8 || (dateTo.hours() == 18 && dateTo.minutes() > 0))))
+      (user.role == 'chief' && ((dateFrom.isoWeekday() == 7 && dateFrom.hours() < 18 && dateFrom.hours() >= 8) || (dateTo.isoWeekday() == 7 && dateTo.hours() >= 8 && dateTo.hours() < 18))) ||
+      (user.role == 'maker' && (dateFrom.isoWeekday() != 7 || dateTo.hours() > 18 || dateFrom.hours() < 8 || (dateTo.hours() == 18 && dateTo.minutes() > 0))))
 
   timesState: ->
     date = @holder.find('#booking-filter-date').val()
