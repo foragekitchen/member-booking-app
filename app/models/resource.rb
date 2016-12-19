@@ -10,7 +10,7 @@ class Resource < NexudusBase
   end
 
   def prep_resource?
-    ['Prep Table', 'Prep Station'].include? resource_type_name
+    Coworker::RESOURCE_TYPES.values.include? resource_type_name
   end
 
   private
@@ -29,8 +29,8 @@ class Resource < NexudusBase
   end
 
   class << self
-    def all(query = {}, maker: false)
-      resource_name = maker ? 'Prep Table' : 'Prep Station'
+    def all(query = {}, role: :chief)
+      resource_name = Coworker::RESOURCE_TYPES[role]
       query_params = query.merge(Resource_ResourceType_Name: resource_name, Resource_Visible: true)
       results = Rails.cache.fetch([REQUEST_URI, query_params], expires: 12.hours) do
         get(REQUEST_URI, query: query_params)['Records']
@@ -47,35 +47,60 @@ class Resource < NexudusBase
       new(result.merge(options.merge(id: id)))
     end
 
-    def all_with_available(from_time: Time.current + 2.hours, to_time: Time.current + 4.hours, maker: false)
+    def all_with_available(from_time: Time.current + 2.hours, to_time: Time.current + 4.hours, role: :chief)
       from_time = Time.parse(from_time) if from_time.is_a?(String)
       to_time = Time.parse(to_time) if to_time.is_a?(String)
 
-      resources = all(maker: maker)
       time_boundaries = { from_time: from_time, to_time: to_time }
       available = available_ids(time_boundaries)
 
+      resources = all(role: role)
+      other_resources =
+        if role == :admin
+          if Coworker.can_book?(:chief, from_time, to_time)
+            all(role: :chief)
+          elsif Coworker.can_book?(:maker, from_time, to_time)
+            all(role: :maker)
+          else
+            available = Timeslot.all_by_day(from_time.wday).map { |t| t['ResourceId'] }.uniq
+            all(role: :maker) + all(role: :chief)
+          end
+        else
+          all(role: :admin)
+        end
       bookings = Booking.all(resource_ids: available, options: time_boundaries)
 
-      resources.each { |resource| resource.available = true if available.include?(resource.id) }
-
-      bookings.each do |booking|
-        next unless available.include?(booking.resource_id) && (resource = resources.select { |r| r.id == booking.resource_id }.first)
-        if booking.from_time >= from_time && booking.to_time <= to_time ||   # falls exactly inside the slot
-            booking.from_time >= from_time && booking.from_time < to_time || # overlaps after requested start
-            booking.from_time <= from_time && booking.to_time > from_time    # overlaps before requested start
-          resource.available = false
-          available.delete(resource.id)
-          next
-        end
+      [other_resources, resources].each do |resource_collection|
+        resource_collection.each { |resource| resource.available = true if available.include?(resource.id) }
       end
+
+      proceed_available!(other_resources, available, bookings, time_boundaries)
+      if other_resources.all? { |resource| resource.available }
+        proceed_available!(resources, available, bookings, time_boundaries)
+      else
+        resources.each { |resource| resource.available = false }
+      end
+
       resources
     end
 
     private
 
+    def proceed_available!(resources, available, bookings, time_boundaries)
+      bookings.each do |booking|
+        next unless available.include?(booking.resource_id) && (resource = resources.select { |r| r.id == booking.resource_id }.first)
+        if booking.from_time >= time_boundaries[:from_time] && booking.to_time <= time_boundaries[:to_time] ||   # falls exactly inside the slot
+            booking.from_time >= time_boundaries[:from_time] && booking.from_time < time_boundaries[:to_time] || # overlaps after requested start
+            booking.from_time <= time_boundaries[:from_time] && booking.to_time > time_boundaries[:from_time]    # overlaps before requested start
+          resource.available = false
+          available.delete(resource.id)
+          next
+        end
+      end
+    end
+
     def available_ids(from_time: Time.current + 2.hours, to_time: Time.current + 4.hours)
-      Timeslot.available(from_time: from_time, to_time: to_time).collect { |t| t['ResourceId'] }.uniq
+      Timeslot.available(from_time: from_time, to_time: to_time).map { |t| t['ResourceId'] }.uniq
     end
   end
 end

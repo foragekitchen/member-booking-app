@@ -36,7 +36,7 @@ class Booking < NexudusBase
       # Expand booking time search boundaries a little bit if we have them
       if options[:from_time]
         options[:from_time] -= 1.day if options[:from_time] == options[:from_time].to_date.beginning_of_day
-        params << "From_Booking_FromTime=#{options[:from_time].change(hour: 7, minutes: 0).utc.to_s(:nexudus)}"
+        params << "From_Booking_FromTime=#{options[:from_time].change(hour: 1, minutes: 0).utc.to_s(:nexudus)}"
       end
       params << "To_Booking_FromTime=#{options[:to_time].in(1.hour).utc.to_s(:nexudus)}" if options[:to_time]
 

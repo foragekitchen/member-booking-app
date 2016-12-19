@@ -28,4 +28,3 @@ class window.BookingModal
       @holder.find('.my-plan span.glyphicon-ok').show()
     else
       @holder.find('.my-plan span.text-warning').show()
-
