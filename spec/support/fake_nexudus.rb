@@ -5,10 +5,16 @@ class FakeNexudus
       [200, { 'Content-Type' => 'application/json' }, [File.read('spec/fixtures/booking.json')]]
     when %r{spaces/bookings}
       [200, { 'Content-Type' => 'application/json' }, [File.read('spec/fixtures/bookings.json')]]
-    when %r{spaces/resources/\d}
-      [200, { 'Content-Type' => 'application/json' }, [File.read('spec/fixtures/resource.json')]]
+    when %r{spaces/resources/(\d+)}
+      [200, { 'Content-Type' => 'application/json' }, [
+          File.read("spec/fixtures/resource_#{File.exists?("spec/fixtures/resource_#{$1}.json") ? $1 : 100}.json")
+      ]]
     when %r{spaces/resources}
-      [200, { 'Content-Type' => 'application/json' }, [File.read('spec/fixtures/resources.json')]]
+      if env['QUERY_STRING'].match(/Resource_ResourceType_Name=Prep%20Station/)
+        [200, { 'Content-Type' => 'application/json' }, [File.read('spec/fixtures/resources.json')]]
+      else
+        [200, { 'Content-Type' => 'application/json' }, [File.read('spec/fixtures/admin_resources.json')]]
+      end
     when %r{spaces/resourcetimeslots}
       [200, { 'Content-Type' => 'application/json' }, [File.read('spec/fixtures/resourcetimeslots.json')]]
     when %r{spaces/coworkers}
