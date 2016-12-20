@@ -1,0 +1,27 @@
+{
+  "CurrentOrderField": "DisplayOrder",
+  "CurrentPage": 1,
+  "CurrentPageSize": 25,
+  "CurrentSortDirection": 1,
+  "FirstItem": 1,
+  "HasNextPage": false,
+  "HasPreviousPage": false,
+  "LastItem": 1,
+  "PageNumber": 1,
+  "PageSize": 25,
+  "Records": [
+    {
+      "Id": 103,
+      "BusinessId": 41030993,
+      "Name": "Prep Space",
+      "CreatedOn": "2015-05-08T03:48:19Z",
+      "ResourceTypeId": 41037023,
+      "ResourceTypeName": "Prep Space",
+      "Visible": true,
+      "UpdatedOn": "2015-08-27T23:02:34Z",
+      "UpdatedBy": "patti@foragesf.com"
+    }
+  ],
+  "TotalItems": 1,
+  "TotalPages": 1
+}
