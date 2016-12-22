@@ -20,7 +20,7 @@
         Remove
   - else
     %td
-      = link_to booking_path(id: booking.id), method: :delete, data: {confirm: "Are you sure you want to cancel this booking for #{Date.parse(booking.from_time)}?"}, class: 'btn btn-default btn-sm' do
+      = link_to booking_path(id: booking.id), method: :delete, data: {confirm: "Are you sure you want to cancel this booking for #{booking.from_time.to_datetime.in_time_zone.strftime('%Y-%m-%d')}?"}, class: 'btn btn-default btn-sm' do
         %span.glyphicon.glyphicon-remove{'aria-hidden': true}
         Remove
 %tr.hidden.edit-booking{id: "edit-booking-#{booking.id}", data: { booking: booking.to_json, resource: booking.resource.to_json }}

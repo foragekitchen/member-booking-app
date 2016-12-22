@@ -24,10 +24,10 @@ class BookingsController < ApplicationController
     response = booking.create
     if (response = JSON.parse(response.body)) && response['WasSuccessful']
       session[:last_booking] = {
-          id: response['Value']['Id'],
-          from_time: date_times[:fromTime].to_s(:google_calendar),
-          to_time: date_times[:toTime].to_s(:google_calendar),
-          resource: Resource.find(new_booking[:resource_id]).try(:name)
+        id: response['Value']['Id'],
+        from_time: date_times[:fromTime].to_s(:google_calendar),
+        to_time: date_times[:toTime].to_s(:google_calendar),
+        resource: Resource.find(new_booking[:resource_id]).try(:name)
       }
       redirect_to resources_url(anchor: 'recurring-container')
     else
@@ -97,10 +97,12 @@ class BookingsController < ApplicationController
     booking = old_booking.dup
     # Create a brand new one with the same settings but with recurring added
     booking.id = nil
-    date = Time.strptime(date_string, Time::DATE_FORMATS[:booking_day]).utc
-    change_date = {month: date.month, day: date.day, year: date.year}
+    date = Time.strptime(date_string, Time::DATE_FORMATS[:booking_day])
+    change_date = { month: date.month, day: date.day, year: date.year }
     # Change from & to dates for new booking
-    [:from_time, :to_time].each { |attr| booking.send("#{attr}=", booking.send(attr).to_datetime.change(change_date)) }
+    plus_day = booking.from_time.to_datetime.in_time_zone.yday != booking.to_time.to_datetime.in_time_zone.yday
+    booking.from_time = booking.from_time.to_datetime.in_time_zone.change(change_date).utc
+    booking.to_time = (booking.to_time.to_datetime.in_time_zone.change(change_date) + (plus_day ? 1 : 0).day).utc
     booking
   end
 
