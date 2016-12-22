@@ -24,7 +24,7 @@ class Timeslot < NexudusBase
         slot_end = Time.zone.parse(time_slot['ToTime'])
         delta = (from_time.to_date - slot_start.to_date).days - (is_from_midnight ? 1 : 0).day
         slot_start += delta
-        slot_end += delta + (from_time.day < to_time.day || is_from_midnight ? 1 : 0).day
+        slot_end += delta + (from_time.yday < to_time.yday || from_time.year < to_time.year || is_from_midnight ? 1 : 0).day
 
         available << time_slot if slot_start <= from_time && slot_end >= to_time
       end
@@ -34,31 +34,10 @@ class Timeslot < NexudusBase
     private
 
     def normalize_slots(slots)
-      grouped = Hash.new { |hash, key| hash[key] = [] }
       slots.each do |time_slot|
         to = Time.parse(time_slot['ToTime'])
         time_slot['ToTime'] = (to + 1.minute).to_s if to.min == 59
-        grouped[time_slot['ResourceId']] << time_slot
       end
-
-      res = []
-      grouped.each do |_, grouped_slots|
-        grouped_slots = grouped_slots.sort_by { |time_slot| Time.parse(time_slot['FromTime']) }
-        index = 0
-        loop do
-          break if !grouped_slots[index + 1] || index >= grouped_slots.size
-          if Time.parse(grouped_slots[index]['FromTime']).to_s(:booking_time) == Time.parse(grouped_slots[index + 1]['ToTime']).to_s(:booking_time)
-            to = Time.parse(grouped_slots[index]['ToTime'])
-            to += 1.day if to.day != Time.parse(grouped_slots[index + 1]['ToTime']).day
-            grouped_slots[index + 1]['ToTime'] = to.to_s
-            grouped_slots.delete_at(index)
-            index = -1
-          end
-          index += 1
-        end
-        res << grouped_slots
-      end
-      res.flatten
     end
   end
 end

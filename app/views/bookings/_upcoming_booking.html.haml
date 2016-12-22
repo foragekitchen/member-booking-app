@@ -13,8 +13,8 @@
     = link_to '#', class: 'btn btn-default btn-sm btn-edit booking-edit', data: { id: booking.id } do
       %span.glyphicon.glyphicon-pencil{'aria-hidden': true}
       Edit
-  - if ((Time.parse(booking.from_time) - Time.now)/1.minute) <= booking.resource.late_cancellation_limit
-    %td{data: {placement: 'left', toggle: 'tooltip'}, title: 'Locked. This booking starts in less than 24 hours.'}
+  - if ((Time.parse(booking.from_time) - Time.now) / 1.minute) <= booking.resource.late_cancellation_limit
+    %td{data: {placement: 'left', toggle: 'tooltip'}, title: "Locked. This booking starts in less than #{booking.resource.late_cancellation_limit.to_i / 60} hours."}
       = link_to '#', class: 'btn btn-default btn-sm disabled' do
         %span.glyphicon.glyphicon-remove{'aria-hidden': true}
         Remove

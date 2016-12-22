@@ -1,12 +1,18 @@
 class Resource < NexudusBase
   attr_accessor :id, :description, :linked_resources, :location, :name,
-                :resource_type_name, :timeslots, :visible, :late_cancellation_limit, :available
+                :resource_type_name, :timeslots, :visible, :available
+  attr_writer :late_cancellation_limit
   REQUEST_URI = '/spaces/resources'.freeze
 
   def initialize(params)
     super
     load_available
     load_location
+  end
+
+  def late_cancellation_limit
+    # Set default cancellation limit to 24h in minutes
+    @late_cancellation_limit || (24.hours / 60)
   end
 
   def prep_resource?
