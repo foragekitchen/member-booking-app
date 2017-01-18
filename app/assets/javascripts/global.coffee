@@ -4,7 +4,6 @@ jQuery ->
   # User can book up to 3 weeks
   if user
     daysOfWeekDisabled = []
-    daysOfWeekDisabled += [0] if user.role == 'chief'
     daysOfWeekDisabled += [1, 2, 3, 4, 5, 6] if user.role == 'maker'
     datepickerOpts = {
       startDate: currentTime().startOf('day').toDate()

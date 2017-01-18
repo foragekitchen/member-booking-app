@@ -25,9 +25,9 @@ class Coworker < NexudusBase
       from = from.in_time_zone
       to = to.in_time_zone
       return true if role == :admin
-      # Only makers can book on sunday from 8:00 AM to 6:00 PM
+      # Makers can book only on sunday from 8:00 AM to 6:00 PM
       return from.sunday? && to.sunday? && from.hour >= 8 && (to.hour < 18 || (to.hour == 18 && to.min == 0)) if role == :maker
-      !from.sunday? || (from.sunday? && ((to.sunday? && (to.hour < 8 || (to.hour == 8 && to.min == 0))) || from.hour >= 18))
+      true
     end
   end
 
