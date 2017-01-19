@@ -63,10 +63,8 @@ class Resource < NexudusBase
       resources = all(role: role)
       other_resources =
         if role == :admin
-          if Coworker.can_book?(:chief, from_time, to_time)
+          if Coworker.can_book?(:chief, from_time, to_time) && !Coworker.can_book?(:maker, from_time, to_time)
             all(role: :chief)
-          elsif Coworker.can_book?(:maker, from_time, to_time)
-            all(role: :maker)
           else
             available = Timeslot.all_by_day(from_time.wday).map { |t| t['ResourceId'] }.uniq
             all(role: :maker) + all(role: :chief)
@@ -80,7 +78,7 @@ class Resource < NexudusBase
       resources.each { |resource| resource.available = true if available.include?(resource.id) }
 
       groups = []
-      if Coworker.can_book?(:chief, from_time, to_time) && Coworker.can_book?(:maker, from_time, to_time)
+      if role != :admin && Coworker.can_book?(:chief, from_time, to_time) && Coworker.can_book?(:maker, from_time, to_time)
         group_resources = all(role: role == :chief ? :maker : :chief)
         groups = booked_groups(group_resources, available, bookings, time_boundaries)
       end
