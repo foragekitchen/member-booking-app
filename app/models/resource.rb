@@ -74,7 +74,7 @@ class Resource < NexudusBase
         else
           all(role: :admin)
         end
-      bookings = Booking.all(resource_ids: available, options: time_boundaries)
+      bookings = Booking.all(resource_ids: available, options: time_boundaries.clone)
 
       other_resources.each { |resource| resource.available = true }
       resources.each { |resource| resource.available = true if available.include?(resource.id) }
