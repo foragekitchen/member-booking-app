@@ -63,12 +63,8 @@ class Resource < NexudusBase
       resources = all(role: role)
       other_resources =
         if role == :admin
-          if Coworker.can_book?(:chief, from_time, to_time) && !Coworker.can_book?(:maker, from_time, to_time)
-            all(role: :chief)
-          else
-            available = Timeslot.all_by_day(from_time.wday).map { |t| t['ResourceId'] }.uniq
-            all(role: :maker) + all(role: :chief)
-          end
+          available = Timeslot.all_by_day(from_time.wday).map { |t| t['ResourceId'] }.uniq
+          all(role: :maker) + all(role: :chief)
         else
           all(role: :admin)
         end
