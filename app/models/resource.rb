@@ -102,9 +102,7 @@ class Resource < NexudusBase
         resource.available = false
         available.delete(resource.id)
       end
-      booked_groups.each do |booked_group|
-        resources.each { |r| r.available = false if r.group_name == booked_group }
-      end
+      resources.each { |r| r.available = false if booked_groups.include?(r.group_name) } if booked_groups.any?
     end
 
     def booked_groups(resources, available, bookings, time_boundaries)
