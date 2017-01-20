@@ -74,7 +74,8 @@ class Resource < NexudusBase
       resources.each { |resource| resource.available = true if available.include?(resource.id) }
 
       groups = []
-      if role != :admin && Coworker.can_book?(:chief, from_time, to_time) && Coworker.can_book?(:maker, from_time, to_time)
+      # @todo: get rid of this hardcoded value
+      if role != :admin && from_time.wday == 0
         group_resources = all(role: role == :chief ? :maker : :chief)
         groups = booked_groups(group_resources, available, bookings, time_boundaries)
       end
