@@ -15,7 +15,7 @@ RSpec.describe Resource, type: :model do
 
     it 'returns id, name, type, description, and location for each resource' do
       expect(@resources.first.instance_variables).to match_array [:@id, :@name, :@resource_type_name,
-                                                                  :@description, :@location, :@visible,
+                                                                  :@description, :@location, :@visible, :@group_name,
                                                                   :@linked_resources, :@late_cancellation_limit, :@available]
     end
 
