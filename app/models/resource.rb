@@ -1,6 +1,6 @@
 class Resource < NexudusBase
   attr_accessor :id, :description, :linked_resources, :location, :name,
-                :resource_type_name, :timeslots, :visible, :available
+                :resource_type_name, :timeslots, :visible, :available, :group_name
   attr_writer :late_cancellation_limit
   REQUEST_URI = '/spaces/resources'.freeze
 
@@ -37,9 +37,9 @@ class Resource < NexudusBase
   class << self
     def all(query = {}, role: :chief)
       resource_name = Coworker::RESOURCE_TYPES[role]
-      query_params = query.merge(Resource_ResourceType_Name: resource_name, Resource_Visible: true)
-      results = Rails.cache.fetch([REQUEST_URI, query_params], expires: 12.hours) do
-        get(REQUEST_URI, query: query_params)['Records']
+      query = query.merge(Resource_ResourceType_Name: resource_name, Resource_Visible: true)
+      results = Rails.cache.fetch([REQUEST_URI, query], expires: 12.hours) do
+        get(REQUEST_URI, query: query)['Records']
       end
 
       results.map { |r| find(r['Id']) }
@@ -63,26 +63,26 @@ class Resource < NexudusBase
       resources = all(role: role)
       other_resources =
         if role == :admin
-          if Coworker.can_book?(:chief, from_time, to_time)
-            all(role: :chief)
-          elsif Coworker.can_book?(:maker, from_time, to_time)
-            all(role: :maker)
-          else
-            available = Timeslot.all_by_day(from_time.wday).map { |t| t['ResourceId'] }.uniq
-            all(role: :maker) + all(role: :chief)
-          end
+          available = Timeslot.all_by_day(from_time.wday).map { |t| t['ResourceId'] }.uniq
+          all(role: :maker) + all(role: :chief)
         else
           all(role: :admin)
         end
-      bookings = Booking.all(resource_ids: available, options: time_boundaries)
+      bookings = Booking.all(resource_ids: available, options: time_boundaries.clone)
 
-      [other_resources, resources].each do |resource_collection|
-        resource_collection.each { |resource| resource.available = true if available.include?(resource.id) }
+      other_resources.each { |resource| resource.available = true }
+      resources.each { |resource| resource.available = true if available.include?(resource.id) }
+
+      groups = []
+      # @todo: get rid of this hardcoded value
+      if role != :admin && from_time.wday == 0
+        group_resources = all(role: role == :chief ? :maker : :chief)
+        groups = booked_groups(group_resources, available, bookings, time_boundaries)
       end
 
       proceed_available!(other_resources, available, bookings, time_boundaries)
       if other_resources.all? { |resource| resource.available }
-        proceed_available!(resources, available, bookings, time_boundaries)
+        proceed_available!(resources, available, bookings, time_boundaries, groups)
       else
         resources.each { |resource| resource.available = false }
       end
@@ -92,15 +92,29 @@ class Resource < NexudusBase
 
     private
 
-    def proceed_available!(resources, available, bookings, time_boundaries)
+    def proceed_available!(resources, available, bookings, time_boundaries, booked_groups = [])
+      for_booked_resources(resources, available, bookings, time_boundaries) do |resource|
+        resource.available = false
+        available.delete(resource.id)
+      end
+      resources.each { |r| r.available = false if booked_groups.include?(r.group_name) } if booked_groups.any?
+    end
+
+    def booked_groups(resources, available, bookings, time_boundaries)
+      groups = []
+      for_booked_resources(resources, available, bookings, time_boundaries) do |resource|
+        groups << resource.group_name
+      end
+      groups.uniq
+    end
+
+    def for_booked_resources(resources, available, bookings, time_boundaries)
       bookings.each do |booking|
         next unless available.include?(booking.resource_id) && (resource = resources.select { |r| r.id == booking.resource_id }.first)
-        if booking.from_time >= time_boundaries[:from_time] && booking.to_time <= time_boundaries[:to_time] ||   # falls exactly inside the slot
-            booking.from_time >= time_boundaries[:from_time] && booking.from_time < time_boundaries[:to_time] || # overlaps after requested start
-            booking.from_time <= time_boundaries[:from_time] && booking.to_time > time_boundaries[:from_time]    # overlaps before requested start
-          resource.available = false
-          available.delete(resource.id)
-          next
+        if booking.from_time >= time_boundaries[:from_time] && booking.to_time <= time_boundaries[:to_time] || # falls exactly inside the slot
+          booking.from_time >= time_boundaries[:from_time] && booking.from_time < time_boundaries[:to_time] || # overlaps after requested start
+          booking.from_time <= time_boundaries[:from_time] && booking.to_time > time_boundaries[:from_time]    # overlaps before requested start
+          yield(resource) if block_given?
         end
       end
     end
