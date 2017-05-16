@@ -20,7 +20,7 @@ class window.TimeSliderRange
       range: true,
       min: 0,
       max: @totalHours * 60,
-      step: 30,
+      step: 15,
       values: times
     ).trigger('slide')
 
