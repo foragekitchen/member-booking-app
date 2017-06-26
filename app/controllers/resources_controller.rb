@@ -3,7 +3,13 @@ class ResourcesController < ApplicationController
   before_action :load_date_intervals
 
   def index
-    @resources = (@from_date && @to_date) ? Resource.all_with_available(from_time: @from_date, to_time: @to_date, role: current_user.role) : Resource.all(role: current_user.role)
+    @resources = if (@from_date && @to_date)
+                   Resource.all_with_available(from_time: @from_date,
+                                               to_time: @to_date,
+                                               role: current_user.role)
+                 else
+                   Resource.all(role: current_user.role)
+                 end
     @booking = session[:last_booking].try(:symbolize_keys) || {}
     session[:last_booking] = nil
   end
@@ -28,7 +34,8 @@ class ResourcesController < ApplicationController
         params[:bookingRequestDate] = to.to_s(:booking_day) if to.hour < 8 || to.hour > 2
       end
       # Format new `from` date
-      from = DateTime.strptime("#{params[:bookingRequestDate]} #{params[:bookingRequestFromTime]}", "#{Time::DATE_FORMATS[:booking_day]} #{Time::DATE_FORMATS[:booking_time]}")
+      from = DateTime.strptime("#{params[:bookingRequestDate]} #{params[:bookingRequestFromTime]}",
+                               "#{Time::DATE_FORMATS[:booking_day]} #{Time::DATE_FORMATS[:booking_time]}")
       if current_user.maker? && (!from.sunday? || from.hours > 14)
         params[:bookingRequestDate] = (from.sunday? ? from + 1.day : from.end_of_week(:monday)).to_s(:booking_day)
         params[:bookingRequestFromTime] = '8:00 AM'
