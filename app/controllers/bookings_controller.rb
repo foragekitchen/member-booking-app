@@ -31,6 +31,7 @@ class BookingsController < ApplicationController
       }
       redirect_to resources_url(anchor: 'recurring-container')
     else
+      Rails.logger.info "BOOKING CREATE ERROR: #{response.inspect}"
       flash[:alert] = 'An error occurred while saving your booking. Please refresh the page and try again.'
       redirect_to resources_url
     end
@@ -70,6 +71,7 @@ class BookingsController < ApplicationController
       if (response = JSON.parse(response.body)) && response['WasSuccessful']
         flash[:notice] = response['Message']
       else
+        Rails.logger.info "BOOKING UPDATE ERROR: #{response.inspect}"
         flash[:alert] = 'An error occurred while updating your booking. Please refresh the page and try again.'
       end
     end
@@ -82,6 +84,7 @@ class BookingsController < ApplicationController
     if (response = JSON.parse(response.body)) && response['WasSuccessful']
       flash[:notice] = response['Message']
     else
+      Rails.logger.info "BOOKING DESTROY ERROR: #{response.inspect}"
       flash[:alert] = 'An error occurred while canceling your booking. Please contact us.'
     end
     redirect_to bookings_url
