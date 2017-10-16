@@ -1,2 +1,2 @@
 @getCurrentUser = ->
-  if $.cookie('user') then JSON.parse($.cookie('user')) else {}
+  if Cookies.get('user') then JSON.parse(Cookies.get('user')) else {}

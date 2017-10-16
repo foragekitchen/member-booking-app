@@ -2,7 +2,7 @@
 #= require jquery_ujs
 #= require jquery-ui
 #= require vendor/jquery.ui.touch-punch.min
-#= require jquery.cookie
+#= require js.cookie
 #= require moment
 #= require moment-timezone-with-data-2010-2020
 #= require bootstrap
