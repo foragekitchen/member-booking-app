@@ -120,9 +120,9 @@ Capybara.configure do |config|
   config.default_max_wait_time = 10
 end
 
-# Capybara.javascript_driver = :poltergeist
+Capybara.javascript_driver = :poltergeist
 
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
-end
-Capybara.javascript_driver = :chrome
+# Capybara.register_driver :chrome do |app|
+#   Capybara::Selenium::Driver.new(app, browser: :chrome)
+# end
+# Capybara.javascript_driver = :chrome
