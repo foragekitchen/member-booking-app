@@ -66,7 +66,7 @@ RSpec.describe Resource, type: :model do
       allow(Rails).to receive(:cache).and_return(rails_caching)
       expect(rails_caching).to receive(:fetch).with(['/spaces/resources', { Resource_ResourceType_Name: 'Prep Station',
                                                                             Resource_Visible: true }],
-                                                    expires: 12.hours, cache_nils: true)
+                                                    expires: 12.hours, cache_nils: false)
       Resource.all
     end
 
@@ -74,7 +74,7 @@ RSpec.describe Resource, type: :model do
       rails_caching = double.as_null_object
       allow(Rails).to receive(:cache).and_return(rails_caching)
       expect(rails_caching).to receive(:fetch).with(['/spaces/resources/23'],
-                                                    expires: 12.hours, cache_nils: true)
+                                                    expires: 12.hours, cache_nils: false)
       Resource.find(23)
     end
   end

@@ -9,7 +9,7 @@ RSpec.describe Timeslot, type: :model do
       allow(Rails).to receive(:cache).and_return(rails_caching)
       expect(rails_caching).to receive(:fetch).with(['/spaces/resourcetimeslots',
                                                      { ResourceTimeSlot_DayOfWeek: 2, size: 100 }],
-                                                    expires: 12.hours, cache_nils: true)
+                                                    expires: 12.hours, cache_nils: false)
       Timeslot.all_by_day(2)
     end
   end
