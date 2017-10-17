@@ -7,9 +7,9 @@ class NexudusBase
   class << self
     def get(*args)
       response = super
-      puts "Nexudus: #{args.inspect} -- #{response.inspect}"
+      NexudusApp.log "Nexudus: #{args.inspect} -- #{response.inspect}"
       return response if response.code < 300
-      puts("Nexudus error response: #{response.inspect}")
+      NexudusApp.log("Nexudus error response: #{response.inspect}")
       if response.code == 409
         sleep 0.5
         get(*args)

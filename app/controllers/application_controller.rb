@@ -4,10 +4,10 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
   rescue_from Exception do |exception|
-    puts '*' * 100
-    puts "Error: #{$!.class.name} -- #{exception.message.inspect}"
-    puts "Backtrace: #{exception.backtrace.join("\n")}"
-    puts '*' * 100
+    NexudusApp.log '*' * 100
+    NexudusApp.log "Error: #{$!.class.name} -- #{exception.message.inspect}"
+    NexudusApp.log "Backtrace: #{exception.backtrace.join("\n")}"
+    NexudusApp.log '*' * 100
 
     error
   end

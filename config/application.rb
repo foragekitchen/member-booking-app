@@ -33,4 +33,9 @@ module NexudusApp
     # Add custom error routes to exceptions
     config.exceptions_app = self.routes
   end
+
+  def self.log(*args)
+    return unless ENV['DEBUG_MODE']
+    Rails.env.production? ? puts(*args) : Rails.logger.info(*args)
+  end
 end
