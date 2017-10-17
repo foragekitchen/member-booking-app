@@ -12,7 +12,7 @@ class NexudusBase
       puts("Nexudus error response: #{response.inspect}")
       if response.code == 409
         sleep 0.5
-        super
+        get(*args)
       end
     end
   end
