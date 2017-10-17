@@ -65,14 +65,16 @@ RSpec.describe Resource, type: :model do
       rails_caching = double.as_null_object
       allow(Rails).to receive(:cache).and_return(rails_caching)
       expect(rails_caching).to receive(:fetch).with(['/spaces/resources', { Resource_ResourceType_Name: 'Prep Station',
-                                                                            Resource_Visible: true }], expires: 12.hours)
+                                                                            Resource_Visible: true }],
+                                                    expires: 12.hours, cache_nils: true)
       Resource.all
     end
 
     it 'should be turned on for fetching a single Resource' do
       rails_caching = double.as_null_object
       allow(Rails).to receive(:cache).and_return(rails_caching)
-      expect(rails_caching).to receive(:fetch).with(['/spaces/resources/23'], expires: 12.hours)
+      expect(rails_caching).to receive(:fetch).with(['/spaces/resources/23'],
+                                                    expires: 12.hours, cache_nils: true)
       Resource.find(23)
     end
   end
