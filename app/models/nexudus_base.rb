@@ -7,8 +7,8 @@ class NexudusBase
   class << self
     def get(*args)
       response = super
-      return response if response.code < 400
-      Rails.logger.info("Nexudus error response: #{response.code} #{response.inspect}")
+      return response if response.code < 300
+      Rails.logger.info("Nexudus error response: #{response.inspect}")
       if response.code == 409
         sleep 0.5
         super
