@@ -9,13 +9,13 @@ class Coworker < NexudusBase
     def find_by_user(user_id, query = {})
       # Find by UserId since it's all we have so far
       query_params = { Coworker_User: user_id }.merge(query)
-      results = Rails.cache.fetch([REQUEST_URI, query_params], expires: 24.hours) do
+      results = Rails.cache.fetch([REQUEST_URI, query_params], expires: 24.hours, cache_nils: false) do
         get(REQUEST_URI, query: query_params)['Records']
       end
       # Now query for single Coworker using Coworker.Id because it gives more info
       return nil unless results.try(:first)
       url = "#{REQUEST_URI}/#{results.first['Id']}"
-      result = Rails.cache.fetch([url], expires: 12.hours) do
+      result = Rails.cache.fetch([url], expires: 12.hours, cache_nils: false) do
         get(url).parsed_response
       end
       new(result)
@@ -37,7 +37,7 @@ class Coworker < NexudusBase
 
   def billing_plan
     url = "#{BILLING_PLANS_URI}/#{next_tariff_id}/"
-    result = Rails.cache.fetch([url], expires: 24.hours) do
+    result = Rails.cache.fetch([url], expires: 24.hours, cache_nils: false) do
       self.class.get(url).parsed_response
     end
     result['Name']
@@ -69,7 +69,7 @@ class Coworker < NexudusBase
     query_params = { CoworkerExtraService_Coworker: id,
                      CoworkerExtraService_ExtraService_Name: 'Prep',
                      CoworkerExtraService_IsFromTariff: true }
-    @_extra_service ||= Rails.cache.fetch([BILLING_URI, query_params], expires: 12.hours) do
+    @_extra_service ||= Rails.cache.fetch([BILLING_URI, query_params], expires: 12.hours, cache_nils: false) do
       self.class.get(BILLING_URI, query: query_params)['Records']
     end.first
     # Do not cache empty extra service

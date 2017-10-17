@@ -4,7 +4,7 @@ class Timeslot < NexudusBase
   class << self
     def all_by_day(day_of_week = Time.zone.today.wday)
       query_params = { ResourceTimeSlot_DayOfWeek: day_of_week, size: 100 }
-      result = Rails.cache.fetch([REQUEST_URI, query_params], expires: 12.hours) do
+      result = Rails.cache.fetch([REQUEST_URI, query_params], expires: 12.hours, cache_nils: false) do
         get(REQUEST_URI, query: query_params)['Records']
       end
       result

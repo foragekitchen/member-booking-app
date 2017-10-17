@@ -38,7 +38,7 @@ class Resource < NexudusBase
     def all(query = {}, role: :chief)
       resource_name = Coworker::RESOURCE_TYPES[role]
       query = query.merge(Resource_ResourceType_Name: resource_name, Resource_Visible: true)
-      results = Rails.cache.fetch([REQUEST_URI, query], expires: 12.hours) do
+      results = Rails.cache.fetch([REQUEST_URI, query], expires: 12.hours, cache_nils: false) do
         get(REQUEST_URI, query: query)['Records']
       end
 
@@ -47,7 +47,7 @@ class Resource < NexudusBase
 
     def find(id, options = {})
       url = "#{REQUEST_URI}/#{id}"
-      result = Rails.cache.fetch([url], expires: 12.hours) do
+      result = Rails.cache.fetch([url], expires: 12.hours, cache_nils: false) do
         get(url).parsed_response
       end
       new(result.merge(options.merge(id: id)))
