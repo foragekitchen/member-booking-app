@@ -70,8 +70,8 @@ class Coworker < NexudusBase
                      CoworkerExtraService_ExtraService_Name: 'Prep',
                      CoworkerExtraService_IsFromTariff: true }
     @_extra_service ||= Rails.cache.fetch([BILLING_URI, query_params], expires: 12.hours, cache_nils: false) do
-      self.class.get(BILLING_URI, query: query_params)['Records']
-    end.first
+      self.class.get(BILLING_URI, query: query_params)['Records'].first
+    end
     # Do not cache empty extra service
     Rails.cache.delete([BILLING_URI, query_params]) unless @_extra_service
     @_extra_service
