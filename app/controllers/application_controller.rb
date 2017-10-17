@@ -4,10 +4,10 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
   rescue_from Exception do |exception|
-    Rails.logger.info '*' * 100
-    Rails.logger.info "Error: #{$!.class.name} -- #{exception.message.inspect}"
-    Rails.logger.info "Backtrace: #{exception.backtrace.join("\n")}"
-    Rails.logger.info '*' * 100
+    puts '*' * 100
+    puts "Error: #{$!.class.name} -- #{exception.message.inspect}"
+    puts "Backtrace: #{exception.backtrace.join("\n")}"
+    puts '*' * 100
 
     error
   end
