@@ -6,13 +6,19 @@ class NexudusBase
 
   class << self
     def get(*args)
-      response = super
-      NexudusApp.log "Nexudus: #{args.inspect} -- #{response.inspect}"
-      return response if response.code < 300
-      NexudusApp.log("Nexudus error response: #{response.inspect}")
-      if response.code == 409
-        sleep 0.5
-        get(*args)
+      tries = 3
+      begin
+        response = super
+        NexudusApp.log "Nexudus: #{args.inspect} -- #{response.inspect}"
+        return response if response.code < 300
+        NexudusApp.log("Nexudus error response: #{response.inspect}")
+        if response.code == 409
+          sleep 0.5
+          get(*args)
+        end
+      rescue Net::OpenTimeout
+        tries -= 1
+        tries.zero? ? raise : retry
       end
     end
   end
