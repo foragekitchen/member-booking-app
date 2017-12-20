@@ -48,8 +48,6 @@ class Coworker < NexudusBase
   end
 
   def remaining_plan_hours
-    # Unfortunately, this only counts the bookings that have been charged, i.e. bookings already passed
-    # See 'remaining_hours_in_plan' for actual total remaining hours
     query_params = { CoworkerExtraService_Coworker: id,
                      CoworkerExtraService_ExtraService_Name: 'Prep',
                      CoworkerExtraService_IsFromTariff: true }

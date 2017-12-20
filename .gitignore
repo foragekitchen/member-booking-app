@@ -16,6 +16,7 @@
 !/log/.keep
 /tmp
 public/documentation-working.html
+.byebug_history
 
 # Ignore sensitive stuff
 .env
