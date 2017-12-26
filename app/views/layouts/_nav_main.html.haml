@@ -12,7 +12,7 @@
     .row
       .col-sm-6
         %small You have
-        %strong.text_blue.display-block#my-account-remaining-hours= pluralize(@coworker.remaining_hours_in_plan.to_i, 'hour')
+        %strong.text_blue.display-block#my-account-remaining-hours= pluralize(@coworker.remaining_plan_hours.to_i, 'hour')
         %small remaining this month
       .col-sm-6
         %small Your Plan:

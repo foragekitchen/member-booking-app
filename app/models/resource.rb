@@ -53,6 +53,22 @@ class Resource < NexudusBase
       new(result.merge(options.merge(id: id)))
     end
 
+    def can_book_resource?(from_time, to_time, coworker, resource_id)
+      time_boundaries = { from_time: from_time, to_time: to_time }
+      available = available_ids(time_boundaries)
+      resource_bookings = Booking.all(resource_ids: Array(resource_id), options: time_boundaries.clone)
+      bookings = Booking.all(resource_ids: available, options: time_boundaries.clone)
+      groups = []
+      role = coworker.role
+      resources = all({ Resource_Id: resource_id }, role: role)
+      if role != :admin && from_time.wday == 0
+        group_resources = all(role: role == :chief ? :maker : :chief)
+        groups = booked_groups(group_resources, available, bookings, time_boundaries)
+      end
+      resource_bookings.select { |b| b.coworker_id != coworker.id }.empty? &&
+        resources.select { |r| groups.include?(r.group_name) }.empty?
+    end
+
     def all_with_available(from_time: Time.current + 2.hours, to_time: Time.current + 4.hours, role: :chief)
       from_time = Time.parse(from_time) if from_time.is_a?(String)
       to_time = Time.parse(to_time) if to_time.is_a?(String)

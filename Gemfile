@@ -21,6 +21,7 @@ gem 'jquery-cookie-rails'
 
 group :development, :test do
   gem 'dotenv-rails'
+  gem 'byebug'
   gem 'rubocop', require: false
 end
 

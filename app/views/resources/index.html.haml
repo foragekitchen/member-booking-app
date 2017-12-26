@@ -37,7 +37,7 @@
               %br/
               Hours remaining in your plan:
               %strong
-                %span.text_blue#hours-remaining= pluralize(@coworker.remaining_hours_in_plan.to_i, 'hour')
+                %span.text_blue#hours-remaining= pluralize(@coworker.remaining_plan_hours.to_i, 'hour')
               %span.text-warning (you will be invoiced any extras)
               %span.glyphicon.glyphicon-ok.text-success{'aria-hidden': 'true'}
           .modal-footer

@@ -54,7 +54,11 @@ class BookingsController < ApplicationController
       end
     elsif params['bookingResource'].present?
       date_times = process_date_times(params['bookingDate'], params['bookingFrom'], params['bookingTo'])
-      unless current_user.can_book?(date_times[:fromTime], date_times[:toTime])
+      unless current_user.can_book?(date_times[:fromTime], date_times[:toTime]) &&
+             Resource.can_book_resource?(date_times[:fromTime],
+                                         date_times[:toTime],
+                                         @coworker,
+                                         params['bookingResource'])
         flash[:alert] = "You don't have an ability to book tables on this date"
         return redirect_to resources_url
       end

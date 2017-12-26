@@ -48,6 +48,7 @@ GEM
       autoprefixer-rails (>= 5.2.1)
       sass (>= 3.3.4)
     builder (3.2.2)
+    byebug (9.1.0)
     capybara (2.11.0)
       addressable
       mime-types (>= 1.16)
@@ -274,6 +275,7 @@ PLATFORMS
 DEPENDENCIES
   bootstrap-datepicker-rails
   bootstrap-sass
+  byebug
   capybara
   coffee-rails
   dotenv-rails
@@ -302,4 +304,4 @@ RUBY VERSION
    ruby 2.3.3p222
 
 BUNDLED WITH
-   1.13.6
+   1.16.0
