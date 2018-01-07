@@ -44,6 +44,10 @@ class BookingsController < ApplicationController
       result = true
       dates.each do |date_string|
         booking = update_recurring(old_booking, date_string)
+        unless booking
+          flash[:alert] = "You don't have an ability to book tables on this date"
+          return redirect_to resources_url
+        end
         response = booking.create
         result = result && (response = JSON.parse(response.body)) && response['WasSuccessful']
       end
@@ -108,8 +112,14 @@ class BookingsController < ApplicationController
     change_date = { month: date.month, day: date.day, year: date.year }
     # Change from & to dates for new booking
     plus_day = booking.from_time.to_datetime.in_time_zone.yday != booking.to_time.to_datetime.in_time_zone.yday
-    booking.from_time = booking.from_time.to_datetime.in_time_zone.change(change_date).utc
-    booking.to_time = (booking.to_time.to_datetime.in_time_zone.change(change_date) + (plus_day ? 1 : 0).day).utc
+    from_time = booking.from_time.to_datetime.in_time_zone.change(change_date).utc
+    to_time = (booking.to_time.to_datetime.in_time_zone.change(change_date) + (plus_day ? 1 : 0).day).utc
+    return false unless Resource.can_book_resource?(from_time.to_datetime.in_time_zone,
+                                                    to_time.to_datetime.in_time_zone,
+                                                    @coworker,
+                                                    booking.resource_id)
+    booking.from_time = from_time
+    booking.to_time = to_time
     booking
   end
 
