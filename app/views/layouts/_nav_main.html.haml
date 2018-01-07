@@ -4,6 +4,9 @@
     = link_to 'My Reservations', bookings_path
   %li.resources-nav
     = link_to 'Book Kitchen Time', resources_path
+  %li.info-nav
+    %a{'data-toggle': 'popover', 'data-trigger': 'focus', role: 'button', tabindex: '0', title: 'Important Information'}
+      Important Information
   %li.accounts-nav
     %a{'data-toggle': 'popover', 'data-trigger': 'focus', role: 'button', tabindex: '0', title: 'My Account'}
       =fa_icon 'user'
@@ -22,3 +25,14 @@
     .row
       .col-sm-12
         = link_to 'Logout', logout_path, class: 'btn btn-primary user-logout', method: 'delete'
+  #information_popover.hidden
+    .row
+      .col-sm-3
+        %small Phone
+      .col-sm-9
+        %strong.text_blue.display-block +1 123 456 7890
+    .row
+      .col-sm-3
+        %small Email
+      .col-sm-9
+        %strong.text_blue.display-block info@foragekitchen.com
