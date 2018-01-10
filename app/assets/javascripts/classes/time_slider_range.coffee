@@ -78,7 +78,8 @@ class window.TimeSliderRange
   startTimes: ->
     from = moment("01/02/1970 #{@holder.data('from')}", 'MM/DD/YYYY h:mm a')
     to = moment("01/02/1970 #{@holder.data('to')}", 'MM/DD/YYYY h:mm a')
-    [(from.hours() - @hoursOffset) * 60, (to.hours() - @hoursOffset + (if to < from then 24 else 0)) * 60]
+    [(from.hours() - @hoursOffset) * 60 + from.minutes(),
+      (to.hours() - @hoursOffset + (if to < from then 24 else 0)) * 60 + + to.minutes()]
 
   sliderValueToTime: (value) ->
     hours = Math.floor((value + @offset) / 60)
