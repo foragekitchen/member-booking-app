@@ -58,8 +58,15 @@ class Resource < NexudusBase
       available = available_ids(time_boundaries)
       resource_bookings = Booking.all(resource_ids: Array(resource_id), options: time_boundaries.clone)
       bookings = Booking.all(resource_ids: available, options: time_boundaries.clone)
-      groups = []
       role = coworker.role
+      bookings.each do |booking|
+        if times_overlapped?(
+            booking.from_time, booking.to_time, time_boundaries[:from_time], time_boundaries[:to_time]
+        ) && (role == :admin || booking.resource_name == 'Prep Space') && booking.coworker_id != coworker.id
+          return false
+        end
+      end
+      groups = []
       resources = all({ Resource_Id: resource_id }, role: role)
       if role != :admin && from_time.wday == 0
         group_resources = all(role: role == :chief ? :maker : :chief)
@@ -127,9 +134,7 @@ class Resource < NexudusBase
     def for_booked_resources(resources, available, bookings, time_boundaries)
       bookings.each do |booking|
         next unless available.include?(booking.resource_id) && (resource = resources.select { |r| r.id == booking.resource_id }.first)
-        if booking.from_time >= time_boundaries[:from_time] && booking.to_time <= time_boundaries[:to_time] || # falls exactly inside the slot
-          booking.from_time >= time_boundaries[:from_time] && booking.from_time < time_boundaries[:to_time] || # overlaps after requested start
-          booking.from_time <= time_boundaries[:from_time] && booking.to_time > time_boundaries[:from_time]    # overlaps before requested start
+        if times_overlapped?(booking.from_time, booking.to_time, time_boundaries[:from_time], time_boundaries[:to_time])
           yield(resource) if block_given?
         end
       end
@@ -137,6 +142,12 @@ class Resource < NexudusBase
 
     def available_ids(from_time: Time.current + 2.hours, to_time: Time.current + 4.hours)
       Timeslot.available(from_time: from_time, to_time: to_time).map { |t| t['ResourceId'] }.uniq
+    end
+
+    def times_overlapped?(booking_from_time, booking_to_time, from_time, to_time)
+      booking_from_time >= from_time && booking_to_time <= to_time || # falls exactly inside the slot
+          booking_from_time >= from_time && booking_from_time < to_time || # overlaps after requested start
+          booking_from_time <= from_time && booking_to_time > from_time
     end
   end
 end
