@@ -48,6 +48,17 @@ class Booking < NexudusBase
       bookings = get("#{REQUEST_URI}?#{params.join('&')}")['Records'].map { |b| new(b) } unless resource_ids.present?
       bookings.flatten.reject(&:blank?).sort_by(&:from_time)
     end
+
+    def upcoming_uncharged(coworker_id)
+      params = []
+      params << 'Booking_Invoiced=false'
+      params << "Booking_Coworker=#{coworker_id}" if coworker_id.present?
+      params << "From_Booking_FromTime=#{DateTime.now.utc.to_s(:nexudus)}"
+
+      bookings = get("#{REQUEST_URI}?#{params.join('&')}")
+      bookings = bookings ? bookings['Records'].map { |b| new(b) } : []
+      bookings.flatten.reject(&:blank?).sort_by(&:from_time)
+    end
   end
 
   def create
