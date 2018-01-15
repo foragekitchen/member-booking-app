@@ -58,7 +58,8 @@ class Coworker < NexudusBase
   def remaining_hours_in_plan
     # Manually calculate how many hours are in upcoming "uncharged" bookings
     # Subtract them from the system's "remaining hours"
-    bookings = Booking.all(coworker_id: id)
+    bookings = Booking.upcoming_uncharged(id)
+    # bookings.select { |b| b.from_time >= DateTime.now }.sum(&:duration_in_minutes)
     upcoming_booking_hours = bookings.sum(&:duration_in_minutes) / 60
     remaining_plan_hours - upcoming_booking_hours
   end
