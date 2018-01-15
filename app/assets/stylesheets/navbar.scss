@@ -96,6 +96,11 @@ nav {
   }
 }
 
+@media (min-width: 768px) {
+  .important-info-row {
+    width: 330px;
+  }
+}
 
 .accounts-nav .dropdown-menu li {
   text-align: center;
