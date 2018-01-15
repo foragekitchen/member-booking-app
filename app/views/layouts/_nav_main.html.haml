@@ -4,6 +4,9 @@
     = link_to 'My Reservations', bookings_path
   %li.resources-nav
     = link_to 'Book Kitchen Time', resources_path
+  %li.info-nav
+    %a{'data-toggle': 'popover', 'data-trigger': 'focus', role: 'button', tabindex: '0', title: 'Important Information'}
+      Important Information
   %li.accounts-nav
     %a{'data-toggle': 'popover', 'data-trigger': 'focus', role: 'button', tabindex: '0', title: 'My Account'}
       =fa_icon 'user'
@@ -12,7 +15,7 @@
     .row
       .col-sm-6
         %small You have
-        %strong.text_blue.display-block#my-account-remaining-hours= pluralize(@coworker.remaining_plan_hours.to_i, 'hour')
+        %strong.text_blue.display-block#my-account-remaining-hours= pluralize(@coworker.remaining_hours_in_plan.to_i, 'hour')
         %small remaining this month
       .col-sm-6
         %small Your Plan:
@@ -22,3 +25,42 @@
     .row
       .col-sm-12
         = link_to 'Logout', logout_path, class: 'btn btn-primary user-logout', method: 'delete'
+  #information_popover.hidden
+    .row
+      .col-sm-4
+        %small Matt #
+      .col-sm-8
+        %strong.text_blue.display-block (415) 279-7337
+    .row
+      .col-sm-4
+        %small Iso #
+      .col-sm-8
+        %strong.text_blue.display-block (617) 894-0597
+    .row
+      .col-sm-4
+        %small Matt Email
+      .col-sm-8
+        %strong.text_blue.display-block matt@foragekitchen.com
+    .row
+      .col-sm-4
+        %small Iso Email
+      .col-sm-8
+        %strong.text_blue.display-block iso@foragekitchen.com
+    .row
+      .col-sm-4
+        %small Alarm Code
+      .col-sm-8
+        %strong.text_blue.display-block 1207
+    .row
+      .col-sm-4
+        %small Gate Code
+      .col-sm-8
+        %strong.text_blue.display-block 4762
+    .row
+      .col-sm-4
+        %small Landlord #
+      .col-sm-8
+        %strong.text_blue.display-block (510) 703-5711
+    .row
+      .col-sm-12
+        %small (John Solomon)
