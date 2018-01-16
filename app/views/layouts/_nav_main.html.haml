@@ -5,10 +5,10 @@
   %li.resources-nav
     = link_to 'Book Kitchen Time', resources_path
   %li.info-nav
-    %a{'data-toggle': 'popover', 'data-trigger': 'focus', role: 'button', tabindex: '0', title: 'Important Information'}
+    %a{'data-toggle': 'popover', role: 'button', tabindex: '0', title: 'Important Information'}
       Important Information
   %li.accounts-nav
-    %a{'data-toggle': 'popover', 'data-trigger': 'focus', role: 'button', tabindex: '0', title: 'My Account'}
+    %a{'data-toggle': 'popover', role: 'button', tabindex: '0', title: 'My Account'}
       =fa_icon 'user'
       My account
   #my_account_popover.hidden
@@ -26,26 +26,30 @@
       .col-sm-12
         = link_to 'Logout', logout_path, class: 'btn btn-primary user-logout', method: 'delete'
   #information_popover.hidden
+    .row.important-info-row
+      .col-sm-4
+        %small Matt's #
+      .col-sm-8
+        %strong.text_blue.display-block
+          %a{'href': 'tel:415-279-7337'} (415) 279-7337
     .row
       .col-sm-4
-        %small Matt #
+        %small Iso's #
       .col-sm-8
-        %strong.text_blue.display-block (415) 279-7337
+        %strong.text_blue.display-block
+          %a{'href': 'tel:617-894-0597'} (617) 894-0597
     .row
       .col-sm-4
-        %small Iso #
+        %small Matt's Email
       .col-sm-8
-        %strong.text_blue.display-block (617) 894-0597
+        %strong.text_blue.display-block
+          %a{'href': 'mailto:matt@foragekitchen.com'} matt@foragekitchen.com
     .row
       .col-sm-4
-        %small Matt Email
+        %small Iso's Email
       .col-sm-8
-        %strong.text_blue.display-block matt@foragekitchen.com
-    .row
-      .col-sm-4
-        %small Iso Email
-      .col-sm-8
-        %strong.text_blue.display-block iso@foragekitchen.com
+        %strong.text_blue.display-block
+          %a{'href': 'mailto:iso@foragekitchen.com'} iso@foragekitchen.com
     .row
       .col-sm-4
         %small Alarm Code
@@ -58,9 +62,10 @@
         %strong.text_blue.display-block 4762
     .row
       .col-sm-4
-        %small Landlord #
+        %small Landlord's #
       .col-sm-8
-        %strong.text_blue.display-block (510) 703-5711
+        %strong.text_blue.display-block
+          %a{'href': 'tel:510-703-5711'} (510) 703-5711
     .row
       .col-sm-12
         %small (John Solomon)
