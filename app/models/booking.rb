@@ -7,6 +7,7 @@ class Booking < NexudusBase
                 :repeat_until, :repeat_on_mondays, :repeat_on_tuesdays, :repeat_on_wednesdays,
                 :repeat_on_thursdays, :repeat_on_fridays, :repeat_on_saturdays, :repeat_on_sundays
   REQUEST_URI = '/spaces/bookings'.freeze
+  PAGE_SIZE = 1000.freeze
 
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::DateHelper
@@ -27,6 +28,17 @@ class Booking < NexudusBase
       booking = new(booking)
       booking.public_send('resource=', booking.resource) if options[:include].present?
       booking
+    end
+
+    def all_for_all_users
+      page = 1
+      response = get("#{REQUEST_URI}?size=#{PAGE_SIZE}")
+      bookings = response['Records'].map { |b| new(b) }
+      while response['HasNextPage']
+        response = get("#{REQUEST_URI}?size=#{PAGE_SIZE}&page=#{page += 1}")
+        bookings << response['Records'].map { |b| new(b) }
+      end
+      bookings.flatten.reject(&:blank?).sort_by(&:from_time)
     end
 
     def all(coworker_id: nil, resource_ids: [], include_passed: nil, options: {})

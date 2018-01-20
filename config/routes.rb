@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'
   delete 'logout' => 'sessions#destroy'
+  get 'reports', to: 'reports#index'
 
   # Error pages
   %w( 404 422 500 ).each do |code|
