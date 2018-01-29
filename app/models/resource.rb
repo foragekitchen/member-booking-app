@@ -69,7 +69,7 @@ class Resource < NexudusBase
       groups = []
       resources = all({ Resource_Id: resource_id }, role: role)
       if role != :admin && from_time.wday == 0
-        group_resources = all(role: role == :chief ? :maker : :chief)
+        group_resources = group_resources(role)
         groups = booked_groups(group_resources, available, bookings, time_boundaries)
       end
       resource_bookings.select { |b| b.coworker_id != coworker.id }.empty? &&
@@ -87,7 +87,7 @@ class Resource < NexudusBase
       other_resources =
         if role == :admin
           available = Timeslot.all_by_day(from_time.wday).map { |t| t['ResourceId'] }.uniq
-          all(role: :maker) + all(role: :chief)
+          all(role: :maker) + all(role: :chief) + all(role: :day_use)
         else
           all(role: :admin)
         end
@@ -99,7 +99,7 @@ class Resource < NexudusBase
       groups = []
       # @todo: get rid of this hardcoded value
       if role != :admin && from_time.wday == 0
-        group_resources = all(role: role == :chief ? :maker : :chief)
+        group_resources = group_resources(role)
         groups = booked_groups(group_resources, available, bookings, time_boundaries)
       end
 
@@ -142,6 +142,14 @@ class Resource < NexudusBase
 
     def available_ids(from_time: Time.current + 2.hours, to_time: Time.current + 4.hours)
       Timeslot.available(from_time: from_time, to_time: to_time).map { |t| t['ResourceId'] }.uniq
+    end
+
+    def group_resources(role)
+      case role
+      when :chief then all(role: :maker) + all(role: :day_use)
+      when :maker then all(role: :chief) + all(role: :day_use)
+      else all(role: :maker) + all(role: :day_use)
+      end
     end
 
     def times_overlapped?(booking_from_time, booking_to_time, from_time, to_time)

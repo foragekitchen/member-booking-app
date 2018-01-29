@@ -3,7 +3,18 @@ class Coworker < NexudusBase
   REQUEST_URI = '/spaces/coworkers'.freeze
   BILLING_URI = '/billing/coworkerextraservices'.freeze
   BILLING_PLANS_URI = '/billing/tariffs'.freeze
-  RESOURCE_TYPES = { chief: 'Prep Station', maker: 'Prep Table', admin: 'Prep Space' }
+  RESOURCE_TYPES = { 
+    chief: 'Prep Station',
+    maker: 'Prep Table',
+    admin: 'Prep Space',
+    day_use: 'Prep Station'
+  }.freeze
+  ROLES = {
+    chief: 'Chief',
+    maker: 'Maker',
+    admin: 'Admin',
+    day_use: 'Day Use'
+  }.freeze
 
   class << self
     def find_by_user(user_id, query = {})
@@ -77,7 +88,7 @@ class Coworker < NexudusBase
   end
 
   def role
-    RESOURCE_TYPES.key(extra_service['ExtraServiceName'])
+    ROLES.key(billing_plan)
   end
 
   def maker?
