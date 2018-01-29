@@ -30,12 +30,13 @@ class Booking < NexudusBase
       booking
     end
 
-    def all_for_all_users
+    def all_for_all_users(from, to)
       page = 1
-      response = get("#{REQUEST_URI}?size=#{PAGE_SIZE}")
+      request = build_request(from, to)
+      response = get(request)
       bookings = response['Records'].map { |b| new(b) }
       while response['HasNextPage']
-        response = get("#{REQUEST_URI}?size=#{PAGE_SIZE}&page=#{page += 1}")
+        response = get("#{request}&page=#{page += 1}")
         bookings << response['Records'].map { |b| new(b) }
       end
       bookings.flatten.reject(&:blank?).sort_by(&:from_time)
@@ -70,6 +71,12 @@ class Booking < NexudusBase
       bookings = get("#{REQUEST_URI}?#{params.join('&')}")
       bookings = bookings ? bookings['Records'].map { |b| new(b) } : []
       bookings.flatten.reject(&:blank?).sort_by(&:from_time)
+    end
+
+    def build_request(from, to)
+      from_param = from.nil? ? '' : "&From_Booking_FromTime=#{DateTime.parse(from).utc.to_s(:nexudus)}"
+      to_param = to.nil? ? '' : "&To_Booking_FromTime=#{DateTime.parse(to).utc.to_s(:nexudus)}"
+      "#{REQUEST_URI}?size=#{PAGE_SIZE}#{from_param}#{to_param}"
     end
   end
 
