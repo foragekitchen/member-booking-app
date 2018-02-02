@@ -10,9 +10,9 @@ class Coworker < NexudusBase
     day_use: 'Prep Station'
   }.freeze
   ROLES = {
-    chief: 'Chief',
+    chief: 'Chefs',
     maker: 'Maker',
-    admin: 'Admin',
+    admin: 'Admin Space',
     day_use: 'Day Use'
   }.freeze
 
@@ -97,6 +97,10 @@ class Coworker < NexudusBase
 
   def admin?
     role == :admin
+  end
+
+  def day_use?
+    role == :day_use
   end
 
   def can_book?(from, to)

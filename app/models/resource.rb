@@ -87,7 +87,7 @@ class Resource < NexudusBase
       other_resources =
         if role == :admin
           available = Timeslot.all_by_day(from_time.wday).map { |t| t['ResourceId'] }.uniq
-          all(role: :maker) + all(role: :chief) + all(role: :day_use)
+          all(role: :maker) + all(role: :chief)
         else
           all(role: :admin)
         end
@@ -146,16 +146,15 @@ class Resource < NexudusBase
 
     def group_resources(role)
       case role
-      when :chief then all(role: :maker) + all(role: :day_use)
-      when :maker then all(role: :chief) + all(role: :day_use)
-      else all(role: :maker) + all(role: :day_use)
+      when :maker then all(role: :chief)
+      else all(role: :maker)
       end
     end
 
     def times_overlapped?(booking_from_time, booking_to_time, from_time, to_time)
       booking_from_time >= from_time && booking_to_time <= to_time || # falls exactly inside the slot
-          booking_from_time >= from_time && booking_from_time < to_time || # overlaps after requested start
-          booking_from_time <= from_time && booking_to_time > from_time
+        booking_from_time >= from_time && booking_from_time < to_time || # overlaps after requested start
+        booking_from_time <= from_time && booking_to_time > from_time
     end
   end
 end

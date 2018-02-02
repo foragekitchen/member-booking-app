@@ -44,6 +44,9 @@ class ResourcesController < ApplicationController
         params[:bookingRequestDate] = (from + 1.day).to_s(:booking_day)
         params[:bookingRequestFromTime] = '8:00 AM'
         params[:bookingRequestToTime] = '10:00 AM'
+      elsif current_user.day_use?
+        params[:bookingRequestFromTime] = '8:00 PM'
+        params[:bookingRequestToTime] = '10:00 PM'
       end
     end
   end
