@@ -3,7 +3,7 @@ class ResourcesController < ApplicationController
   before_action :load_date_intervals
 
   def index
-    @resources = if (@from_date && @to_date)
+    @resources = if @from_date && @to_date
                    Resource.all_with_available(from_time: @from_date,
                                                to_time: @to_date,
                                                role: current_user.role)

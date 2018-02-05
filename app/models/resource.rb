@@ -72,8 +72,15 @@ class Resource < NexudusBase
         group_resources = group_resources(role)
         groups = booked_groups(group_resources, available, bookings, time_boundaries)
       end
-      resource_bookings.select { |b| b.coworker_id != coworker.id }.empty? &&
-        resources.select { |r| groups.include?(r.group_name) }.empty?
+      bookings_to_check = resource_bookings.select { |b| b.coworker_id != coworker.id }
+      bookings_to_check.each do |booking|
+        if times_overlapped?(
+            booking.from_time, booking.to_time, time_boundaries[:from_time], time_boundaries[:to_time]
+        )
+          return false
+        end
+      end
+      resources.select { |r| groups.include?(r.group_name) }.empty?
     end
 
     def all_with_available(from_time: Time.current + 2.hours, to_time: Time.current + 4.hours, role: :chief)
