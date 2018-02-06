@@ -13,7 +13,7 @@ class Coworker < NexudusBase
     chief: 'Chefs',
     maker: 'Maker',
     admin: 'Admin Space',
-    day_use: 'Day Use'
+    day_use: 'Daily Use'
   }.freeze
 
   class << self
