@@ -69,11 +69,18 @@ class Resource < NexudusBase
       groups = []
       resources = all({ Resource_Id: resource_id }, role: role)
       if role != :admin && from_time.wday == 0
-        group_resources = all(role: role == :chief ? :maker : :chief)
+        group_resources = group_resources(role)
         groups = booked_groups(group_resources, available, bookings, time_boundaries)
       end
-      resource_bookings.select { |b| b.coworker_id != coworker.id }.empty? &&
-        resources.select { |r| groups.include?(r.group_name) }.empty?
+      bookings_to_check = resource_bookings.select { |b| b.coworker_id != coworker.id }
+      bookings_to_check.each do |booking|
+        if times_overlapped?(
+            booking.from_time, booking.to_time, time_boundaries[:from_time], time_boundaries[:to_time]
+        )
+          return false
+        end
+      end
+      resources.select { |r| groups.include?(r.group_name) }.empty?
     end
 
     def all_with_available(from_time: Time.current + 2.hours, to_time: Time.current + 4.hours, role: :chief)
@@ -99,7 +106,7 @@ class Resource < NexudusBase
       groups = []
       # @todo: get rid of this hardcoded value
       if role != :admin && from_time.wday == 0
-        group_resources = all(role: role == :chief ? :maker : :chief)
+        group_resources = group_resources(role)
         groups = booked_groups(group_resources, available, bookings, time_boundaries)
       end
 
@@ -144,10 +151,17 @@ class Resource < NexudusBase
       Timeslot.available(from_time: from_time, to_time: to_time).map { |t| t['ResourceId'] }.uniq
     end
 
+    def group_resources(role)
+      case role
+      when :maker then all(role: :chief)
+      else all(role: :maker)
+      end
+    end
+
     def times_overlapped?(booking_from_time, booking_to_time, from_time, to_time)
       booking_from_time >= from_time && booking_to_time <= to_time || # falls exactly inside the slot
-          booking_from_time >= from_time && booking_from_time < to_time || # overlaps after requested start
-          booking_from_time <= from_time && booking_to_time > from_time
+        booking_from_time >= from_time && booking_from_time < to_time || # overlaps after requested start
+        booking_from_time <= from_time && booking_to_time > from_time
     end
   end
 end
