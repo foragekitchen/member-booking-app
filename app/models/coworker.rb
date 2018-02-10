@@ -88,7 +88,7 @@ class Coworker < NexudusBase
   end
 
   def role
-    ROLES.key(billing_plan)
+    ROLES.key(billing_plan) ? ROLES.key(billing_plan) : :chief
   end
 
   def maker?
