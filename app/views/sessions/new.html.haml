@@ -26,4 +26,12 @@
         = f.label :password
         = f.password_field :password, class: 'form-control'
       = f.submit 'Log in', class: 'btn btn-primary', data: { disable_with: 'Loading...' }
-      = link_to 'Forgot password?', 'https://spaces.nexudus.com/Login', target: '_blank', class: 'pull-right'
+      .pull-right
+        %a{'data-toggle': 'popover', role: 'button', tabindex: '0', title: 'Forgot password?'}
+          Forgot password?
+      #forgot_password_popover.hidden
+        .row
+          .col-sm-12
+            %small Email
+            %a{'href': 'mailto:matt@foragekitchen.com'}  matt@foragekitchen.com
+            %small to reset password. We’ll make sure it happens quick!
