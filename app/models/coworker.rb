@@ -7,13 +7,15 @@ class Coworker < NexudusBase
     chief: 'Prep Station',
     maker: 'Prep Table',
     admin: 'Prep Space',
-    day_use: 'Prep Station'
+    day_use: 'Prep Station',
+    day_use_20: 'Prep Station'
   }.freeze
   ROLES = {
     chief: 'Chefs',
     maker: 'Maker',
     admin: 'Admin Space',
-    day_use: 'Day Use - new'
+    day_use: 'Day Use - new',
+    day_use_20: 'Day Use - 20'
   }.freeze
 
   class << self
@@ -32,10 +34,11 @@ class Coworker < NexudusBase
       new(result)
     end
 
+    # TODO: add condition for day use?
     def can_book?(role, from, to)
+      return true if role == :admin
       from = from.in_time_zone
       to = to.in_time_zone
-      return true if role == :admin
       # Makers can book only on sunday from 8:00 AM to 6:00 PM
       return from.sunday? && to.sunday? && from.hour >= 8 && (to.hour < 18 || (to.hour == 18 && to.min == 0)) if role == :maker
       true

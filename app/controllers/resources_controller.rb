@@ -18,10 +18,7 @@ class ResourcesController < ApplicationController
 
   def load_date_intervals
     if params[:bookingRequestFromTime] && params[:bookingRequestToTime]
-      @from_date = convert_to_universal_time(params[:bookingRequestDate], params[:bookingRequestFromTime])
-      @to_date = convert_to_universal_time(params[:bookingRequestDate], params[:bookingRequestToTime])
-      @from_date += 1.day if @from_date == @from_date.to_date.beginning_of_day
-      @to_date += 1.day if @to_date < @from_date
+      set_dates
     else
       from = Time.current + 2.hours
       to = from + 2.hours
@@ -29,8 +26,7 @@ class ResourcesController < ApplicationController
       params[:bookingRequestFromTime] = from.beginning_of_hour.to_s(:booking_time)
       params[:bookingRequestToTime] = to.beginning_of_hour.to_s(:booking_time)
       if (from.hour < 8 && from.hour > 2) || (to.hour < 8 && to.hour > 2)
-        params[:bookingRequestFromTime] = '8:00 AM'
-        params[:bookingRequestToTime] = '10:00 AM'
+        set_standard_interval
         params[:bookingRequestDate] = to.to_s(:booking_day) if to.hour < 8 || to.hour > 2
       end
       # Format new `from` date
@@ -38,16 +34,25 @@ class ResourcesController < ApplicationController
                                "#{Time::DATE_FORMATS[:booking_day]} #{Time::DATE_FORMATS[:booking_time]}")
       if current_user.maker? && (!from.sunday? || from.hour > 14)
         params[:bookingRequestDate] = (from.sunday? ? from + 1.day : from.end_of_week(:monday)).to_s(:booking_day)
-        params[:bookingRequestFromTime] = '8:00 AM'
-        params[:bookingRequestToTime] = '10:00 AM'
+        set_standard_interval
       elsif !current_user.maker? && from.sunday?
         params[:bookingRequestDate] = (from + 1.day).to_s(:booking_day)
-        params[:bookingRequestFromTime] = '8:00 AM'
-        params[:bookingRequestToTime] = '10:00 AM'
+        set_standard_interval
       elsif current_user.day_use?
-        params[:bookingRequestFromTime] = '8:00 PM'
-        params[:bookingRequestToTime] = '10:00 PM'
+        set_standard_interval('PM')
       end
     end
+  end
+
+  def set_standard_interval(midday = 'AM')
+    params[:bookingRequestFromTime] = "8:00 #{midday}"
+    params[:bookingRequestToTime] = "10:00 #{midday}"
+  end
+
+  def set_dates
+    @from_date = convert_to_universal_time(params[:bookingRequestDate], params[:bookingRequestFromTime])
+    @to_date = convert_to_universal_time(params[:bookingRequestDate], params[:bookingRequestToTime])
+    @from_date += 1.day if @from_date == @from_date.to_date.beginning_of_day
+    @to_date += 1.day if @to_date < @from_date
   end
 end
