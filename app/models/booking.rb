@@ -7,6 +7,9 @@ class Booking < NexudusBase
                 :repeat_until, :repeat_on_mondays, :repeat_on_tuesdays, :repeat_on_wednesdays,
                 :repeat_on_thursdays, :repeat_on_fridays, :repeat_on_saturdays, :repeat_on_sundays
   REQUEST_URI = '/spaces/bookings'.freeze
+  # TODO: implement pagination handling
+  PAGE_SIZE = '&size=200'
+  ORDERING = '&orderby=FromTime&dir=Descending'
 
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::DateHelper
@@ -44,8 +47,8 @@ class Booking < NexudusBase
         result = get("#{REQUEST_URI}?#{(params + ["Booking_Resource=#{id}"]).join('&')}")['Records']
         bookings << result.map { |b| new(b) }
       end
-      bookings = get("#{REQUEST_URI}?#{params.join('&')}")['Records'].map { |b| new(b) } unless resource_ids.present?
-      bookings.flatten.reject(&:blank?).sort_by(&:from_time)
+      bookings = get("#{REQUEST_URI}?#{params.join('&')}#{PAGE_SIZE}#{ORDERING}")['Records'].map { |b| new(b) } unless resource_ids.present?
+      bookings.flatten.reject(&:blank?)
     end
 
     def upcoming_uncharged(coworker_id)
