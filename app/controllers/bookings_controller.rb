@@ -3,7 +3,7 @@ class BookingsController < ApplicationController
 
   def index
     @bookings = Booking.all(coworker_id: @coworker.id)
-    @upcoming = @bookings.reject { |b| b.from_time.to_time < Time.now.utc }
+    @upcoming = @bookings.reject { |b| b.from_time.to_time < Time.now.utc }.sort_by(&:from_time)
     @past = @bookings.reject { |b| b.from_time.to_time > Time.now.utc }
   end
 
