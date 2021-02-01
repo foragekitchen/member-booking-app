@@ -8,8 +8,8 @@ class Booking < NexudusBase
                 :repeat_on_thursdays, :repeat_on_fridays, :repeat_on_saturdays, :repeat_on_sundays
   REQUEST_URI = '/spaces/bookings'.freeze
   # TODO: implement pagination handling
-  PAGE_SIZE = '&size=200'
-  ORDERING = '&orderby=FromTime&dir=Descending'
+  PAGE_SIZE = 'size=200'.freeze
+  ORDERING = '&orderby=FromTime&dir=Descending'.freeze
 
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::DateHelper
@@ -43,11 +43,16 @@ class Booking < NexudusBase
       params << "To_Booking_FromTime=#{options[:to_time].in(1.hour).utc.to_s(:nexudus)}" if options[:to_time]
 
       bookings = []
-      resource_ids.uniq.each do |id|
+      if resource_ids.length == 1
+        id = resource_ids.first
         result = get("#{REQUEST_URI}?#{(params + ["Booking_Resource=#{id}"]).join('&')}")['Records']
         bookings << result.map { |b| new(b) }
+      else
+        page_size = params.empty? ? PAGE_SIZE : "&#{PAGE_SIZE}"
+        result = get("#{REQUEST_URI}?#{params.join('&')}#{page_size}#{ORDERING}")['Records']
+        result = result.select { |b| resource_ids.include?(b['ResourceId']) } unless resource_ids.empty?
+        bookings = result.map { |b| new(b) }
       end
-      bookings = get("#{REQUEST_URI}?#{params.join('&')}#{PAGE_SIZE}#{ORDERING}")['Records'].map { |b| new(b) } unless resource_ids.present?
       bookings.flatten.reject(&:blank?)
     end
 
