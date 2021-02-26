@@ -111,6 +111,6 @@ class Coworker < NexudusBase
   end
 
   def to_s
-    { name: full_name, role: role, active: active }.to_json
+    { name: full_name, role: role, active: active, id: id }.to_json
   end
 end

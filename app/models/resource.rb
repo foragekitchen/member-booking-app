@@ -1,6 +1,7 @@
 class Resource < NexudusBase
   attr_accessor :id, :description, :linked_resources, :location, :name,
-                :resource_type_name, :timeslots, :visible, :available, :group_name
+                :resource_type_name, :timeslots, :visible, :available, :group_name,
+                :coworker_name
   attr_writer :late_cancellation_limit
   REQUEST_URI = '/spaces/resources'.freeze
 
@@ -111,7 +112,7 @@ class Resource < NexudusBase
       end
 
       proceed_available!(other_resources, available, bookings, time_boundaries)
-      if other_resources.all? { |resource| resource.available }
+      if other_resources.all?(&:available)
         proceed_available!(resources, available, bookings, time_boundaries, groups)
       else
         resources.each { |resource| resource.available = false }
@@ -123,16 +124,17 @@ class Resource < NexudusBase
     private
 
     def proceed_available!(resources, available, bookings, time_boundaries, booked_groups = [])
-      for_booked_resources(resources, available, bookings, time_boundaries) do |resource|
+      for_booked_resources(resources, available, bookings, time_boundaries) do |resource, booking|
         resource.available = false
         available.delete(resource.id)
+        resource.coworker_name = booking.coworker_full_name
       end
       resources.each { |r| r.available = false if booked_groups.include?(r.group_name) } if booked_groups.any?
     end
 
     def booked_groups(resources, available, bookings, time_boundaries)
       groups = []
-      for_booked_resources(resources, available, bookings, time_boundaries) do |resource|
+      for_booked_resources(resources, available, bookings, time_boundaries) do |resource, _|
         groups << resource.group_name
       end
       groups.uniq
@@ -142,7 +144,7 @@ class Resource < NexudusBase
       bookings.each do |booking|
         next unless available.include?(booking.resource_id) && (resource = resources.select { |r| r.id == booking.resource_id }.first)
         if times_overlapped?(booking.from_time, booking.to_time, time_boundaries[:from_time], time_boundaries[:to_time])
-          yield(resource) if block_given?
+          yield(resource, booking) if block_given?
         end
       end
     end

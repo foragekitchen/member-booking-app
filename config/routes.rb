@@ -5,13 +5,15 @@ Rails.application.routes.draw do
   resources :resources, only: :index
   resources :bookings, except: :edit
 
+  get 'upcoming_bookings', to: 'upcoming#index'
+
   # Custom routes
-  get 'login' => 'sessions#new'
-  post 'login' => 'sessions#create'
-  delete 'logout' => 'sessions#destroy'
+  get 'login', to: 'sessions#new'
+  post 'login', to: 'sessions#create'
+  delete 'logout', to: 'sessions#destroy'
 
   # Error pages
-  %w( 404 422 500 ).each do |code|
+  %w[404 422 500].each do |code|
     get code, to: 'application#error', code: code
   end
 end

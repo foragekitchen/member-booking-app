@@ -1,0 +1,58 @@
+- if flash[:notice]
+  .alert.alert-success.alert-dismissible{role: 'alert'}
+    %button.close{'aria-label': 'Close', 'data-dismiss': 'alert', type: 'button'}
+      %span{'aria-hidden': 'true'} ×
+    %strong Success!
+    = flash[:notice]
+- if flash[:info]
+  .alert.alert-info.alert-dismissible{role: 'alert'}
+    %button.close{'aria-label': 'Close', 'data-dismiss': 'alert', type: 'button'}
+      %span{'aria-hidden': 'true'} ×
+    = flash[:info]
+- if flash[:alert]
+  .alert.alert-danger.alert-dismissible{role: 'alert'}
+    %button.close{'aria-label': 'Close', 'data-dismiss': 'alert', type: 'button'}
+      %span{'aria-hidden': 'true'} ×
+    %strong Oh no!
+    = flash[:alert]
+.col-md-3
+  %h1 Upcoming Bookings
+  %p
+    Here you can check if the table you are interested in is busy in the following days.
+.col-md-9.reservations-tables
+  = form_tag(upcoming_bookings_path, method: 'get', id: 'upcoming-filter', class: 'form-inline') do
+    %h2
+      =fa_icon 'calendar-check-o'
+      Choose the date range
+    .form-group.upcoming-booking-date
+      .input-group.input-daterange
+        %input#booking-filter-from-date.form-control.datepicker-upcoming-from{name: 'fromDate', type: 'text', value: params[:fromDate]}
+        .input-group-addon to
+        %input#booking-filter-to-date.form-control.datepicker-upcoming-to{name: 'toDate', type: 'text', value: params[:toDate]}
+    .form-group
+      = submit_tag 'Filter dates', class: 'btn btn-primary', data: { disable_with: 'Loading...' }
+  - if @bookings.any?
+    %table#upcoming-bookings.table.table-striped
+      %thead
+        %tr
+          %th{width: '25%'} Resource(s)
+          %th{width: '25%'} Date(s)
+          %th{width: '25%'} In/Out Time
+          %th{width: '25%'} Coworker
+      %tbody
+      - @bookings.each do |booking|
+        %tr{id: booking.id}
+          %td
+            .td-label Resource(s):
+            = booking.resource.name
+          %td
+            .td-label Date(s):
+            = booking.friendly_dates
+          %td
+            .td-label In/Out Time:
+            = booking.friendly_times
+          %td
+            .td-label In/Out Time:
+            = booking.coworker_full_name
+  - else
+    %h3 There are no upcoming bookings

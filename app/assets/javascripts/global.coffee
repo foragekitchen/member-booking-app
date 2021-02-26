@@ -13,6 +13,15 @@ jQuery ->
     $('.datepicker').datepicker($.extend({autoclose: true}, datepickerOpts)).on('changeDate', ->
       window.booking_filter.submit() if window.booking_filter
     )
+    upcomingOpts = {
+      startDate: currentTime().startOf('day').toDate()
+    }
+    $('.datepicker-upcoming-from').datepicker($.extend({autoclose: true}, upcomingOpts)).on('changeDate', (e) ->
+      $('.datepicker-upcoming-to').data('datepicker').setStartDate(e.date)
+    )
+    $('.datepicker-upcoming-to').datepicker($.extend({autoclose: true}, upcomingOpts)).on('changeDate', (e) ->
+      $('.datepicker-upcoming-from').data('datepicker').setEndDate(e.date)
+    )
     $('.multi-datepicker').datepicker($.extend({multidate: true}, datepickerOpts)).on('changeDate', (e) ->
       # Format all dates and store them indide of input value
       dates = []
