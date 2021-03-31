@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   # Custom routes
   get 'login', to: 'sessions#new'
   post 'login', to: 'sessions#create'
-  delete 'logout', to: 'sessions#destroy'
+  get 'logout', to: 'sessions#destroy'
 
   # Error pages
   %w[404 422 500].each do |code|

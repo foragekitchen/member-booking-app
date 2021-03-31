@@ -26,7 +26,7 @@
           (#{@coworker.total_hours_in_plan.to_i} hrs, #{number_to_currency(@coworker.extra_service_cost_per_hour)}/hr add'l)
     .row
       .col-sm-12
-        = link_to 'Logout', logout_path, class: 'btn btn-primary user-logout', method: 'delete'
+        = link_to 'Logout', logout_path, class: 'btn btn-primary user-logout'
   #information_popover.hidden
     .row.important-info-row
       .col-sm-4
