@@ -8,8 +8,14 @@ class NexudusBase
     def get(*args)
       tries = 3
       begin
-        response = super
-        NexudusApp.log "Nexudus: #{args.inspect} -- #{response.inspect}"
+        if args.length == 1
+          request_args = [args, format: :json].flatten
+        else
+          params = args[1]
+          request_args = [args[0], params.merge(format: :json)]
+        end
+        response = super(*request_args)
+        NexudusApp.log "Nexudus: #{request_args.inspect} -- #{response.inspect}"
         return response if response.code < 300
         NexudusApp.log("Nexudus error response: #{response.inspect}")
         if response.code == 409
