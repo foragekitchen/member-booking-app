@@ -3,7 +3,7 @@ class window.TimeSliderRange
     @hoursOffset = 1
     @totalHours = 24
     @offset = @hoursOffset * 60
-    @min = 2 * 60
+    @min = 1 * 60
     @max = 12 * 60
     @holder = holder
     @from_target = $(@holder.data('from-target'))
